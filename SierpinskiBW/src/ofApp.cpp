@@ -46,9 +46,59 @@ void ofApp::update(){
 		ofxOscMessage m;
 		receiver.getNextMessage(&m);
         if (m.getAddress() == "/threshold") {
-            // video red_e red_f green_e green_f blue_e blue_f on/of
             sierpinski.setThreshold(m.getArgAsInt32(0));
+        } else if (m.getAddress() == "/sierpinski_0") {
+            if (m.getArgAsInt32(0)==1) {
+                sierpinski.sierpinski_0.setActive(true);
+            } else {
+                sierpinski.sierpinski_0.setActive(false);
+            }
+        } else if (m.getAddress() == "/sierpinski_1") {
+            int x_0 = m.getArgAsInt32(1);
+            int y_0 = m.getArgAsInt32(2);
+            if (m.getArgAsInt32(0)==1) {
+                sierpinski.sierpinski_1[x_0][y_0].setActive(true);
+            } else {
+                sierpinski.sierpinski_1[x_0][y_0].setActive(false);
+            }
+        } else if (m.getAddress() == "/sierpinski_2") {
+            int x_0 = m.getArgAsInt32(1);
+            int y_0 = m.getArgAsInt32(2);
+            int x_1 = m.getArgAsInt32(3);
+            int y_1 = m.getArgAsInt32(4);
+            if (m.getArgAsInt32(0)==1) {
+                sierpinski.sierpinski_2[x_0][y_0][x_1][y_1].setActive(true);
+            } else {
+                sierpinski.sierpinski_2[x_0][y_0][x_1][y_1].setActive(false);
+            }
+        } else if (m.getAddress() == "/sierpinski_3") {
+            int x_0 = m.getArgAsInt32(1);
+            int y_0 = m.getArgAsInt32(2);
+            int x_1 = m.getArgAsInt32(3);
+            int y_1 = m.getArgAsInt32(4);
+            int x_2 = m.getArgAsInt32(5);
+            int y_2 = m.getArgAsInt32(6);
+            if (m.getArgAsInt32(0)==1) {
+                sierpinski.sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2].setActive(true);
+            } else {
+                sierpinski.sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2].setActive(false);
+            }
+        } else if (m.getAddress() == "/sierpinski_4") {
+            int x_0 = m.getArgAsInt32(1);
+            int y_0 = m.getArgAsInt32(2);
+            int x_1 = m.getArgAsInt32(3);
+            int y_1 = m.getArgAsInt32(4);
+            int x_2 = m.getArgAsInt32(5);
+            int y_2 = m.getArgAsInt32(6);
+            int x_3 = m.getArgAsInt32(7);
+            int y_3 = m.getArgAsInt32(8);
+            if (m.getArgAsInt32(0)==1) {
+                sierpinski.sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3].setActive(true);
+            } else {
+                sierpinski.sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3].setActive(false);
+            }
         }
+
     }
 }
 

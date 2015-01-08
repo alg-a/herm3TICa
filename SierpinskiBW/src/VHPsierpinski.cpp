@@ -24,18 +24,35 @@ void VHPsierpinski::setup() {
     
     threshold = 150;
     
-    // initializing storage arrays
-    resetArrays();
-}
+    sender.setup("localhost", 8000);
+    
+    
+    sierpinski_0.setAddress("/sierpinski_0");
+    for (int i=0; i<3; i++){
+        for (int u=0; u<3; u++){
+            sierpinski_1[i][u].setAddress("/sierpinski_1/"+ofToString(i)+"/"+ofToString(u));
+            for (int o=0; o<3; o++){
+                for (int s=0; s<3; s++){
+                    sierpinski_2[i][u][o][s].setAddress("/sierpinski_2/"+ofToString(i)+"/"+ofToString(u)+"/"+ofToString(o)+"/"+ofToString(s));
+                    for (int q=0; q<3; q++){
+                        for (int p=0; p<3; p++){
+                            sierpinski_3[i][u][o][s][q][p].setAddress("/sierpinski_3/"+ofToString(i)+"/"+ofToString(u)+"/"+ofToString(o)+"/"+ofToString(s)+"/"+ofToString(q)+"/"+ofToString(p));
+                            for (int t=0; t<3; t++){
+                                for (int r=0; r<3; r++){
+                                    sierpinski_4[i][u][o][s][q][p][t][r].setAddress("/sierpinski_4/"+ofToString(i)+"/"+ofToString(u)+"/"+ofToString(o)+"/"+ofToString(s)+"/"+ofToString(q)+"/"+ofToString(p)+"/"+ofToString(t)+"/"+ofToString(r));
+                                }
+                            }
+                        }
+                    }
 
-//----------------------------------------------------------------
-void VHPsierpinski::resetArrays() {
-    sierpinski_0 = 0;
-    memset(sierpinski_1, 0, sizeof(sierpinski_1));
-    memset(sierpinski_2, 0, sizeof(sierpinski_2));
-    memset(sierpinski_3, 0, sizeof(sierpinski_3));
-    memset(sierpinski_4, 0, sizeof(sierpinski_4));
-
+                }
+            }
+        }
+        
+    }
+    
+    
+    
 }
 
 //----------------------------------------------------------------
@@ -47,7 +64,6 @@ void VHPsierpinski::update(int _w, int _t, unsigned char * _p) {
 
 //----------------------------------------------------------------
 void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
-    resetArrays();
     for (int i=0; i<totalSierpinski; i+=3){
         int n = sizeSierpinski_0 * 3;
         int x = i % n;
@@ -59,7 +75,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
         int y_0r = y % sizeSierpinski_1;
         int y_0 = (y - y_0r) / sizeSierpinski_1;
         if ((x_0==1)&&(y_0==1)) {
-            sierpinski_0 += 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+            sierpinski_0.addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
         } else {
             n = sizeSierpinski_2 * 3;
             int x_1r = x_0r % n;
@@ -67,7 +83,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
             int y_1r = y_0r % sizeSierpinski_2;
             int y_1 = (y_0r - y_1r) / sizeSierpinski_2;
             if ((x_1==1)&&(y_1==1)) {
-                sierpinski_1[x_0][y_0] += 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+                sierpinski_1[x_0][y_0].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
             } else {
                 n = sizeSierpinski_3 * 3;
                 int x_2r = x_1r % n;
@@ -75,7 +91,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
                 int y_2r = y_1r % sizeSierpinski_3;
                 int y_2 = (y_1r - y_2r) / sizeSierpinski_3;
                 if ((x_2==1)&&(y_2==1)) {
-                    sierpinski_2[x_0][y_0][x_1][y_1] += 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+                    sierpinski_2[x_0][y_0][x_1][y_1].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
                 } else {
                     n = sizeSierpinski_4 * 3;
                     int x_3r = x_2r % n;
@@ -83,7 +99,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
                     int y_3r = y_2r % sizeSierpinski_4;
                     int y_3 = (y_2r - y_3r) / sizeSierpinski_4;
                     if ((x_3==1)&&(y_3==1)) {
-                        sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2] += 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+                        sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
                     } else {
                         n = base * 3;
                         int x_4r = x_3r % n;
@@ -91,7 +107,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
                         int y_4r = y_3r % base;
                         int y_4 = (y_3r - y_4r) / base;
                         if ((x_4==1)&&(y_4==1)) {
-                            sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3] += 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+                            sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
                         }
                     }
                 }
@@ -119,15 +135,7 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
             //sierpinski[i] = sierpinski_0/(sizeSierpinski_1*sizeSierpinski_1);
             //sierpinski[i+1] = sierpinski_0/(sizeSierpinski_1*sizeSierpinski_1);
             //sierpinski[i+2] = sierpinski_0/(sizeSierpinski_1*sizeSierpinski_1);
-            if (sierpinski_0/(sizeSierpinski_1*sizeSierpinski_1)<=threshold) {
-                sierpinski[i] = 0;
-                sierpinski[i+1] = 0;
-                sierpinski[i+2] = 0;
-            } else {
-                sierpinski[i] = 255;
-                sierpinski[i+1] = 255;
-                sierpinski[i+2] = 255;
-            }
+            updateSierpinski(sierpinski_0, sizeSierpinski_1, i);
             
         } else {
             n = sizeSierpinski_2 * 3;
@@ -139,15 +147,8 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
                 //sierpinski[i] = sierpinski_1[x_0][y_0]/(sizeSierpinski_2*sizeSierpinski_2);
                 //sierpinski[i+1] = sierpinski_1[x_0][y_0]/(sizeSierpinski_2*sizeSierpinski_2);
                 //sierpinski[i+2] = sierpinski_1[x_0][y_0]/(sizeSierpinski_2*sizeSierpinski_2);
-                if (sierpinski_1[x_0][y_0]/(sizeSierpinski_2*sizeSierpinski_2)<=threshold) {
-                    sierpinski[i] = 0;
-                    sierpinski[i+1] = 0;
-                    sierpinski[i+2] = 0;
-                } else {
-                    sierpinski[i] = 255;
-                    sierpinski[i+1] = 255;
-                    sierpinski[i+2] = 255;
-                }
+                updateSierpinski(sierpinski_1[x_0][y_0], sizeSierpinski_2, i);
+                
             } else {
                 n = sizeSierpinski_3 * 3;
                 int x_2r = x_1r % n;
@@ -158,15 +159,7 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
                     //sierpinski[i] = sierpinski_2[x_0][y_0][x_1][y_1]/(sizeSierpinski_3*sizeSierpinski_3);
                     //sierpinski[i+1] = sierpinski_2[x_0][y_0][x_1][y_1]/(sizeSierpinski_3*sizeSierpinski_3);
                     //sierpinski[i+2] = sierpinski_2[x_0][y_0][x_1][y_1]/(sizeSierpinski_3*sizeSierpinski_3);
-                    if (sierpinski_2[x_0][y_0][x_1][y_1]/(sizeSierpinski_3*sizeSierpinski_3)<=threshold) {
-                        sierpinski[i] = 0;
-                        sierpinski[i+1] = 0;
-                        sierpinski[i+2] = 0;
-                    } else {
-                        sierpinski[i] = 255;
-                        sierpinski[i+1] = 255;
-                        sierpinski[i+2] = 255;
-                    }
+                    updateSierpinski(sierpinski_2[x_0][y_0][x_1][y_1], sizeSierpinski_3, i);
                 } else {
                     n = sizeSierpinski_4 * 3;
                     int x_3r = x_2r % n;
@@ -177,15 +170,7 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
                         //sierpinski[i] = sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2]/(sizeSierpinski_4*sizeSierpinski_4);
                         //sierpinski[i+1] = sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2]/(sizeSierpinski_4*sizeSierpinski_4);
                         //sierpinski[i+2] = sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2]/(sizeSierpinski_4*sizeSierpinski_4);
-                        if (sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2]/(sizeSierpinski_4*sizeSierpinski_4)<=threshold) {
-                            sierpinski[i] = 0;
-                            sierpinski[i+1] = 0;
-                            sierpinski[i+2] = 0;
-                        } else {
-                            sierpinski[i] = 255;
-                            sierpinski[i+1] = 255;
-                            sierpinski[i+2] = 255;
-                        }
+                        updateSierpinski(sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2], sizeSierpinski_4, i);
                     } else {
                         n = base * 3;
                         int x_4r = x_3r % n;
@@ -196,15 +181,7 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
                             //sierpinski[i] = sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3]/(base*base);
                             //sierpinski[i+1] = sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3]/(base*base);
                             //sierpinski[i+2] = sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3]/(base*base);
-                            if (sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3]/(base*base)<=threshold) {
-                                sierpinski[i] = 0;
-                                sierpinski[i+1] = 0;
-                                sierpinski[i+2] = 0;
-                            } else {
-                                sierpinski[i] = 255;
-                                sierpinski[i+1] = 255;
-                                sierpinski[i+2] = 255;
-                            }
+                            updateSierpinski(sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3], base, i);
                         } else {
                             n = 1*3;
                             int x_5r = x_4r % n;
@@ -233,6 +210,50 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
                     }
                 }
             }
+        }
+    }
+}
+
+//----------------------------------------------------------------
+void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
+    if (_s.getValue()!=0) {
+        _s.setAverage(_t*_t);
+        
+        bool value;
+        if (_s.getAverage()<=threshold) {
+            sierpinski[_i] = 0;
+            sierpinski[_i+1] = 0;
+            sierpinski[_i+2] = 0;
+            value = false;
+        } else {
+            sierpinski[_i] = 255;
+            sierpinski[_i+1] = 255;
+            sierpinski[_i+2] = 255;
+            value = true;
+        }
+        if (_s.isActive()) {
+            sierpinski[_i+2] = 0;
+            ofxOscMessage msg;
+            msg.setAddress(_s.address);
+            cout << _s.address << endl;
+            msg.addIntArg((int)value);
+            sender.sendMessage(msg);
+        }
+    } else {
+        bool value;
+        if (_s.getAverage()<=threshold) {
+            sierpinski[_i] = 0;
+            sierpinski[_i+1] = 0;
+            sierpinski[_i+2] = 0;
+            value = false;
+        } else {
+            sierpinski[_i] = 255;
+            sierpinski[_i+1] = 255;
+            sierpinski[_i+2] = 255;
+            value = true;
+        }
+        if (_s.isActive()) {
+            sierpinski[_i+2] = 0;
         }
     }
 }
