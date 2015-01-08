@@ -14,11 +14,11 @@ class VHPsierpinski {
         ofTexture			textureSierpinski;      // video texture
         unsigned char *     sierpinski;             // buffer
     
-        int					sierpinski_0[3];
-        int					sierpinski_1[3][3][3];
-        int					sierpinski_2[3][3][3][3][3];
-        int					sierpinski_3[3][3][3][3][3][3][3];
-        int					sierpinski_4[3][3][3][3][3][3][3][3][3];
+        int					sierpinski_0;
+        int					sierpinski_1[3][3];
+        int					sierpinski_2[3][3][3][3];
+        int					sierpinski_3[3][3][3][3][3][3];
+        int					sierpinski_4[3][3][3][3][3][3][3][3];
         int                 base;
         int                 sizeSierpinski_0;
         int                 sizeSierpinski_1;
@@ -27,6 +27,8 @@ class VHPsierpinski {
         int                 sizeSierpinski_4;
         int                 totalSierpinski;
     
+        int                 threshold;
+    
         // methods
         void setup();
         void resetArrays();
@@ -34,6 +36,7 @@ class VHPsierpinski {
         void store(int _w, int _t, unsigned char * _p);
         void average(int _w, int _t, unsigned char * _p);
         void draw();
+        void setThreshold(int _t);
     
     private:
 	

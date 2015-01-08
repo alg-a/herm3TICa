@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "VHPsierpinski.h"
+#include "ofxOsc.h"
 
 class ofApp : public ofBaseApp{
 
@@ -29,8 +30,9 @@ class ofApp : public ofBaseApp{
         int 				camHeight;
         int                 totalPixels;
         
+        ofxOscReceiver receiver;
     
-        int                 n[6];
-    
+        // info
+        ofTrueTypeFont		font;
     
 };

@@ -28,6 +28,9 @@ void ofApp::setup(){
     videoTexture.allocate(camWidth, camHeight, GL_RGB);
     
     sierpinski.setup();
+    receiver.setup(9000);
+    
+    font.loadFont("verdana.ttf", 8, false, true);
 }
 
 //--------------------------------------------------------------
@@ -39,7 +42,14 @@ void ofApp::update(){
         videoTexture.loadData(pixels, camWidth, camHeight, GL_RGB);
         sierpinski.update(camWidth, totalPixels, pixels);
     }
-
+    while(receiver.hasWaitingMessages()) {
+		ofxOscMessage m;
+		receiver.getNextMessage(&m);
+        if (m.getAddress() == "/threshold") {
+            // video red_e red_f green_e green_f blue_e blue_f on/of
+            sierpinski.setThreshold(m.getArgAsInt32(0));
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -47,6 +57,8 @@ void ofApp::draw(){
 	ofSetHexColor(0xffffff);
 	//videoTexture.draw(0, 0, camWidth/2, camHeight/2);
     sierpinski.draw();
+    ofSetHexColor(0xffffff);
+	font.drawString(ofToString(sierpinski.threshold), 739, 10);
 }
 
 //--------------------------------------------------------------
