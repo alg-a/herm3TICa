@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "VHPsierpinski.h"
 
 class ofApp : public ofBaseApp{
 
@@ -22,27 +23,13 @@ class ofApp : public ofBaseApp{
         ofVideoGrabber 		vidGrabber;
     
         ofTexture			videoTexture;
-        ofTexture			textureSierpinski;
-    
-        unsigned char *     sierpinski;
+        VHPsierpinski       sierpinski;
     
         int 				camWidth;
         int 				camHeight;
         int                 totalPixels;
-        int                 totalSierpinski;
+        
     
-        int					sierpinski_0[3];
-        int					sierpinski_1[3][3][3];
-        int					sierpinski_2[3][3][3][3][3];
-        int					sierpinski_3[3][3][3][3][3][3][3];
-        int					sierpinski_4[3][3][3][3][3][3][3][3][3];
-    
-        int                 base;
-        int                 sizeSierpinski_0;
-        int                 sizeSierpinski_1;
-        int                 sizeSierpinski_2;
-        int                 sizeSierpinski_3;
-        int                 sizeSierpinski_4;
         int                 n[6];
     
     
