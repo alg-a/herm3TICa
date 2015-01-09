@@ -17,6 +17,7 @@ VHPdata::VHPdata() {
 
 void VHPdata::setActive(bool _a) {
     active = _a;
+    cout << "setActive(" << _a << ")" << endl;
 }
 
 bool VHPdata::isActive() {
@@ -59,6 +60,7 @@ string VHPdata::getAddress() {
 
 void VHPdata::setAverage(int _t) {
     average = addition/_t;
+    // cout << "addition: " << addition << " average: " << average << " total: " << _t << endl;
     addition = 0;
 }
 
@@ -89,4 +91,3 @@ bool VHPdata::isNew(){
 }
 
 //----------------------------------------------------------------
-

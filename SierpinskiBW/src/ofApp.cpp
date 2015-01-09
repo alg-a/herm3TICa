@@ -104,7 +104,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofSetHexColor(0xffffff);
 	//videoTexture.draw(0, 0, camWidth/2, camHeight/2);
     sierpinski.draw();
     ofSetHexColor(0xffffff);
@@ -113,7 +112,9 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == 'f'){
+		ofToggleFullscreen();
+	}
 }
 
 //--------------------------------------------------------------

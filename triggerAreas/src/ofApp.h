@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "VHPsierpinski.h"
 #include "ofxOsc.h"
+#include "VHPtriggerArea.h"
+#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,14 +22,17 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        // variables
+    
+        // Cam
         ofVideoGrabber 		vidGrabber;
         ofTexture			videoTexture;
-    
-        VHPsierpinski       sierpinski;
-    
         int 				camWidth;
         int 				camHeight;
         int                 totalPixels;
+    
+        // triggerArea
+        VHPtriggerArea      area;
     
         // OSC
         ofxOscReceiver receiver;
@@ -36,4 +40,7 @@ class ofApp : public ofBaseApp{
         // info
         ofTrueTypeFont		font;
     
+        // settings
+        ofxXmlSettings XML;
+		
 };

@@ -1,4 +1,4 @@
-#N canvas 897 103 1144 727 10;
+#N canvas 688 145 1144 727 10;
 #X declare -lib mrpeach;
 #X obj -25 17 import mrpeach;
 #X obj -27 108 packOSC;
@@ -15,33 +15,33 @@
 #X msg 156 88 /threshold \$1;
 #X obj 156 66 pack f;
 #X obj 159 21 hsl 128 15 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 3100 1;
+-1 -1 4300 1;
 #X floatatom 156 42 5 0 0 0 - - -;
 #X msg -45 41 connect localhost 9000;
 #X obj 156 253 s msgOSC;
 #X obj 156 208 pack f;
 #X floatatom 156 184 5 0 0 0 - - -;
 #X msg 156 230 /sierpinski_0 \$1;
-#X obj 156 164 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 156 164 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 316 251 s msgOSC;
 #X floatatom 316 182 5 0 0 0 - - -;
 #X obj 316 162 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 373 165 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 2;
+-1 -1 0;
 #X obj 316 206 pack f f f;
 #X obj 373 183 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 2;
+-1 -1 0;
 #X msg 315 229 /sierpinski_1 \$1 \$2 \$3;
 #X text 424 163 x_0;
 #X text 424 181 y_0;
 #X obj 482 253 s msgOSC;
 #X floatatom 482 184 5 0 0 0 - - -;
-#X obj 482 164 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 482 164 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 539 167 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 0;
+-1 -1 1;
 #X obj 539 185 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
 #X text 590 165 x_0;
@@ -55,14 +55,14 @@
 #X text 670 164 x_1;
 #X text 670 182 y_1;
 #X obj 48 132 print;
-#X obj -9 354 unpackOSC;
-#X floatatom -9 402 5 0 0 0 - - -;
-#X obj -9 377 routeOSC /sierpinski_0;
-#X obj 171 381 print;
-#X obj -9 331 udpreceive 8000;
+#X obj -12 459 unpackOSC;
+#X floatatom -12 507 5 0 0 0 - - -;
+#X obj -12 482 routeOSC /sierpinski_0;
+#X obj 168 486 print;
+#X obj -12 436 udpreceive 8000;
 #X obj 346 476 s msgOSC;
 #X floatatom 346 407 5 0 0 0 - - -;
-#X obj 346 387 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 346 387 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 403 390 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
@@ -73,12 +73,12 @@
 #X obj 483 389 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
 #X obj 483 407 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 1;
+-1 -1 0;
 #X text 534 387 x_1;
 #X text 534 405 y_1;
 #X msg 345 453 /sierpinski_3 \$1 \$2 \$3 \$4 \$5 \$5 \$6;
 #X obj 567 391 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 1;
+-1 -1 0;
 #X obj 567 409 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
 #X text 618 389 x_2;
@@ -86,10 +86,10 @@
 #X obj 346 431 pack f f f f f f f;
 #X obj 352 607 s msgOSC;
 #X floatatom 352 538 5 0 0 0 - - -;
-#X obj 352 518 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 352 518 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 409 521 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
--1 -1 1;
+-1 -1 0;
 #X obj 409 539 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
 #X text 460 519 x_0;
@@ -114,6 +114,10 @@
 -1 -1 0;
 #X text 704 520 x_3;
 #X text 704 538 y_3;
+#X obj -12 531 route 0 1;
+#X msg -12 559 0;
+#X msg 17 559 255;
+#X obj -12 586 s sierpinski_data;
 #X connect 1 0 9 0;
 #X connect 2 0 4 0;
 #X connect 3 0 2 0;
@@ -150,6 +154,7 @@
 #X connect 40 0 38 4;
 #X connect 44 0 46 0;
 #X connect 44 0 47 0;
+#X connect 45 0 87 0;
 #X connect 46 0 45 0;
 #X connect 48 0 44 0;
 #X connect 50 0 65 0;
@@ -174,3 +179,7 @@
 #X connect 82 0 81 0;
 #X connect 83 0 82 7;
 #X connect 84 0 82 8;
+#X connect 87 0 88 0;
+#X connect 87 1 89 0;
+#X connect 88 0 90 0;
+#X connect 89 0 90 0;

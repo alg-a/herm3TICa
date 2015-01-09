@@ -75,7 +75,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
         int y_0r = y % sizeSierpinski_1;
         int y_0 = (y - y_0r) / sizeSierpinski_1;
         if ((x_0==1)&&(y_0==1)) {
-            sierpinski_0.addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
+            sierpinski_0.add(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
         } else {
             n = sizeSierpinski_2 * 3;
             int x_1r = x_0r % n;
@@ -83,7 +83,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
             int y_1r = y_0r % sizeSierpinski_2;
             int y_1 = (y_0r - y_1r) / sizeSierpinski_2;
             if ((x_1==1)&&(y_1==1)) {
-                sierpinski_1[x_0][y_0].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
+                sierpinski_1[x_0][y_0].add(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
             } else {
                 n = sizeSierpinski_3 * 3;
                 int x_2r = x_1r % n;
@@ -91,7 +91,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
                 int y_2r = y_1r % sizeSierpinski_3;
                 int y_2 = (y_1r - y_2r) / sizeSierpinski_3;
                 if ((x_2==1)&&(y_2==1)) {
-                    sierpinski_2[x_0][y_0][x_1][y_1].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
+                    sierpinski_2[x_0][y_0][x_1][y_1].add(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
                 } else {
                     n = sizeSierpinski_4 * 3;
                     int x_3r = x_2r % n;
@@ -99,7 +99,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
                     int y_3r = y_2r % sizeSierpinski_4;
                     int y_3 = (y_2r - y_3r) / sizeSierpinski_4;
                     if ((x_3==1)&&(y_3==1)) {
-                        sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
+                        sierpinski_3[x_0][y_0][x_1][y_1][x_2][y_2].add(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
                     } else {
                         n = base * 3;
                         int x_4r = x_3r % n;
@@ -107,7 +107,7 @@ void VHPsierpinski::store(int _w, int _t, unsigned char * _p) {
                         int y_4r = y_3r % base;
                         int y_4 = (y_3r - y_4r) / base;
                         if ((x_4==1)&&(y_4==1)) {
-                            sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3].addValue(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
+                            sierpinski_4[x_0][y_0][x_1][y_1][x_2][y_2][x_3][y_3].add(0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2]);
                         }
                     }
                 }
@@ -216,9 +216,8 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
 
 //----------------------------------------------------------------
 void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
-    if (_s.getValue()!=0) {
+    if (_s.getAddition()!=0) {
         _s.setAverage(_t*_t);
-        
         bool value;
         if (_s.getAverage()<=threshold) {
             sierpinski[_i] = 0;
@@ -232,12 +231,16 @@ void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
             value = true;
         }
         if (_s.isActive()) {
+            _s.setValue(value);
             sierpinski[_i+2] = 0;
-            ofxOscMessage msg;
-            msg.setAddress(_s.address);
-            cout << _s.address << endl;
-            msg.addIntArg((int)value);
-            sender.sendMessage(msg);
+            if(_s.isNew()) {
+                ofxOscMessage msg;
+                msg.setAddress(_s.address);
+                cout << _s.address << endl;
+                msg.addIntArg((int)value);
+                sender.sendMessage(msg);
+                _s.updateLast();
+            }
         }
     } else {
         bool value;
