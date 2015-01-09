@@ -17,6 +17,7 @@ VHPdata::VHPdata() {
 
 void VHPdata::setActive(bool _a) {
     active = _a;
+    cout << "setActive(" << active << ")" << endl;
 }
 
 bool VHPdata::isActive() {
@@ -57,13 +58,16 @@ string VHPdata::getAddress() {
     return address;
 }
 
+//----------------------------------------------------------------
+
+
 void VHPdata::setAverage(int _t) {
     average = addition/_t;
     addition = 0;
 }
 
-int VHPdata::getAverage() {
-    return (int)average;
+float VHPdata::getAverage() {
+    return average;
 }
 
 //----------------------------------------------------------------
@@ -72,21 +76,28 @@ void VHPdata::setLast(bool _l){
     last = _l;
 }
 
+void VHPdata::setLastAverage(float _a){
+    lastAverage = (int) _a;
+}
+
 void VHPdata::updateLast() {
     setLast(value);
+    setLastAverage(average);
 }
 
 bool VHPdata::getLast() {
     return last;
 }
 
+int VHPdata::getLastAverage() {
+    return lastAverage;
+}
+
 bool VHPdata::isNew(){
-    if (last != value) {
+    //cout << " last: " << last << " value: " << value << endl;
+    if ((last != value)||(lastAverage != (int)average)) {
         return true;
     } else {
         return false;
     }
 }
-
-//----------------------------------------------------------------
-

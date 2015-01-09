@@ -28,6 +28,8 @@ void ofApp::setup(){
     videoTexture.allocate(camWidth, camHeight, GL_RGB);
     
     sierpinski.setup();
+    
+    font.loadFont("verdana.ttf", 8, false, true);
 }
 
 //--------------------------------------------------------------
@@ -47,6 +49,7 @@ void ofApp::draw(){
 	ofSetHexColor(0xffffff);
 	//videoTexture.draw(0, 0, camWidth/2, camHeight/2);
     sierpinski.draw();
+    font.drawString(ofToString(ofGetFrameRate()), 739, 24);
 }
 
 //--------------------------------------------------------------

@@ -108,6 +108,7 @@ void ofApp::draw(){
     sierpinski.draw();
     ofSetHexColor(0xffffff);
 	font.drawString(ofToString(sierpinski.threshold), 739, 10);
+	font.drawString(ofToString(ofGetFrameRate()), 739, 24);
 }
 
 //--------------------------------------------------------------

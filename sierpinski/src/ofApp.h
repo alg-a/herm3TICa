@@ -28,9 +28,8 @@ class ofApp : public ofBaseApp{
         int 				camWidth;
         int 				camHeight;
         int                 totalPixels;
-        
     
-        int                 n[6];
-    
+        // info
+        ofTrueTypeFont		font;
     
 };

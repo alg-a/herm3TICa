@@ -197,9 +197,9 @@ void VHPsierpinski::average(int _w, int _t, unsigned char * _p) {
                                     sierpinski[i+1] = 0;
                                     sierpinski[i+2] = 0;
                                 } else {
-                                    sierpinski[i] = 255;
-                                    sierpinski[i+1] = 255;
-                                    sierpinski[i+2] = 255;
+                                    sierpinski[i] = 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+                                    sierpinski[i+1] = 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
+                                    sierpinski[i+2] = 0.2126 * _p[pos] + 0.7152 * _p[pos+1] + 0.0722 * _p[pos+2];
                                 }
                             } else {
                                 //sierpinski[i] = pixels[pos];
@@ -220,42 +220,46 @@ void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
         _s.setAverage(_t*_t);
         bool value;
         if (_s.getAverage()<=threshold) {
+            value = false;
             sierpinski[_i] = 0;
             sierpinski[_i+1] = 0;
             sierpinski[_i+2] = 0;
-            value = false;
         } else {
-            sierpinski[_i] = 255;
-            sierpinski[_i+1] = 255;
-            sierpinski[_i+2] = 255;
             value = true;
+            sierpinski[_i] = (int) _s.getAverage();
+            sierpinski[_i+1] = (int) _s.getAverage();
+            sierpinski[_i+2] = (int) _s.getAverage();
         }
+        _s.setValue(value);
         if (_s.isActive()) {
-            _s.setValue(value);
-            sierpinski[_i+2] = 0;
             if(_s.isNew()) {
                 ofxOscMessage msg;
                 msg.setAddress(_s.address);
                 cout << _s.address << endl;
                 msg.addIntArg((int)value);
+                msg.addFloatArg(_s.getAverage());
                 sender.sendMessage(msg);
                 _s.updateLast();
             }
+            if (_s.getLast()) {
+                sierpinski[_i] = 255;
+                sierpinski[_i+1] = 255;
+                sierpinski[_i+2] = 0;
+            }
         }
     } else {
-        bool value;
         if (_s.getAverage()<=threshold) {
             sierpinski[_i] = 0;
             sierpinski[_i+1] = 0;
             sierpinski[_i+2] = 0;
-            value = false;
         } else {
+            sierpinski[_i] = (int) _s.getAverage();
+            sierpinski[_i+1] = (int) _s.getAverage();
+            sierpinski[_i+2] = (int) _s.getAverage();
+        }
+        if ((_s.isActive())&&(_s.getLast())) {
             sierpinski[_i] = 255;
             sierpinski[_i+1] = 255;
-            sierpinski[_i+2] = 255;
-            value = true;
-        }
-        if (_s.isActive()) {
             sierpinski[_i+2] = 0;
         }
     }
