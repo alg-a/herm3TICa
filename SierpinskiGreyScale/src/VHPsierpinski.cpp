@@ -267,7 +267,7 @@ void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
 
 //----------------------------------------------------------------
 void VHPsierpinski::draw() {
-    textureSierpinski.draw(0, 0, sizeSierpinski_0, sizeSierpinski_0);
+    textureSierpinski.draw(0, 0, sizeSierpinski_0*1.5, sizeSierpinski_0*1.5);
 }
 
 //----------------------------------------------------------------

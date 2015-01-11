@@ -1,0 +1,37 @@
+#N canvas 398 205 1037 686 10;
+#X declare -lib mrpeach;
+#X obj 37 134 import mrpeach;
+#X obj 35 225 packOSC;
+#X obj 17 269 udpsend;
+#X msg 28 180 disconnect;
+#X obj 17 290 tgl 15 0 empty empty connected 20 7 0 8 -24198 -241291
+-1 1 1;
+#X obj 35 202 r msgOSC;
+#X obj -2 69 loadbang;
+#X obj -2 113 s loadbang1;
+#X obj -2 91 t b b b;
+#X obj 35 247 spigot;
+#X obj 283 229 s msgOSC;
+#X obj 283 184 pack f;
+#X obj 286 139 hsl 128 15 0 255 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 283 160 5 0 0 0 - - -;
+#X msg 17 158 connect localhost 9000;
+#X obj 110 249 print;
+#X msg 283 206 /contrast \$1;
+#X connect 1 0 9 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 9 1;
+#X connect 5 0 1 0;
+#X connect 5 0 15 0;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;
+#X connect 8 1 14 0;
+#X connect 8 2 0 0;
+#X connect 9 0 2 0;
+#X connect 11 0 16 0;
+#X connect 12 0 13 0;
+#X connect 13 0 11 0;
+#X connect 14 0 2 0;
+#X connect 16 0 10 0;

@@ -95,8 +95,9 @@ void VHPtriggerArea::update(int _w, int _h, int _t, unsigned char * _p) {
 
 void VHPtriggerArea::draw() {
     ofPushStyle();
-    ofFill();
-    //ofNoFill();
+    //ofFill();
+    ofNoFill();
+    ofSetLineWidth(1.8);
     //ofSetColor(ofColor(data.getAverage(), data.getAverage(), data.getAverage()));
     if (data.getValue()) {
         ofSetColor(ofColor(255, 255, 255));

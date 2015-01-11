@@ -1,4 +1,4 @@
-#N canvas 399 261 1144 727 10;
+#N canvas 18 22 596 737 10;
 #X declare -lib mrpeach;
 #X obj -3 35 import mrpeach;
 #X obj -5 126 packOSC;
@@ -15,7 +15,7 @@
 #X msg 185 66 /threshold \$1;
 #X obj 185 44 pack f;
 #X obj 188 -21 hsl 128 15 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 6200 0;
+-1 -1 1300 0;
 #X floatatom 185 0 5 0 0 0 - - -;
 #X msg -23 59 connect localhost 9000;
 #X obj 186 209 s msgOSC;
@@ -40,19 +40,19 @@
 #X obj 235 468 pack f f;
 #X floatatom 235 448 5 0 0 0 - - -;
 #X floatatom 280 449 5 0 0 0 - - -;
-#X obj -13 269 grid grid1 300 0 100 150 0 100 1 0.2 0.2 10 10 164 285
+#X obj -13 269 grid grid1 300 0 100 150 0 100 1 0.2 0.2 10 10 164 275
 ;
 #X obj 280 426 expr 100 - $f1;
 #X obj 415 384 s msgOSC;
 #X obj 415 339 pack f;
-#X obj 418 296 hsl 128 15 0 100 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 4900 0;
+#X obj 418 296 hsl 128 15 1 100 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 1400 0;
 #X floatatom 415 317 5 0 0 0 - - -;
 #X msg 415 361 /width \$1;
 #X obj 555 384 s msgOSC;
 #X obj 555 339 pack f;
-#X obj 558 296 hsl 128 15 0 100 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 3300 0;
+#X obj 558 296 hsl 128 15 1 100 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 1300 0;
 #X floatatom 555 317 5 0 0 0 - - -;
 #X msg 555 361 /height \$1;
 #X connect 1 0 9 0;

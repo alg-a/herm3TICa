@@ -19,7 +19,7 @@ void ofApp::setup(){
         }
 	}
     
-	vidGrabber.setDeviceID(0);
+	vidGrabber.setDeviceID(1);
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);
 	
@@ -107,8 +107,8 @@ void ofApp::draw(){
 	//videoTexture.draw(0, 0, camWidth/2, camHeight/2);
     sierpinski.draw();
     ofSetHexColor(0xffffff);
-	font.drawString(ofToString(sierpinski.threshold), 739, 10);
-	font.drawString(ofToString(ofGetFrameRate()), 739, 24);
+	font.drawString(ofToString(sierpinski.threshold), 739*1.5, 10);
+	font.drawString(ofToString(ofGetFrameRate()), 739*1.5, 24);
 }
 
 //--------------------------------------------------------------
