@@ -238,10 +238,19 @@ void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
                 cout << _s.address << endl;
                 msg.addIntArg((int)value);
                 msg.addFloatArg(_s.getAverage());
+                msg.addIntArg((int)_s.on);
                 sender.sendMessage(msg);
                 _s.updateLast();
             }
-            if (_s.getLast()) {
+            if (_s.type == "average") {
+                sierpinski[_i] = 0;
+                sierpinski[_i+1] = _s.average;
+                sierpinski[_i+2] = _s.average;;
+            } else if ((_s.type == "toggle")&&(_s.on)) {
+                sierpinski[_i] = 255;
+                sierpinski[_i+1] = 255;
+                sierpinski[_i+2] = 0;
+            } else if ((_s.type != "toggle")&&(_s.getLast())) {
                 sierpinski[_i] = 255;
                 sierpinski[_i+1] = 255;
                 sierpinski[_i+2] = 0;
@@ -257,7 +266,15 @@ void VHPsierpinski::updateSierpinski(VHPdata & _s, int _t, int _i) {
             sierpinski[_i+1] = (int) _s.getAverage();
             sierpinski[_i+2] = (int) _s.getAverage();
         }
-        if ((_s.isActive())&&(_s.getLast())) {
+        if (_s.type == "average") {
+            sierpinski[_i] = 0;
+            sierpinski[_i+1] = _s.average;
+            sierpinski[_i+2] = _s.average;;
+        } else if ((_s.type == "toggle")&&(_s.on)) {
+            sierpinski[_i] = 255;
+            sierpinski[_i+1] = 255;
+            sierpinski[_i+2] = 0;
+        } else if ((_s.type != "toggle")&&(_s.getLast())) {
             sierpinski[_i] = 255;
             sierpinski[_i+1] = 255;
             sierpinski[_i+2] = 0;

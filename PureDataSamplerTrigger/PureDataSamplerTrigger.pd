@@ -1,4 +1,4 @@
-#N canvas 535 162 958 824 10;
+#N canvas 249 118 577 589 10;
 #X msg 16 -244 read lista.txt;
 #X obj 16 -222 read-list;
 #X obj 16 -266 loadbang;
@@ -11,7 +11,7 @@
 -1 -1;
 #X text 222 107 stop;
 #X obj 134 129 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 4900 0;
+-1 -1 2540 0;
 #X text -155 141 file location from read-list;
 #X obj -65 169 r read-list_0;
 #X obj 132 163 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -30,7 +30,7 @@
 -1 -1;
 #X text 223 215 stop;
 #X obj 135 237 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 9800 0;
+-1 -1 2540 0;
 #X obj -38 226 r read-list_2;
 #X obj 132 271 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;

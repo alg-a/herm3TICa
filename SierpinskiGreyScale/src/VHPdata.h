@@ -11,13 +11,15 @@ class VHPdata {
         VHPdata();
     
         // variables
-        bool active;
-        string address;
-        int addition;
-        float average;
-        int lastAverage;
-        bool value;
-        bool last;
+        bool        active;
+        string      address;
+        string      type;
+        int         addition;
+        float       average;
+        int         lastAverage;
+        bool        on;
+        bool        value;
+        bool        last;
     
         // methods
         void setActive(bool _a);
@@ -27,11 +29,17 @@ class VHPdata {
         void add(int _a);
         int getAddition();
     
+        void setOn(bool _o);
+        bool getOn();
+    
         void setValue(bool _v);
         bool getValue();
     
         void setAddress(string _a);
         string getAddress();
+    
+        void setType(int _t);
+        string getType();
     
         void setAverage(int _t);
         float getAverage();

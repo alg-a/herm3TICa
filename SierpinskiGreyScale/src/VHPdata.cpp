@@ -4,7 +4,9 @@
 
 //----------------------------------------------------------------
 VHPdata::VHPdata() {
+    type = "toggle"; // trigger average
     active = false;
+    on = false;
     addition = 0;
     average = 0.0;
     value = 0;
@@ -40,6 +42,16 @@ int VHPdata::getAddition() {
 
 //----------------------------------------------------------------
 
+void VHPdata::setOn(bool _o) {
+    on = _o;
+}
+
+bool VHPdata::getOn() {
+    return on;
+}
+
+//----------------------------------------------------------------
+
 void VHPdata::setValue(bool _v) {
     value = _v;
 }
@@ -56,6 +68,22 @@ void VHPdata::setAddress(string _a) {
 
 string VHPdata::getAddress() {
     return address;
+}
+
+//----------------------------------------------------------------
+
+void VHPdata::setType(int _t) {
+    if (_t == 0) {
+        type = "trigger";
+    } else if (_t == 1) {
+        type = "toggle";
+    }  else if (_t == 2) {
+        type = "average";
+    }
+}
+
+string VHPdata::getType() {
+    return type;
 }
 
 //----------------------------------------------------------------
@@ -94,8 +122,21 @@ int VHPdata::getLastAverage() {
 }
 
 bool VHPdata::isNew(){
-    //cout << " last: " << last << " value: " << value << endl;
-    if ((last != value)||(lastAverage != (int)average)) {
+    // cout << " last: " << last << " value: " << value << " on: " << on << endl;
+    if ((type == "trigger")&&(last != value)) {
+        return true;
+    } else if ((type == "toggle")&&(last != value)) {
+        if ((!value)&&(on)) {
+            on = false;
+            return true;
+        } if ((!value)&&(!on)) {
+            on = true;
+            return true;
+        } else {
+            updateLast();
+            return false;
+        }
+    } else if ((type == "average")&&(lastAverage != (int)average)) {
         return true;
     } else {
         return false;
