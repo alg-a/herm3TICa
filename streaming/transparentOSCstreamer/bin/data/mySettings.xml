@@ -1,0 +1,5 @@
+<HOST>192.168.1.21</HOST>
+<RPORT>8000</RPORT>
+<SPORT>9000</SPORT>
+<USER>horacio</USER>
+<UPDATEURL>http://test.escoitar.org/exec/get_data.php</UPDATEURL>

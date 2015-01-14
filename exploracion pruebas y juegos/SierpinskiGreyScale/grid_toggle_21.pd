@@ -1,0 +1,28 @@
+#N canvas 623 468 500 484 10;
+#X obj 100 79 spigot;
+#X msg 191 187 0;
+#X msg 171 212 0;
+#X msg 152 259 1;
+#X obj 127 139 route 0 1;
+#X obj 100 100 tgl 12 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 100 117 t f f;
+#X obj 100 295 outlet;
+#X obj 152 162 t b b b;
+#X obj 100 36 r grid_21_all;
+#X obj 133 56 r grid_21_all_spigot;
+#X obj 171 233 s grid_21_all;
+#X connect 0 0 5 0;
+#X connect 1 0 0 1;
+#X connect 2 0 11 0;
+#X connect 3 0 0 1;
+#X connect 4 1 8 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 1 4 0;
+#X connect 8 0 3 0;
+#X connect 8 1 2 0;
+#X connect 8 2 1 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 1;
+#X coords 0 -1 1 1 12 12 2 100 100;
