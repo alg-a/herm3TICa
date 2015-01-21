@@ -43,7 +43,7 @@
 		if ((count($data)==count($fields_data))&&(count($data_user)==count($fields_user))) {
 		
 			// encontrar el usuario o crearlo si no existe
-			$user = db_select_one($db_tables['user'], $fields_user, $data_user['name']);
+			$user = db_select_one($db_tables['user'], $fields_user[0], $data_user['user_name']);
 			if (!$user['error']) {
 				// el usuario existe
 				$user_id = $user['data']['id'];
