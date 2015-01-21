@@ -28,7 +28,7 @@
 //	7				subprocess error
 //	8				wrong data type for variable
 //	9				error_copping_files
-//	10				data_mising						POST/GET vars missing.
+//	10				data_missing					POST/GET vars missing.
 //	11				author_exists
 //	12				error_creating_folders
 //	13				error_creating_icon
