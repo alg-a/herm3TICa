@@ -28,6 +28,8 @@ class ofApp : public ofBaseApp{
         void getResponse();
         void addStreamer(ofxJSONElement& _s);
     
+        void newResponse(ofxHttpResponse & response);
+    
         // Variables
         ofxXmlSettings XML;
         vector<string> host;
@@ -35,11 +37,13 @@ class ofApp : public ofBaseApp{
         vector<ofxOscSender> sender;
         ofxOscReceiver receiver;
         int timer;
-        bool loadded;
-        string user_name;
-        string update_URL;
-        ofxHttpUtils updateData;
+        bool loaded;
     
         ofxJSONElement  response;
+        ofxHttpUtils updateData;
+        string auth_key;
+        string user_name;
+        string getdata_URL;
+        string update_URL;
 		
 };
