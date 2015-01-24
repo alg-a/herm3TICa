@@ -84,8 +84,10 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     
     // recording variables
     recordingNum = 0;
+    playingNum = 0;
     newRecording = "";
     recording = false;
+    playing = false;
 }
 
 void VHPcam::settings(int _stela, int _mixture, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3){
@@ -218,21 +220,29 @@ void VHPcam::save(int _s) {
             greyRecorder.close();
             recording = false;
         }
-        /*
-        if(vidRecorder->isRecording()){
-            vidRecorder->stopRecording();
-        }
-         */
     } else if (_s == 1){
         if(!recording) {
             camRecorder.setup("saved/clip_"+ ofToString(recordingNum) +".mov", camWidth, camHeight, 15);
             greyRecorder.setup("saved/clip_grey_"+ ofToString(recordingNum) +".mov", camWidth/2, camHeight/2, 15);
             recording = true;
-            //vidRecorder->startRecording("saved/clip_"+ ofToString(recordingNum) +".mov");
             recordingNum++;
         }
     }
 }
+
+void VHPcam::play(int _p, int _n) {
+    if (_p == 0) {
+        if(playing) {
+            player.stop();
+            playing = false;
+        }
+    } else if (_p == 1){
+        if(!playing) {
+            playing = load(_n);
+        }
+    }
+}
+
 
 string VHPcam::getNewRecording() {
     return newRecording;
@@ -242,9 +252,10 @@ void VHPcam::emptyNewRecording() {
     newRecording = "";
 }
 
-void VHPcam::load(int _n){
-	player.loadMovie("saved/clip_0.mov");
-    player.play();
+bool VHPcam::load(int _n){
+	bool exists = player.loadMovie("saved/clip_"+ofToString(_n)+".mov");
+    if (exists) player.play();
+    return exists;
 }
 
 //----------------------------------------------------------------

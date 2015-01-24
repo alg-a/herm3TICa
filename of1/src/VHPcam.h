@@ -28,8 +28,10 @@ class VHPcam {
         ofxVideoRecorder        camRecorder;
         ofxVideoRecorder        greyRecorder;
         int                     recordingNum;
+        int                     playingNum;
         string                  newRecording;
         bool                    recording;
+        bool                    playing;
     
         // video
         ofTexture               videoTexture;
@@ -69,7 +71,8 @@ class VHPcam {
         void update();
         void draw();
         void setContrast(int _n, float _e, float _f);
-        void load(int _n);
+        bool load(int _n);
+        void play(int _p, int _n);
     
         void save(int _s);
         string getNewRecording();

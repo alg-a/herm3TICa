@@ -37,6 +37,8 @@ void VHPosc::update(VHPcam & _cam) {
             } else {
                 _cam.show = true;
             }
+        } else if (m.getAddress() == "/play") {
+            _cam.play(m.getArgAsInt32(0), m.getArgAsInt32(1));
         }
     }
     string newRecording = _cam.getNewRecording();

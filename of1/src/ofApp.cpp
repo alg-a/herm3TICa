@@ -45,8 +45,6 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     if (key == 'f'){
 		ofToggleFullscreen();
-	} else if (key == 'x'){
-		cam.load(0);
 	}
 }
 
