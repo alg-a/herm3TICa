@@ -43,6 +43,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     
     // control variables
     show = false;
+    showPlayer = false;
     
     // init grabber
     vidGrabber.initGrabber(camWidth,camHeight);
@@ -86,6 +87,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     recordingNum = 0;
     playingNum = 0;
     newRecording = "";
+    fileBeingRecorded = "";
     recording = false;
     playing = false;
 }
@@ -193,7 +195,7 @@ void VHPcam::update() {
 void VHPcam::draw() {
     camFbo.draw(0,0);
     if (show) greyFbo.draw(camWidth*3/4, camHeight*3/4, camWidth/4, camHeight/4);
-    if (player.isPlaying()) {
+    if ((player.isPlaying())&&(showPlayer)) {
         player.draw(camWidth*2/4, camHeight*3/4, camWidth/4, camHeight/4);
     }
     
@@ -218,12 +220,14 @@ void VHPcam::save(int _s) {
         if(recording) {
             camRecorder.close();
             greyRecorder.close();
+            newRecording = fileBeingRecorded;
             recording = false;
         }
     } else if (_s == 1){
         if(!recording) {
             camRecorder.setup("saved/clip_"+ ofToString(recordingNum) +".mov", camWidth, camHeight, 15);
             greyRecorder.setup("saved/clip_grey_"+ ofToString(recordingNum) +".mov", camWidth/2, camHeight/2, 15);
+            fileBeingRecorded = "saved/clip_"+ ofToString(recordingNum) +".mov";
             recording = true;
             recordingNum++;
         }

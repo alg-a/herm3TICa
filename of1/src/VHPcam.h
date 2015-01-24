@@ -30,6 +30,7 @@ class VHPcam {
         int                     recordingNum;
         int                     playingNum;
         string                  newRecording;
+        string                  fileBeingRecorded;
         bool                    recording;
         bool                    playing;
     
@@ -48,6 +49,7 @@ class VHPcam {
         ofPixels                greyPix;
     
         bool                    show;
+        bool                    showPlayer;
         int                     camWidth;
         int                     camHeight;
         int                     totalPixels;

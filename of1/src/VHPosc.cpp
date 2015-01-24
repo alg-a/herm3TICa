@@ -39,14 +39,21 @@ void VHPosc::update(VHPcam & _cam) {
             }
         } else if (m.getAddress() == "/play") {
             _cam.play(m.getArgAsInt32(0), m.getArgAsInt32(1));
+        } else if (m.getAddress() == "/showplayer") {
+            if (m.getArgAsInt32(0)==0) {
+                _cam.showPlayer = false;
+            } else {
+                _cam.showPlayer = true;
+            }
         }
     }
     string newRecording = _cam.getNewRecording();
     if (newRecording!="") {
-        vector<string> result = ofSplitString(newRecording, "/");
+        //vector<string> result = ofSplitString(newRecording, "/");
         ofxOscMessage msg;
         msg.setAddress("/saved");
-        msg.addStringArg(result[result.size()-3]+"/"+result[result.size()-2]+"/"+result[result.size()-1]);
+        msg.addStringArg(newRecording);
+        //msg.addStringArg(result[result.size()-3]+"/"+result[result.size()-2]+"/"+result[result.size()-1]);
         cout << " sending: " << msg.getArgAsString(0) << " to address: " << msg.getAddress() << endl;
         sender.sendMessage(msg);
         _cam.emptyNewRecording();
