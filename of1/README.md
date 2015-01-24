@@ -21,7 +21,7 @@ horaciogd at vhplab dot net
 
 ### How to
 
-	1. Create an openframeworks project adding ofxOsc + ofxXmlSettings.
+	1. Create an openframeworks project adding the following addons ofxOsc + ofxXmlSettings.
 	2. Copy and remplace main.cpp, ofApp.cpp and ofApp.h from the repository to the src folder of your project.
 	3. Add the remaining files (ofxVideoRecorder.cpp, ofxVideoRecorder.h, VHPcam.cpp, VHPcam.h, VHPcontrast.cpp, VHPcontrast.h, VHPosc.cpp, VHPosc.h) to your project.
 	4. Copy the data folder from the repository to the bin folder of your project.

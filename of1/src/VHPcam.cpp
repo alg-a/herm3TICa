@@ -234,16 +234,6 @@ void VHPcam::save(int _s) {
     }
 }
 
-void VHPcam::isSaved(ofVideoSavedEventArgs& _e){
-	// the ofQTKitGrabber sends a message with the file name and any errors when the video is done recording
-	if(_e.error.empty()){
-	    cout << _e.videoPath << endl;
-        newRecording = _e.videoPath;
-	} else {
-		ofLogError("videoSavedEvent") << "Video save error: " << _e.error;
-	}
-}
-
 string VHPcam::getNewRecording() {
     return newRecording;
 }

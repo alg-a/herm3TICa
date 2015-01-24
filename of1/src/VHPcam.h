@@ -72,7 +72,6 @@ class VHPcam {
         void load(int _n);
     
         void save(int _s);
-        void isSaved(ofVideoSavedEventArgs& _e);
         string getNewRecording();
         void emptyNewRecording();
         
