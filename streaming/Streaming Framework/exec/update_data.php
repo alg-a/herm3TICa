@@ -8,7 +8,6 @@
 	
 	$data_user = array();
 	$data = array();
-	$project_id = null;
 	$fields_user = array('user_name');
 	$fields_data = array('data_name','data_type','data');
 	$data_text = '';
