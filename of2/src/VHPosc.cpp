@@ -48,6 +48,12 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.maskColor.set(m.getArgAsInt32(0), m.getArgAsInt32(1), m.getArgAsInt32(2));
         } else if (m.getAddress() == "/maskMode") {
             _cam.vidBackground = m.getArgAsInt32(0);
+        } else if (m.getAddress() == "/grid") {
+            if (m.getArgAsInt32(0)==0) {
+                _cam.sendGrid = false;
+            } else {
+                _cam.sendGrid = true;
+            }
         }
     }
     string newRecording = _cam.getNewRecording();
@@ -57,9 +63,20 @@ void VHPosc::update(VHPcam & _cam) {
         msg.setAddress("/saved");
         msg.addStringArg(newRecording);
         //msg.addStringArg(result[result.size()-3]+"/"+result[result.size()-2]+"/"+result[result.size()-1]);
-        cout << " sending: " << msg.getArgAsString(0) << " to address: " << msg.getAddress() << endl;
+        //cout << " sending: " << msg.getArgAsString(0) << " to address: " << msg.getAddress() << endl;
         sender.sendMessage(msg);
         _cam.emptyNewRecording();
+    }
+    if (_cam.sendGrid) {
+        ofVec2f v = _cam.grid.getVector();
+        if ((v.x>0.0)|(v.y>0.0)) {
+            ofxOscMessage msg;
+            msg.setAddress("/grid/vector");
+            msg.addFloatArg(v.x);
+            msg.addFloatArg(v.y);
+            //cout << " sending: " << msg.getArgAsFloat(0) << " " << msg.getArgAsFloat(1) << " to address: " << msg.getAddress() << endl;
+            sender.sendMessage(msg);
+        }
     }
 }
 

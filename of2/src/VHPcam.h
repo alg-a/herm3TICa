@@ -5,6 +5,7 @@
 #include "VHPcontrast.h"
 #include "ofxVideoRecorder.h"
 #include "ofxOpenCv.h"
+#include "VHPgrid.h"
 
 //--------------------------------------------------------
 class VHPcam {
@@ -57,6 +58,9 @@ class VHPcam {
         ofPixels                maskPix;
         ofFbo                   contrastFbo;
         ofPixels                contrastPix;
+        ofFbo                   gridFbo;
+        ofPixels                gridPix;
+    
         // sierpinskiFbo
         ofFbo                   Fbo[6];
         ofPixels                Pix[6];
@@ -99,6 +103,8 @@ class VHPcam {
         float blur;
         float min;
         float max;
+        VHPgrid grid;
+        bool sendGrid;
     
         // display
         int mode;

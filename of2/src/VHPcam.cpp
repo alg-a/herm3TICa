@@ -91,6 +91,8 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n) {
         Texture[i].allocate(w[i], h[i], GL_RGB);
         Texture[i].setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
     }
+    gridFbo.allocate(w[4], h[4], GL_RGB, 0);
+    sendGrid = false;
     
     //shaders
     #ifdef TARGET_OPENGLES
@@ -145,6 +147,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n) {
     blur = 0.0;
     min = 0.0;
     max = 1.0;
+    grid.init(18, 9, 81, 81);
     
     mode = 0;
     vidBackground = 0;
@@ -280,6 +283,11 @@ void VHPcam::update() {
             Fbo[i].readToPixels(Pix[i]);
             Texture[i].loadData(Pix[i].getPixels(), w[i], h[i], GL_RGB);
         }
+        gridFbo.begin();
+        adjTexture.draw(0, 0, w[4]-2, h[4]);
+        gridFbo.end();
+        gridFbo.readToPixels(gridPix);
+        grid.update(gridPix.getPixels(), 2);
     }
 }
 
@@ -317,6 +325,11 @@ void VHPcam::draw() {
         ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
         ofDrawBitmapString("stela: " + ofToString(percent[0]/1000.0), camWidth*2 - 160, camHeight*2 - 24);
         ofPopStyle();
+        if (sendGrid) {
+            ofVec2f v = grid.getVector();
+            ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 360, camHeight*2 - 38);
+            grid.draw();
+        }
     } else {
         // sierpinsky
         /*
@@ -338,6 +351,11 @@ void VHPcam::draw() {
             Texture[5-i].draw(0, 0, w[5-i]*n, h[5-i]*n);
             sierpinskiShader.end();
             n /= 3;
+        }
+        if (sendGrid) {
+            ofVec2f v = grid.getVector();
+            ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 360, camHeight*2 - 10);
+            grid.draw();
         }
     }
     if(recording){

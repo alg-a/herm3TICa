@@ -1,4 +1,4 @@
-#N canvas 810 77 818 750 10;
+#N canvas 883 142 818 750 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of2_msgOSC;
@@ -102,10 +102,10 @@
 #N canvas 201 416 430 156 rgb_mascara 0;
 #X obj 0 96 s of2_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 14700 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 15500 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -154,44 +154,52 @@
 #X coords 0 -1 1 1 24 24 2 0 0;
 #X restore 68 481 pd salvar;
 #X text 98 484 Gravar;
-#N canvas 953 249 373 442 reciveOSC 0;
+#N canvas 943 295 598 513 reciveOSC 0;
 #X obj -826 78 symbol;
 #X obj -826 32 unpackOSC;
 #X obj -826 9 udpreceive 8000;
-#X obj -826 54 routeOSC /saved /of2_settings;
-#X obj -724 125 s of2_show;
-#X obj -741 102 s of2_stela;
-#X obj -707 151 s of2_e0;
-#X obj -690 173 s of2_f0;
-#X obj -673 197 s of2_e1;
-#X obj -656 221 s of2_f1;
-#X obj -639 242 s of2_e2;
-#X obj -622 266 s of2_f2;
-#X obj -605 287 s of2_e3;
-#X obj -588 311 s of2_f3;
-#X obj -741 80 unpack f f f f f f f f f f;
-#X obj -567 122 delay 1;
-#X msg -567 146 1;
-#X obj -567 166 s loadbang_1;
+#X obj -740 125 s of2_show;
+#X obj -757 102 s of2_stela;
+#X obj -723 151 s of2_e0;
+#X obj -706 173 s of2_f0;
+#X obj -689 197 s of2_e1;
+#X obj -672 221 s of2_f1;
+#X obj -655 242 s of2_e2;
+#X obj -638 266 s of2_f2;
+#X obj -621 287 s of2_e3;
+#X obj -604 311 s of2_f3;
+#X obj -757 80 unpack f f f f f f f f f f;
+#X obj -583 122 delay 1;
+#X msg -583 146 1;
+#X obj -583 166 s loadbang_1;
 #X obj -826 100 outlet;
-#X connect 0 0 18 0;
-#X connect 1 0 3 0;
+#X obj -826 54 routeOSC /saved /of2_settings /grid;
+#X obj -487 112 routeOSC /vector;
+#X obj -487 137 unpack f f;
+#X obj -487 168 s of2_vector_x;
+#X obj -430 197 s of2_vector_y;
+#X connect 0 0 17 0;
+#X connect 1 0 18 0;
 #X connect 2 0 1 0;
-#X connect 3 0 0 0;
-#X connect 3 1 14 0;
-#X connect 14 0 5 0;
-#X connect 14 1 4 0;
-#X connect 14 2 6 0;
-#X connect 14 3 7 0;
-#X connect 14 4 8 0;
-#X connect 14 5 9 0;
-#X connect 14 6 10 0;
-#X connect 14 7 11 0;
-#X connect 14 8 12 0;
-#X connect 14 9 13 0;
-#X connect 14 9 15 0;
+#X connect 13 0 4 0;
+#X connect 13 1 3 0;
+#X connect 13 2 5 0;
+#X connect 13 3 6 0;
+#X connect 13 4 7 0;
+#X connect 13 5 8 0;
+#X connect 13 6 9 0;
+#X connect 13 7 10 0;
+#X connect 13 8 11 0;
+#X connect 13 9 12 0;
+#X connect 13 9 14 0;
+#X connect 14 0 15 0;
 #X connect 15 0 16 0;
-#X connect 16 0 17 0;
+#X connect 18 0 0 0;
+#X connect 18 1 13 0;
+#X connect 18 2 19 0;
+#X connect 19 0 20 0;
+#X connect 20 0 21 0;
+#X connect 20 1 22 0;
 #X restore -123 8 pd reciveOSC;
 #X symbolatom -123 29 40 0 0 0 - - -;
 #N canvas 657 427 211 308 enviaOSC 0;
@@ -207,7 +215,7 @@
 #X obj 18 -53 spigot;
 #X msg 0 -182 connect localhost 9000;
 #X obj 69 -114 print;
-#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 0 1
+#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 1 1
 ;
 #X obj 18 -74 spigot;
 #X obj 87 -20 r loadbang_1;
@@ -268,7 +276,7 @@
 #N canvas 320 350 450 300 blur 0;
 #X obj 0 150 s of2_msgOSC;
 #X obj 3 0 hsl 200 24 1 10 1 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 1800 1;
 #X floatatom 0 81 5 0 0 0 - - -;
 #X obj 0 105 pack f;
 #X obj 0 -20 r of2_blur;
@@ -283,10 +291,10 @@
 #N canvas 320 350 450 300 recorte 0;
 #X obj 0 220 s of2_msgOSC;
 #X obj 3 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 0;
+-1 -1 6600 0;
 #X obj 0 -20 r of2_stela;
 #X obj 3 28 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 19900 0;
+-1 -1 6600 0;
 #X obj 0 175 pack f f;
 #X obj 18 146 t b f;
 #X msg 0 197 /recorte \$1 \$2;
@@ -318,10 +326,10 @@
 #X coords 0 -1 1 1 205 52 2 0 0;
 #X restore -322 177 pd recorte;
 #X text -210 649 Interface;
-#N canvas 373 556 450 300 mode 1;
+#N canvas 373 556 450 300 mode 0;
 #X obj 0 83 s of2_msgOSC;
 #X obj 0 0 hradio 24 1 0 3 empty empty empty 0 -8 0 10 -262144 -1 -1
-0;
+2;
 #X obj 0 38 pack f;
 #X msg 0 60 /mode \$1;
 #X obj 0 -24 r c_of2_mode;
@@ -331,19 +339,6 @@
 #X connect 4 0 1 0;
 #X coords 0 -1 1 1 72 24 2 0 0;
 #X restore -289 645 pd mode;
-#X text -257 683 inverted;
-#N canvas 1194 520 450 300 inverted 0;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
-#X obj 0 76 s of2_msgOSC;
-#X obj 0 31 pack f;
-#X obj 0 -21 r c_of2_inverted;
-#X msg 0 53 /inverted \$1;
-#X connect 0 0 2 0;
-#X connect 2 0 4 0;
-#X connect 3 0 0 0;
-#X connect 4 0 1 0;
-#X coords 0 -1 1 1 24 24 2 0 0;
-#X restore -289 678 pd inverted;
 #N canvas 280 459 331 199 color 0;
 #X obj 1 140 s of2_msgOSC;
 #X obj 3 27 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
@@ -387,5 +382,18 @@
 #X connect 4 0 1 0;
 #X coords 0 -1 1 1 72 24 2 0 0;
 #X restore 138 199 pd maskMode;
+#N canvas 1194 520 450 300 grid 0;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
+#X obj 0 76 s of2_msgOSC;
+#X obj 0 31 pack f;
+#X msg 0 53 /grid \$1;
+#X obj 0 -21 r of2_grid;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X coords 0 -1 1 1 24 24 2 0 0;
+#X restore -289 678 pd grid;
+#X text -257 682 grid;
 #X connect 11 0 12 0;
 #X connect 19 0 18 0;
