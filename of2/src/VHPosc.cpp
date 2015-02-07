@@ -42,18 +42,19 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.max = m.getArgAsFloat(1);
         } else if (m.getAddress() == "/mode") {
             _cam.mode = m.getArgAsInt32(0);
-        } else if (m.getAddress() == "/inverted") {
-            
+        } else if (m.getAddress() == "/threshold") {
+            _cam.sierpinski.setThreshold(m.getArgAsInt32(0));
         } else if (m.getAddress() == "/color") {
             _cam.maskColor.set(m.getArgAsInt32(0), m.getArgAsInt32(1), m.getArgAsInt32(2));
         } else if (m.getAddress() == "/maskMode") {
             _cam.vidBackground = m.getArgAsInt32(0);
         } else if (m.getAddress() == "/grid") {
-            if (m.getArgAsInt32(0)==0) {
-                _cam.sendGrid = false;
-            } else {
-                _cam.sendGrid = true;
-            }
+            (m.getArgAsInt32(0)==0) ? _cam.sendGrid = false : _cam.sendGrid = true;
+        } else if (m.getAddress() == "/sierpinski") {
+            _cam.sierpinski.setActive(m.getArgAsInt32(0), m.getArgAsInt32(1), m.getArgAsInt32(2), m.getArgAsInt32(3));
+        } else if (m.getAddress() == "/sierpinskiAlpha") {
+            (m.getArgAsInt32(0)==0) ? _cam.doAlpha = 0 : _cam.doAlpha = 1;
+            _cam.sierpinskiMixture = m.getArgAsFloat(1);
         }
     }
     string newRecording = _cam.getNewRecording();
@@ -98,6 +99,7 @@ void VHPosc::sendSettings(int _stela, int _show, int _e0, int _f0, int _e1, int 
     cout << " sending: " << msg.getArgAsInt32(0) << ", " << msg.getArgAsInt32(1) << ", " << msg.getArgAsInt32(2) << ", " << msg.getArgAsInt32(3) << ", " << msg.getArgAsInt32(4) << ", " << msg.getArgAsInt32(5) << ", " << msg.getArgAsInt32(6) << ", " << msg.getArgAsInt32(7) << " to address: " << msg.getAddress() << endl;
     sender.sendMessage(msg);
 }
+
 
 
 //----------------------------------------------------------------

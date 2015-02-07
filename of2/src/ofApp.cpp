@@ -31,8 +31,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     ofBackground(0,0,0);
-    osc.update(cam);
-    cam.update();
+    osc.update(cam); // receive msg and set cam
+    cam.update(osc.sender); // update cam and send msg via osc
 }
 
 //--------------------------------------------------------------

@@ -2,10 +2,13 @@
 #define VHP_CAM
 
 #include "ofMain.h"
+#include "ofxOsc.h"
 #include "VHPcontrast.h"
 #include "ofxVideoRecorder.h"
 #include "ofxOpenCv.h"
 #include "VHPgrid.h"
+#include "VHPsierpinski.h"
+
 
 //--------------------------------------------------------
 class VHPcam {
@@ -67,7 +70,13 @@ class VHPcam {
         ofTexture               Texture[6];
         int                     w[6];
         int                     h[6];
-        
+        // sierpinskiDataFbo
+        ofFbo                   sierpinskiFbo[6];
+        ofPixels                sierpinskiPix[6];
+        ofTexture               sierpinskiTexture[6];
+        int                     doAlpha;
+        float                   sierpinskiMixture;
+    
         int                     camWidth;
         int                     camHeight;
         int                     totalPixels;
@@ -95,6 +104,7 @@ class VHPcam {
         ofShader                stelaShader;
         ofShader                contrastShader;
         ofShader                sierpinskiShader;
+        ofShader                alphaShader;
     
         ofFbo fboBlurOnePass;
         ofFbo fboBlurTwoPass;
@@ -105,16 +115,17 @@ class VHPcam {
         float max;
         VHPgrid grid;
         bool sendGrid;
+        VHPsierpinski sierpinski;
     
         // display
-        int mode;
+        int mode; // 0 interface, 1 sierpinski mago, 2 mascara + grid, 3 sierpinski advanced
         int vidBackground; // 0 color, 1 stela, 2 player
         ofColor maskColor;
     
         // methods
         void setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n);
         void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
-        void update();
+        void update(ofxOscSender & _sender);
         void draw();
         void setContrast(int _n, float _e, float _f);
         bool load(int _n);
