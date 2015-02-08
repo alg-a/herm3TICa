@@ -3,22 +3,45 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    // settings
+    if( settings.loadFile("mySettings.xml") ){
+        cout << "mySettings.xml loaded from documents folder!" << endl;
+    } else if( settings.loadFile("mySettings.xml") ){
+        cout << "mySettings.xml loaded from data folder!" << endl;
+    } else{
+        cout << "unable to load mySettings.xml check data/ folder" << endl;
+    }
+    
+    int n = settings.getNumTags("IMAGE");
+    for(int i = 0; i < n; i++){
+        loadImage(settings.getValue("IMAGE", "", i));
+    }
+    ntarot = 0;
+    showTarot = false;
+    
     camWidth 		= 1280;	// try to grab at this size.
 	camHeight 		= 720;
 	totalPixels     = camWidth*camHeight*3;
     
+    // width + height for sierpinski
     w[0] = 1460; // 1458 + 2 (*1)
     h[0] = 729;
+    th[0] = 1458.0*camHeight/camWidth;
 	w[1] = 488; // 486 + 2 (*3)
     h[1] = 243;
+    th[1] = 486.0*camHeight/camWidth;
 	w[2] = 164; // 162 + 2 (*9)
     h[2] = 81;
+    th[2] = 162.0*camHeight/camWidth;
     w[3] = 56; // 54 + 2 (*27)
     h[3] = 27;
+    th[3] = 54.0*camHeight/camWidth;
 	w[4] = 20; // 18 + 2 (*81)
     h[4] = 9;
+    th[4] = 18.0*camHeight/camWidth;
 	w[5] = 8; // 6 + 2 (*243)
     h[5] = 3;
+    th[5] = 6.0*camHeight/camWidth;
 
     //we can now get back a list of devices.
 	vector<ofVideoDevice> devices = vidGrabber.listDevices();
@@ -73,7 +96,11 @@ void ofApp::update(){
         for (int i=0; i<6; i++) {
             Fbo[i].begin();
             ofClear(0, 0, 0, 255);
-            videoTexture.draw(0, 0, w[i]-2, h[i]);
+            if (showTarot) {
+                tarot[ntarot].draw(0,0, w[i]-2, h[i]);
+            } else {
+                videoTexture.draw(0, 0, w[i]-2, th[i]);
+            }
             Fbo[i].end();
             Fbo[i].readToPixels(Pix[i]);
             Texture[i].loadData(Pix[i].getPixels(), w[i], h[i], GL_RGB);
@@ -104,9 +131,25 @@ void ofApp::draw(){
 	font.drawString(ofToString(ofGetFrameRate()), 10, camHeight +20);
 }
 
+//----------------------------------------------------------------
+
+void ofApp::loadImage(string _image) {
+	tarot.push_back(ofImage());
+    tarot[tarot.size()-1].loadImage(_image);
+    cout << _image << " width: " << tarot[tarot.size()-1].getWidth() << " height: " << tarot[tarot.size()-1].getHeight() << endl;
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == '0'){
+		showTarot = false;
+	} else if (key == '+'){
+        ntarot ++;
+        if (ntarot>=tarot.size()) {
+            ntarot = 0;
+        }
+        showTarot = true;
+    }
 }
 
 //--------------------------------------------------------------

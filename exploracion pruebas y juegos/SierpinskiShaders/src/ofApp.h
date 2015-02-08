@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp{
 
@@ -8,7 +9,8 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-
+    
+        void loadImage(string _image);
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -27,6 +29,10 @@ class ofApp : public ofBaseApp{
         int                 totalPixels;
         int                 w[6];
         int                 h[6];
+        float                     th[6];
+    
+        // settings
+        ofxXmlSettings settings;
     
         // info
         ofTrueTypeFont		font;
@@ -38,5 +44,10 @@ class ofApp : public ofBaseApp{
         ofFbo                   Fbo[6];
         ofPixels                Pix[6];
         ofTexture               Texture[6];
-        
+    
+        // images
+        vector<ofImage>         tarot;
+        int                     ntarot;
+        bool                     showTarot;
+    
 };
