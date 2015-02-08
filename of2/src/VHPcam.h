@@ -70,6 +70,8 @@ class VHPcam {
         ofTexture               Texture[6];
         int                     w[6];
         int                     h[6];
+        float                     th[6];
+    
         // sierpinskiDataFbo
         ofFbo                   sierpinskiFbo[6];
         ofPixels                sierpinskiPix[6];

@@ -75,16 +75,22 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n) {
     // width + height for sierpinski
     w[0] = 1460; // 1458 + 2 (*1)
     h[0] = 729;
+    th[0] = 1458.0*camHeight/camWidth;
 	w[1] = 488; // 486 + 2 (*3)
     h[1] = 243;
+    th[1] = 486.0*camHeight/camWidth;
 	w[2] = 164; // 162 + 2 (*9)
     h[2] = 81;
+    th[2] = 162.0*camHeight/camWidth;
     w[3] = 56; // 54 + 2 (*27)
     h[3] = 27;
+    th[3] = 54.0*camHeight/camWidth;
 	w[4] = 20; // 18 + 2 (*81)
     h[4] = 9;
+    th[4] = 18.0*camHeight/camWidth;
 	w[5] = 8; // 6 + 2 (*243)
     h[5] = 3;
+    th[5] = 6.0*camHeight/camWidth;
     
     // allocate the frame buffer object
     for (int i=0; i<6; i++) {
@@ -290,11 +296,12 @@ void VHPcam::update(ofxOscSender & _sender) {
         stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
         contrastShader.end();
         contrastFbo.end();
-        // sierpinski
+        
+        // Sierpinski
         for (int i=0; i<6; i++) {
             Fbo[i].begin();
             ofClear(0, 0, 0, 255);
-            contrastFbo.draw(0, 0, w[i]-2, h[i]);
+            contrastFbo.draw(0, 0, w[i]-2, th[i]);
             Fbo[i].end();
             Fbo[i].readToPixels(Pix[i]);
             Texture[i].loadData(Pix[i].getPixels(), w[i], h[i], GL_RGB);
@@ -306,14 +313,13 @@ void VHPcam::update(ofxOscSender & _sender) {
         gridFbo.end();
         gridFbo.readToPixels(gridPix);
         grid.update(gridPix.getPixels(), 2);
-        // SierpinskiData
         
-        // sierpinski
+        // SierpinskiData
         for (int i=0; i<6; i++) {
             sierpinskiFbo[i].begin();
             ofClear(0, 0, 0, 255);
             //contrastFbo.draw(0, 0, dw[i]-2, dh[i]);
-            videoTexture.draw(0, 0, w[i]-2, h[i]);
+            videoTexture.draw(0, 0, w[i]-2, th[i]);
             sierpinskiFbo[i].end();
             sierpinskiFbo[i].readToPixels(sierpinskiPix[i]);
             sierpinskiTexture[i].loadData(sierpinskiPix[i].getPixels(), w[i], h[i], GL_RGB);
