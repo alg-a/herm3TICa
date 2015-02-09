@@ -243,7 +243,7 @@ void VHPcam::emptyNewRecording() {
 //----------------------------------------------------------------
 
 bool VHPcam::load(int _n){
-	bool exists = player.loadMovie("saved/clip_"+ofToString(_n)+".mov");
+	bool exists = player.loadMovie("recorded/clip_"+ofToString(_n)+".mov");
     if (exists) player.play();
     return exists;
 }

@@ -1,4 +1,4 @@
-#N canvas 801 69 839 888 10;
+#N canvas 1684 4 839 888 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of2_msgOSC;
@@ -77,9 +77,9 @@
 #X restore -322 404 pd b;
 #N canvas 317 363 457 135 rgb 0;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 14800 0;
+-1 -1 0 0;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 15400 0;
+-1 -1 0 0;
 #X obj 0 54 s of2_e1;
 #X obj 0 74 s of2_e2;
 #X obj 0 95 s of2_e3;
@@ -102,10 +102,10 @@
 #N canvas 201 416 430 156 rgb_mascara 0;
 #X obj 0 96 s of2_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 15998 1;
+-1 -1 18398 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 14671 1;
+-1 -1 15171 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -220,7 +220,6 @@
 #X obj -19 -271 loadbang;
 #X obj -19 -249 t b b b;
 #X obj 18 -53 spigot;
-#X msg 0 -182 connect localhost 9000;
 #X obj 69 -114 print;
 #X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 1 1
 ;
@@ -229,22 +228,23 @@
 #X obj 40 -271 inlet;
 #X obj 79 -25 r of2_loadbang_1;
 #X obj -19 -227 s of2_loadbang1;
-#X connect 1 0 11 0;
+#X msg 0 -182 connect localhost 9001;
+#X connect 1 0 10 0;
 #X connect 2 0 4 0;
 #X connect 3 0 2 0;
 #X connect 4 0 7 1;
 #X connect 5 0 6 0;
-#X connect 6 0 15 0;
-#X connect 6 1 8 0;
+#X connect 6 0 14 0;
+#X connect 6 1 15 0;
 #X connect 6 2 0 0;
 #X connect 7 0 2 0;
-#X connect 8 0 2 0;
-#X connect 10 0 11 1;
-#X connect 11 0 7 0;
-#X connect 12 0 1 0;
-#X connect 12 0 9 0;
-#X connect 13 0 8 0;
-#X connect 14 0 10 0;
+#X connect 9 0 10 1;
+#X connect 10 0 7 0;
+#X connect 11 0 1 0;
+#X connect 11 0 8 0;
+#X connect 12 0 15 0;
+#X connect 13 0 9 0;
+#X connect 15 0 2 0;
 #X coords 0 -1 1 1 135 15 2 0 0;
 #X restore -323 30 pd enviaOSC;
 #N canvas 1221 371 450 300 mezcla 0;
@@ -338,7 +338,7 @@
 #N canvas 373 556 450 300 mode 0;
 #X obj 0 83 s of2_msgOSC;
 #X obj 0 0 hradio 24 1 0 4 empty empty empty 0 -8 0 10 -262144 -1 -1
-1;
+2;
 #X obj 0 38 pack f;
 #X msg 0 60 /mode \$1;
 #X obj 0 -24 r c_of2_mode;
@@ -351,13 +351,13 @@
 #N canvas 280 459 331 199 color 0;
 #X obj 1 140 s of2_msgOSC;
 #X obj 3 27 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 1300 1;
+-1 -1 0 1;
 #X obj 3 1 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
 -1 -1 0 1;
 #X msg -79 69 bang;
 #X obj 1 95 pack f f f;
 #X obj 3 53 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 900 1;
+-1 -1 0 1;
 #X msg -67 95 bang;
 #X msg 1 117 /color \$1 \$2 \$3;
 #X obj -105 -29 r of2_colorr;
@@ -391,7 +391,7 @@
 #X coords 0 -1 1 1 72 24 2 0 0;
 #X restore 142 175 pd maskMode;
 #N canvas 1194 520 450 300 grid 0;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
 #X obj 0 76 s of2_msgOSC;
 #X obj 0 31 pack f;
 #X msg 0 53 /grid \$1;
@@ -430,8 +430,8 @@
 #N canvas 320 350 450 300 sierpinskiAlpha 0;
 #X obj 25 176 s of2_msgOSC;
 #X obj 27 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 3000 0;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
+-1 -1 0 0;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
 #X msg 25 153 /sierpinskiAlpha \$1 \$2;
 #X obj 25 131 pack f f;
 #X obj -108 -20 r of2_sierpinskiAlpha;
@@ -485,7 +485,7 @@
 #X text 25 63 capturar imagen como fondo;
 #N canvas 1187 589 450 300 velocity 0;
 #X obj 3 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 19900 1;
 #X obj 0 55 pack f;
 #X msg 0 77 /velocity \$1;
 #X obj 0 -30 r of2_velocity;
@@ -502,7 +502,7 @@
 #X restore -322 589 pd velocity;
 #N canvas 1187 589 450 300 velocityBkg 0;
 #X obj 3 0 hsl 130 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 12900 1;
 #X obj 0 55 pack f;
 #X obj 0 100 s of2_msgOSC;
 #X obj 0 -30 r of2_velocityBkg;
