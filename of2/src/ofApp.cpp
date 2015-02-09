@@ -16,7 +16,7 @@ void ofApp::setup(){
     }
     
     // Cam
-    cam.setup(settings.getValue("CAM_WIDTH", 1280), settings.getValue("CAM_HEIGHT", 720), settings.getValue("DEVICE_ID", 0), settings.getValue("CAM_FRAMERATE", 60), settings.getValue("FFMPEG", "/Applications/ffmpeg/ffmpeg"), settings.getValue("RECORDING", 0));
+    cam.setup(settings.getValue("CAM_WIDTH", 1280), settings.getValue("CAM_HEIGHT", 720), settings.getValue("DEVICE_ID", 0), settings.getValue("CAM_FRAMERATE", 60), settings.getValue("FFMPEG", "/Applications/ffmpeg/ffmpeg"), settings.getValue("RECORDING", 0), settings.getValue("BKGRECORDING", 0));
     cam.settings(settings.getValue("STELA", 100), 0, settings.getValue("CONTRAST_GREY_E", 140), settings.getValue("CONTRAST_GREY_F", 172), settings.getValue("CONTRAST_R_E", 165), settings.getValue("CONTRAST_R_F", 187), settings.getValue("CONTRAST_G_E", 165), settings.getValue("CONTRAST_G_F", 187), settings.getValue("CONTRAST_B_E", 165), settings.getValue("CONTRAST_B_F", 187));
     // OSC
     osc.setup(settings.getValue("HOST", "localhost"), settings.getValue("S_PORT", 8000), settings.getValue("R_PORT", 9000));

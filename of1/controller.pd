@@ -1,12 +1,12 @@
-#N canvas 917 62 595 484 10;
+#N canvas 997 63 592 485 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of1_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 8900 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 13800 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -28,10 +28,10 @@
 #N canvas 241 465 430 156 g 0;
 #X obj 0 96 s of1_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 8900 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 13800 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -53,10 +53,10 @@
 #N canvas 36 580 430 156 b 0;
 #X obj 0 96 s of1_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 8900 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 13800 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -77,9 +77,9 @@
 #X restore -322 229 pd b;
 #N canvas 317 363 457 135 rgb 0;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 8900 1;
+-1 -1 0 1;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 13800 1;
+-1 -1 0 1;
 #X obj 0 54 s of1_e1;
 #X obj 0 74 s of1_e2;
 #X obj 0 95 s of1_e3;
@@ -102,10 +102,10 @@
 #N canvas 201 416 430 156 rgb_mascara 0;
 #X obj 0 96 s of1_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 10925 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 13523 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -134,14 +134,14 @@
 #X connect 2 0 3 0;
 #X connect 3 0 1 0;
 #X connect 4 0 0 0;
-#X coords 0 -1 1 1 24 24 2 0 0;
+#X coords 0 300 1 299 24 24 2 0 0;
 #X restore 125 83 pd show;
 #X text 157 88 Amosar a Máscara;
 #X text -321 123 Contraste da Cámara;
 #N canvas 320 350 450 300 stela 0;
 #X obj 0 150 s of1_msgOSC;
 #X obj 3 0 hsl 200 24 1 1000 1 0 empty empty empty -2 -8 0 10 -262144
--1 -1 16400 1;
+-1 -1 0 1;
 #X floatatom 0 81 5 0 0 0 - - -;
 #X obj 0 105 pack f;
 #X msg 0 127 /stela \$1;
@@ -220,7 +220,7 @@
 #X obj 18 -53 spigot;
 #X msg 0 -182 connect localhost 9000;
 #X obj 69 -114 print;
-#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 1 1
+#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 0 1
 ;
 #X obj 18 -74 spigot;
 #X obj 37 -271 inlet;
@@ -291,7 +291,8 @@
 #X restore 69 440 pd showplayer;
 #X obj -323 2 bng 24 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#N canvas 1194 520 450 300 show 0;
+#X text -326 65 on/of;
+#N canvas 1194 520 450 300 adjust 0;
 #X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
 #X obj 0 76 s of1_msgOSC;
 #X obj 0 31 pack f;
@@ -302,7 +303,6 @@
 #X connect 3 0 0 0;
 #X connect 4 0 1 0;
 #X coords 0 -1 1 1 24 24 2 0 0;
-#X restore -323 83 pd show;
-#X text -326 65 on/of;
+#X restore -323 83 pd adjust;
 #X connect 13 0 14 0;
 #X connect 22 0 15 0;

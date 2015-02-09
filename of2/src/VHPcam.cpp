@@ -10,7 +10,7 @@ VHPcam::VHPcam() {
 // methods
 
 //----------------------------------------------------------------
-void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n) {
+void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _nb) {
     
     // video setup
     camWidth 		= _w;	// try to grab at this size.
@@ -163,6 +163,9 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n) {
     fileBeingRecorded = "";
     recording = false;
     playing = false;
+    BkgNum = _nb;
+    playingBkgNum = 0;
+    playingBkg = false;
     
     x = 0;
     blur = 0.0;
@@ -187,14 +190,15 @@ void VHPcam::settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _
 
 //----------------------------------------------------------------
 void VHPcam::update(ofxOscSender & _sender) {
+    
     vidGrabber.update();
     player.update();
+    bkgPlayer.update();
     
-    if (player.isPlaying()) {
-        playerTexture.loadData(player.getPixels(), camWidth*2, camHeight*2, GL_RGB);
-    }
+    if (player.isPlaying()) playerTexture.loadData(player.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+    if (bkgPlayer.isPlaying()) background.loadData(bkgPlayer.getPixels(), camWidth, camHeight, GL_RGB);
     
-	if (vidGrabber.isFrameNew()){
+    if (vidGrabber.isFrameNew()){
         
         videoTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
         
@@ -466,6 +470,8 @@ void VHPcam::save(int _s) {
     }
 }
 
+//----------------------------------------------------------------
+
 void VHPcam::play(int _p, int _n) {
     if (_p == 0) {
         if(playing) {
@@ -479,6 +485,20 @@ void VHPcam::play(int _p, int _n) {
     }
 }
 
+void VHPcam::playBkg(int _p, int _n) {
+    if (_p == 0) {
+        if(playingBkg) {
+            bkgPlayer.stop();
+            playingBkg = false;
+        }
+    } else if (_p == 1){
+        if(!playingBkg) {
+            playingBkg = loadBkg(_n);
+        }
+    }
+}
+
+//----------------------------------------------------------------
 
 string VHPcam::getNewRecording() {
     return newRecording;
@@ -488,9 +508,17 @@ void VHPcam::emptyNewRecording() {
     newRecording = "";
 }
 
+//----------------------------------------------------------------
+
 bool VHPcam::load(int _n){
-	bool exists = player.loadMovie("saved/clip_"+ofToString(_n)+".mov");
+	bool exists = player.loadMovie("recorded/clip_"+ofToString(_n)+".mov");
     if (exists) player.play();
+    return exists;
+}
+
+bool VHPcam::loadBkg(int _n){
+	bool exists = bkgPlayer.loadMovie("recorded/clip_grey_"+ofToString(_n)+".mov");
+    if (exists) bkgPlayer.play();
     return exists;
 }
 

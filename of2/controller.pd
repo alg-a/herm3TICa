@@ -1,4 +1,4 @@
-#N canvas 827 132 839 888 10;
+#N canvas 792 101 839 888 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of2_msgOSC;
@@ -272,10 +272,8 @@
 #X coords 0 -1 1 1 272 24 2 0 0;
 #X restore -180 568 pd player;
 #X text 97 571 Reproducir material gravado;
-#X obj 135 356 s of2_msgOSC;
-#X msg 136 333 /background 1;
-#X text -323 111 blur;
-#X text -321 157 recorte;
+#X text -323 151 blur;
+#X text -321 197 recorte;
 #N canvas 320 350 450 300 blur 0;
 #X obj 0 150 s of2_msgOSC;
 #X obj 3 0 hsl 200 24 1 10 1 0 empty empty empty -2 -8 0 10 -262144
@@ -290,7 +288,7 @@
 #X connect 4 0 1 0;
 #X connect 5 0 0 0;
 #X coords 0 -1 1 1 205 24 2 0 0;
-#X restore -322 131 pd blur;
+#X restore -322 171 pd blur;
 #N canvas 320 350 450 300 recorte 0;
 #X obj 0 220 s of2_msgOSC;
 #X obj 3 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
@@ -327,7 +325,7 @@
 #X connect 11 0 1 0;
 #X connect 12 0 11 1;
 #X coords 0 -1 1 1 205 52 2 0 0;
-#X restore -322 177 pd recorte;
+#X restore -322 217 pd recorte;
 #X text -190 649 Interface;
 #N canvas 373 556 450 300 mode 0;
 #X obj 0 83 s of2_msgOSC;
@@ -452,14 +450,39 @@
 #X floatatom 284 674 5 0 0 0 - - -;
 #X obj 32 652 VHPdataReceive 0 0;
 #X obj 284 693 s volume_sound_0;
+#X text -104 142 Usar material gravado como fondo;
+#N canvas 1127 641 450 300 bkgPlayer 0;
+#X obj 0 83 s of2_msgOSC;
+#X obj 0 38 pack f f;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
+#X obj 32 0 hradio 24 1 0 10 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X obj 32 -21 loadbang;
+#X msg 0 60 /playBkg \$1 \$2;
+#X connect 1 0 5 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 1;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
+#X coords 0 300 1 299 272 24 2 0 0;
+#X restore -181 115 pd bkgPlayer;
+#N canvas 162 378 130 93 getBkg 0;
+#X obj -1 52 s of2_msgOSC;
+#X msg 0 29 /background 1;
+#X obj 0 0 bng 24 250 50 0 empty empty empty 17 7 0 10 -262144 -1 -1
+;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X coords 0 -1 1 1 24 24 2 0 0;
+#X restore 95 83 pd getBkg;
+#X text 25 63 capturar imagen como fondo;
 #X connect 11 0 12 0;
-#X connect 19 0 18 0;
-#X connect 35 0 13 0;
-#X connect 39 0 40 0;
-#X connect 40 0 42 0;
-#X connect 40 1 41 0;
-#X connect 43 1 44 0;
-#X connect 44 0 46 0;
-#X connect 45 0 37 0;
-#X connect 45 1 38 0;
-#X connect 45 2 39 0;
+#X connect 33 0 13 0;
+#X connect 37 0 38 0;
+#X connect 38 0 40 0;
+#X connect 38 1 39 0;
+#X connect 41 1 42 0;
+#X connect 42 0 44 0;
+#X connect 43 0 35 0;
+#X connect 43 1 36 0;
+#X connect 43 2 37 0;

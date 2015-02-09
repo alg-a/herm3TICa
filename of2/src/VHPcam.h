@@ -24,6 +24,7 @@ class VHPcam {
     
         // Player
         ofVideoPlayer           player;
+        ofVideoPlayer           bkgPlayer;
     
         // Devices
         vector<string>          videoDevices;
@@ -33,10 +34,13 @@ class VHPcam {
         ofxVideoRecorder        recorder;
         int                     recordingNum;
         int                     playingNum;
+        int                     BkgNum;
+        int                     playingBkgNum;
         string                  newRecording;
         string                  fileBeingRecorded;
         bool                    recording;
         bool                    playing;
+        bool                    playingBkg;
     
         // video
         ofTexture               videoTexture;
@@ -125,13 +129,15 @@ class VHPcam {
         ofColor maskColor;
     
         // methods
-        void setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n);
+        void setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _nb);
         void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
         void update(ofxOscSender & _sender);
         void draw();
         void setContrast(int _n, float _e, float _f);
         bool load(int _n);
+        bool loadBkg(int _n);
         void play(int _p, int _n);
+        void playBkg(int _p, int _n);
     
         void save(int _s);
         string getNewRecording();

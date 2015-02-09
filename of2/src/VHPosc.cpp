@@ -33,7 +33,9 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.percent[1] = m.getArgAsFloat(0);
         } else if (m.getAddress() == "/play") {
             _cam.play(m.getArgAsInt32(0), m.getArgAsInt32(1));
-        } else if (m.getAddress() == "/background") {
+        }  else if (m.getAddress() == "/playBkg") {
+            _cam.playBkg(m.getArgAsInt32(0), m.getArgAsInt32(1));
+        }else if (m.getAddress() == "/background") {
             _cam.updateBkg();
         } else if (m.getAddress() == "/blur") {
             _cam.blur = m.getArgAsFloat(0);
