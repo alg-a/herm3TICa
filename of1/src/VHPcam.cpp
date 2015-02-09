@@ -44,6 +44,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     // control variables
     show = false;
     showPlayer = false;
+    bkgAdjustment = 0;
     
     // init grabber
     vidGrabber.initGrabber(camWidth,camHeight);
@@ -108,32 +109,6 @@ void VHPcam::update() {
     player.update();
     
 	if (vidGrabber.isFrameNew()){
-        /*
-        int w = camWidth/2;
-        int h = camHeight/2;
-        int t = camWidth*camHeight/4;
-        for (int i=0; i<t; i++) {
-            int x = i % w;
-            int y = (i - x) / w;
-            x *= 2;
-            y *= 2;
-            int pos = (y * camWidth * 3 + x*3) % totalPixels;
-            int val = 0.2126 * pixels[pos] + 0.7152 * pixels[pos+1] + 0.0722 * pixels[pos+2];
-            val = contrast.ajusteExponencial(val, e[0], f[0]);
-            buffer[i] = val;
-        }
-        for (int i=0; i<totalPixels; i+=3) {
-            pixels[i] = contrast.ajusteExponencial(pixels[i], e[1], f[1]);
-            pixels[i+1] = contrast.ajusteExponencial(pixels[i+1], e[2], f[2]);
-            pixels[i+2] = contrast.ajusteExponencial(pixels[i+2], e[3], f[3]);
-            pixels[i] = mixture.value[pixels[i]][timeBuffer[i]][percent];
-            pixels[i+1] = mixture.value[pixels[i+1]][timeBuffer[i+1]][percent];
-            pixels[i+2] = mixture.value[pixels[i+2]][timeBuffer[i+2]][percent];
-            //int x = i % (camWidth * 3);
-            //int y = (i - x) / (camWidth * 3);
-            // do something with pixels[i]  ...
-        }
-         */
         videoTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
         if (player.isPlaying()) {
             playerTexture.loadData(player.getPixels(), camWidth, camHeight, GL_RGB);
@@ -172,9 +147,11 @@ void VHPcam::update() {
         greyShader.begin();
         greyShader.setUniformTexture("texE", contrast.texture[e[0]], 1);
         greyShader.setUniform1f("f", f[0]);
+        greyShader.setUniform1i("adjust", bkgAdjustment);
         videoTexture.draw(0, 0, camWidth/2, camHeight/2);
         greyShader.end();
         greyFbo.end();
+
         // copy the frame buffer pixels
         stelaFbo.readToPixels(stelaPix);
         timeBufferTexture.loadData(stelaPix.getPixels(), camWidth, camHeight, GL_RGB);

@@ -32,19 +32,13 @@ void VHPosc::update(VHPcam & _cam) {
         }  else if (m.getAddress() == "/mixture") {
             _cam.percent[1] = m.getArgAsFloat(0);
         } else if (m.getAddress() == "/show") {
-            if (m.getArgAsInt32(0)==0) {
-                _cam.show = false;
-            } else {
-                _cam.show = true;
-            }
+            (m.getArgAsInt32(0)==0) ? _cam.show = false : _cam.show = true;
         } else if (m.getAddress() == "/play") {
             _cam.play(m.getArgAsInt32(0), m.getArgAsInt32(1));
         } else if (m.getAddress() == "/showplayer") {
-            if (m.getArgAsInt32(0)==0) {
-                _cam.showPlayer = false;
-            } else {
-                _cam.showPlayer = true;
-            }
+            (m.getArgAsInt32(0)==0) ? _cam.showPlayer = false : _cam.showPlayer = true;
+        } else if (m.getAddress() == "/adjust") {
+            (m.getArgAsInt32(0)==0) ? _cam.bkgAdjustment = 0 : _cam.bkgAdjustment = 1;
         }
     }
     string newRecording = _cam.getNewRecording();

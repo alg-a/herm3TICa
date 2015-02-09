@@ -53,6 +53,7 @@ class VHPcam {
         int                     camWidth;
         int                     camHeight;
         int                     totalPixels;
+        int                    bkgAdjustment;
     
         // contraste
         VHPcontrast             contrast;
