@@ -1,4 +1,4 @@
-#N canvas 519 22 839 888 10;
+#N canvas 827 132 839 888 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of2_msgOSC;
@@ -204,7 +204,7 @@
 #X connect 20 1 22 0;
 #X restore -123 8 pd reciveOSC;
 #X symbolatom -123 29 40 0 0 0 - - -;
-#N canvas 657 427 211 308 enviaOSC 0;
+#N canvas 401 283 211 308 enviaOSC 0;
 #X obj 20 -206 import mrpeach;
 #X obj 18 -115 packOSC;
 #X obj 0 -21 udpsend;
@@ -212,7 +212,6 @@
 #X obj 0 0 tgl 15 0 empty empty connected 20 7 0 8 -24198 -1 -1 1 1
 ;
 #X obj -19 -271 loadbang;
-#X obj -19 -227 s loadbang1;
 #X obj -19 -249 t b b b;
 #X obj 18 -53 spigot;
 #X msg 0 -182 connect localhost 9000;
@@ -220,24 +219,25 @@
 #X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 0 1
 ;
 #X obj 18 -74 spigot;
-#X obj 87 -20 r loadbang_1;
 #X obj 18 -138 r of2_msgOSC;
 #X obj 40 -271 inlet;
-#X connect 1 0 12 0;
+#X obj 87 -20 r of2_loadbang_1;
+#X obj -19 -227 s of2_loadbang1;
+#X connect 1 0 11 0;
 #X connect 2 0 4 0;
 #X connect 3 0 2 0;
-#X connect 4 0 8 1;
-#X connect 5 0 7 0;
-#X connect 7 0 6 0;
-#X connect 7 1 9 0;
-#X connect 7 2 0 0;
+#X connect 4 0 7 1;
+#X connect 5 0 6 0;
+#X connect 6 0 15 0;
+#X connect 6 1 8 0;
+#X connect 6 2 0 0;
+#X connect 7 0 2 0;
 #X connect 8 0 2 0;
-#X connect 9 0 2 0;
-#X connect 11 0 12 1;
-#X connect 12 0 8 0;
-#X connect 13 0 11 0;
-#X connect 14 0 1 0;
-#X connect 15 0 9 0;
+#X connect 10 0 11 1;
+#X connect 11 0 7 0;
+#X connect 12 0 1 0;
+#X connect 13 0 8 0;
+#X connect 14 0 10 0;
 #X coords 0 -1 1 1 135 15 2 0 0;
 #X restore -323 30 pd enviaOSC;
 #N canvas 1221 371 450 300 mezcla 0;
