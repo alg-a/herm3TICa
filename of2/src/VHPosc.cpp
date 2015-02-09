@@ -57,7 +57,12 @@ void VHPosc::update(VHPcam & _cam) {
         } else if (m.getAddress() == "/sierpinskiAlpha") {
             (m.getArgAsInt32(0)==0) ? _cam.doAlpha = 0 : _cam.doAlpha = 1;
             _cam.sierpinskiMixture = m.getArgAsFloat(1);
+        } else if (m.getAddress() == "/velocity") {
+            _cam.player.setSpeed(m.getArgAsFloat(0));
+        } else if (m.getAddress() == "/velocityBkg") {
+            _cam.bkgPlayer.setSpeed(m.getArgAsFloat(0));
         }
+
     }
     string newRecording = _cam.getNewRecording();
     if (newRecording!="") {
@@ -85,9 +90,9 @@ void VHPosc::update(VHPcam & _cam) {
 
 //----------------------------------------------------------------
 
-void VHPosc::sendSettings(int _stela, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3){
+void VHPosc::sendSettings(int _stela, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw){
     ofxOscMessage msg;
-    msg.setAddress("/of1_settings");
+    msg.setAddress("/of2_settings");
     msg.addIntArg(_stela);
     msg.addIntArg(_show);
     msg.addIntArg(_e0);
@@ -98,6 +103,9 @@ void VHPosc::sendSettings(int _stela, int _show, int _e0, int _f0, int _e1, int 
     msg.addIntArg(_f2);
     msg.addIntArg(_e3);
     msg.addIntArg(_f3);
+    msg.addFloatArg(_b);
+    msg.addFloatArg(_rb);
+    msg.addFloatArg(_rw);
     cout << " sending: " << msg.getArgAsInt32(0) << ", " << msg.getArgAsInt32(1) << ", " << msg.getArgAsInt32(2) << ", " << msg.getArgAsInt32(3) << ", " << msg.getArgAsInt32(4) << ", " << msg.getArgAsInt32(5) << ", " << msg.getArgAsInt32(6) << ", " << msg.getArgAsInt32(7) << " to address: " << msg.getAddress() << endl;
     sender.sendMessage(msg);
 }

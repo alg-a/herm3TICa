@@ -24,7 +24,7 @@ class VHPosc {
         // methods
         void setup(string _h, int _sp, int _rp);
         void update(VHPcam & _cam);
-        void sendSettings(int _stela, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
+        void sendSettings(int _stela, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw);
     
     private:
 	

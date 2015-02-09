@@ -39,6 +39,8 @@ void VHPosc::update(VHPcam & _cam) {
             (m.getArgAsInt32(0)==0) ? _cam.showPlayer = false : _cam.showPlayer = true;
         } else if (m.getAddress() == "/adjust") {
             (m.getArgAsInt32(0)==0) ? _cam.bkgAdjustment = 0 : _cam.bkgAdjustment = 1;
+        } else if (m.getAddress() == "/velocity") {
+            _cam.player.setSpeed(m.getArgAsFloat(0));
         }
     }
     string newRecording = _cam.getNewRecording();

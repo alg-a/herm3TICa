@@ -130,7 +130,7 @@ class VHPcam {
     
         // methods
         void setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _nb);
-        void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
+        void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw);
         void update(ofxOscSender & _sender);
         void draw();
         void setContrast(int _n, float _e, float _f);

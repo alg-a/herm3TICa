@@ -179,13 +179,16 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     maskColor.set(0, 0, 0);
 }
 
-void VHPcam::settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3){
+void VHPcam::settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw){
     percent[0] = ofClamp(_stela, 0, 1000);
     percent[1] = ofClamp(_mixture, 0, 1000);
     setContrast(0, _e0, _f0);
     setContrast(1, _e1, _f1);
     setContrast(2, _e2, _f2);
     setContrast(3, _e3, _f3);
+    blur = _b;
+    min = _rb;
+    max = _rw;
 }
 
 //----------------------------------------------------------------
