@@ -2,4 +2,5 @@
 <RPORT>8000</RPORT>
 <SPORT>9000</SPORT>
 <USER>horacio</USER>
-<UPDATEURL>http://test.escoitar.org/exec/get_data.php</UPDATEURL>
+<GETDATAURL>http://test.escoitar.org/exec/get_data.php</GETDATAURL>
+<UPDATEURL>http://test.escoitar.org/exec/update_data.php</UPDATEURL>

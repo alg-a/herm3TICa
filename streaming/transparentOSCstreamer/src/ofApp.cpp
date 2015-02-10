@@ -2,19 +2,26 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetVerticalSync(true);
+    
+    ofAddListener(updateData.newResponseEvent,this,&ofApp::newResponse);
+    updateData.start();
     
     if( XML.loadFile("mySettings.xml") ){
         cout << "mySettings.xml loaded from documents folder!" << endl;
-    } else if( XML.loadFile("mySettings.xml") ){
-        cout << "mySettings.xml loaded from data folder!" << endl;
-    } else{
+    }else{
         cout << "unable to load mySettings.xml check data/ folder" << endl;
     }
+    
     string h = XML.getValue("HOST", "localhost");
     user_name = XML.getValue("USER", "horacio");
-    update_URL = XML.getValue("UPDATEURL", "http://test.escoitar.org/exec/get_data.php");
+    getdata_URL = XML.getValue("GETDATAURL", "http://test.escoitar.org/exec/get_data.php");
+    update_URL = XML.getValue("UPDATEURL", "http://test.escoitar.org/exec/update_data.php");
     int rport = XML.getValue("RPORT", 8000);
     int sport = XML.getValue("SPORT", 9000);
+    
+    auth_key = "your auth_key here";
+    
     host = ofSplitString(h, ",");
     for (int i=0; i<host.size(); i++) {
         sender.push_back(ofxOscSender());
@@ -31,7 +38,7 @@ void ofApp::setup(){
     receiver.setup(rport);
     
     timer = 0;
-    loadded = false;
+    loaded = false;
     
 }
 
@@ -40,7 +47,7 @@ void ofApp::getResponse() {
     string url = update_URL + "?user_name=" + user_name + "&last=true";
     if (!response.open(url)) {
         cout << "Failed to parse JSON" << endl;
-        loadded = false;
+        loaded = false;
     } else {
         bool error = response["error"].asBool();
         cout << error << endl;
@@ -55,15 +62,20 @@ void ofApp::getResponse() {
                 addStreamer(s);
             }
         }
-        loadded = true;
+        loaded = true;
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::newResponse(ofxHttpResponse & response){
+    cout << (string)response.responseBody <<endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
     timer++;
-    if ((loadded)&&(timer>10)) {
+    if ((loaded)&&(timer>10)) {
         timer = 0;
         getResponse();
     } else if (timer>500) {
@@ -71,13 +83,6 @@ void ofApp::update(){
         getResponse();
     }
     
-    /*
-    timer++;
-    if ((loadded)&&(timer>10)) {
-        startResponse();
-    } else if (timer>500) {
-        startResponse();
-    }*/
 }
 
 //--------------------------------------------------------------
@@ -108,7 +113,9 @@ void ofApp::addStreamer(ofxJSONElement& _s) {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    ofBackground(255,255,255);
+	ofSetColor(0,0,0);
+    
 }
 
 //--------------------------------------------------------------
@@ -118,7 +125,17 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    if(key=='s'){ // sending data test
+        ofxHttpForm form;
+        form.action = update_URL;
+        form.method = OFX_HTTP_POST;
+        form.addFormField("auth_key",auth_key);
+        form.addFormField("user_name",user_name);
+        form.addFormField("data_name","test");
+        form.addFormField("data_type","bool");
+        form.addFormField("data","0");
+        updateData.addForm(form);
+    }
 }
 
 //--------------------------------------------------------------

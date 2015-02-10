@@ -4,10 +4,7 @@
 	include ("../inc/db.php");
 	include ("../inc/base.php");
 	
-	//include ("../inc/noTours-db.php");
-	
 	header("Content-type: text/javascript; charset=utf-8");
-	// header("Content-type: text/html; charset=utf-8");
 	
 	if ( (isset($_POST['user_name'])) && ($_POST['user_name']!="") ) {
 		$user_name = $_POST["user_name"];
@@ -57,7 +54,7 @@
 			} else {
 				// error: 3 - no_db_entries_found.
 				// $process_id, $data, $ui_msg, $dosql='', $error=FALSE, $type='', $tec_msg='', $error_process=''
-				$return = return_array('exec_get_data', '', $read['msg'], $read['dosql'], true, 3, "There is no recent data being streammed", 'db_select_all');
+				$return = return_array('exec_get_data', '', $read['msg'], $read['dosql'], true, 3, "There is no recent data being streamed", 'db_select_all');
 			}
 		} else {
 			/// no error handling jet!!!
@@ -113,7 +110,7 @@
 		echo json_encode($return);
 	} else {
 		// error: 10 - POST/GET vars missing.
-		$error = return_array('exec_get_data', '', $write['data_mising'], '', true, 10, "Mising variables: \$_POST['user_name'] = '".$_POST['user_name']."', \$_POST['data_name'] = '".$_POST['data_name']."', \$_POST['last'] = '".$_POST['last']."', \$_POST['stored'] = '".$_POST['stored']."'.", 'exec_get_data');
+		$error = return_array('exec_get_data', '', $write['data_missing'], '', true, 10, "Missing variables: \$_POST['user_name'] = '".$_POST['user_name']."', \$_POST['data_name'] = '".$_POST['data_name']."', \$_POST['last'] = '".$_POST['last']."', \$_POST['stored'] = '".$_POST['stored']."'.", 'exec_get_data');
 		//print_r($error);
 		echo json_encode($error);
 	}

@@ -23,7 +23,8 @@ $write = array(
 	'success_inserting_db_entry' => 'la entrada ha sido insertada correctamente',
 	'success_selecting_db_avg' => 'la media de los valores de una lista de entradas de la base de datos ha sido calculada corectamente',
 		
-	'data_mising' => "faltan algunos datos necesarios para ejecutar el script",
+	'data_missing' => "faltan algunos datos necesarios para ejecutar el script",
+	'auth_missing' => "falta o es equivocada la auth key",
 	
 	/* application texts */
 	'error_wrong_datatype' => 'la variable introducida en la funcion es de tipo erróneo',
