@@ -13,11 +13,11 @@ VHPcam::VHPcam() {
 void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     
     // video setup
-    camWidth 		= _w;	// try to grab at this size.
-	camHeight 		= _h;
+    width 		= _w;	// try to grab at this size.
+	height 		= _h;
     
     //we can now get back a list of devices.
-	vector<ofVideoDevice> devices = vidGrabber.listDevices();
+	vector<ofVideoDevice> devices = grabber.listDevices();
     for(int i = 0; i < devices.size(); i++){
 		cout << devices[i].id << ": " << devices[i].deviceName;
         if( devices[i].bAvailable ){
@@ -27,9 +27,9 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
         }
 	}
     
-    cout << "DeviceID: " << _d << " FrameRate: " << _f << " camWidth: " << camWidth << " camHeight: " << camHeight  << endl;
-    vidGrabber.setVerbose(true);
-    vidGrabber.setDeviceID(_d);
+    cout << "DeviceID: " << _d << " FrameRate: " << _f << " width: " << width << " height: " << height  << endl;
+    grabber.setVerbose(true);
+    grabber.setDeviceID(_d);
 	//vidGrabber.setDesiredFrameRate(_f);
     
     // Video devices
@@ -38,16 +38,16 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     }
     
     // init grabber
-    vidGrabber.initGrabber(camWidth,camHeight);
+    grabber.initGrabber(width,height);
     
     // allocate the frame buffer object
-    camFbo.allocate(camWidth, camHeight, GL_RGB, 0);
+    fbo.allocate(width, height, GL_RGB, 0);
     
     // allocate textures
-    videoTexture.allocate(camWidth, camHeight, GL_RGB);
+    texture.allocate(width, height, GL_RGB);
     
     //recorder
-    camRecorder.setFfmpegLocation(_ffmpeg);
+    recorder.setFfmpegLocation(_ffmpeg);
     
     // recording variables
     recordingNum = 0;
@@ -59,25 +59,25 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
 
 //----------------------------------------------------------------
 void VHPcam::update() {
-    vidGrabber.update();
+    grabber.update();
     player.update();
     
-	if (vidGrabber.isFrameNew()){
+	if (grabber.isFrameNew()){
         
         if (player.isPlaying()) {
-            videoTexture.loadData(player.getPixels(), camWidth, camHeight, GL_RGB);
+            texture.loadData(player.getPixels(), width, height, GL_RGB);
         } else {
-            videoTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
+            texture.loadData(grabber.getPixels(), width, height, GL_RGB);
         }
         
         // Cam
-        camFbo.begin();
-        videoTexture.draw(0, 0, camWidth, camHeight);
-        camFbo.end();
+        fbo.begin();
+        texture.draw(0, 0, width, height);
+        fbo.end();
         
         if(recording){
-            camFbo.readToPixels(camPix);
-            camRecorder.addFrame(camPix);
+            fbo.readToPixels(pix);
+            recorder.addFrame(pix);
         }
         
     }
@@ -86,7 +86,7 @@ void VHPcam::update() {
 //----------------------------------------------------------------
 
 void VHPcam::draw() {
-    camFbo.draw(0,0);
+    fbo.draw(0,0);
 }
 
 //----------------------------------------------------------------
@@ -94,13 +94,13 @@ void VHPcam::draw() {
 void VHPcam::save(int _s) {
     if (_s == 0) {
         if(recording) {
-            camRecorder.close();
+            recorder.close();
             newRecording = fileBeingRecorded;
             recording = false;
         }
     } else if (_s == 1){
         if(!recording) {
-            camRecorder.setup("saved/clip_"+ ofToString(recordingNum) +".mov", camWidth, camHeight, 15);
+            recorder.setup("saved/clip_"+ ofToString(recordingNum) +".mov", width, height, 15);
             fileBeingRecorded = "saved/clip_"+ ofToString(recordingNum) +".mov";
             recording = true;
             recordingNum++;

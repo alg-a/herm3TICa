@@ -2,7 +2,6 @@
 #define VHP_CAM
 
 #include "ofMain.h"
-#include "VHPcontrast.h"
 #include "ofxVideoRecorder.h"
 
 //--------------------------------------------------------
