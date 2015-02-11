@@ -44,12 +44,14 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     // control variables
     show = false;
     showPlayer = false;
+    invert = false;
     bkgAdjustment = 0;
     
     // init grabber
     vidGrabber.initGrabber(camWidth,camHeight);
     
     // allocate the frame buffer object
+    invertFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     camFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     playerFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     stelaFbo.allocate(camWidth, camHeight, GL_RGB, 0);
@@ -62,20 +64,20 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     
     //shaders
     #ifdef TARGET_OPENGLES
-	camShader.load("shaders_gles/greyscale.vert","shaders_gles/cam.frag");
-	greyShader.load("shaders_gles/greyscale.vert","shaders_gles/greyscale.frag");
-	stelaShader.load("shaders_gles/greyscale.vert","shaders_gles/stela.frag");
+	camShader.load("shaders_gles/cam");
+	greyShader.load("shaders_gles/greyscale");
+	stelaShader.load("shaders_gles/stela");
     cout << "shadersES2" << endl;
     #else
 	if(ofGetGLProgrammableRenderer()){
-		camShader.load("shaders_gl3/greyscale.vert", "shaders_gl3/cam.frag");
-		greyShader.load("shaders_gl3/greyscale.vert", "shaders_gl3/greyscale.frag");
-		stelaShader.load("shaders_gl3/greyscale.vert", "shaders_gl3/stela.frag");
+		camShader.load("shaders_gl3/cam");
+		greyShader.load("shaders_gl3/greyscale");
+		stelaShader.load("shaders_gl3/stela");
         cout << "shadersGL3" << endl;
 	}else{
-		camShader.load("shaders/greyscale.vert", "shaders/cam.frag");
-		greyShader.load("shaders/greyscale.vert", "shaders/greyscale.frag");
-		stelaShader.load("shaders/greyscale.vert", "shaders/stela.frag");
+		camShader.load("shaders/cam");
+		greyShader.load("shaders/greyscale");
+		stelaShader.load("shaders/stela");
         cout << "shadersGL2" << endl;
 	}
     #endif
@@ -110,6 +112,17 @@ void VHPcam::update() {
     
 	if (vidGrabber.isFrameNew()){
         videoTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
+        
+        // Invert
+        if (invert) {
+            invertFbo.begin();
+            videoTexture.draw(camWidth, 0, -camWidth, camHeight);
+            invertFbo.end();
+            invertFbo.readToPixels(invertPix);
+            videoTexture.loadData(invertPix.getPixels(), camWidth, camHeight, GL_RGB);
+        }
+        
+        // Mixture
         if (player.isPlaying()) {
             playerTexture.loadData(player.getPixels(), camWidth, camHeight, GL_RGB);
             playerFbo.begin();
@@ -122,6 +135,7 @@ void VHPcam::update() {
             playerFbo.readToPixels(playerPix);
             videoTexture.loadData(playerPix.getPixels(), camWidth, camHeight, GL_RGB);
         }
+        
         // Stela
         stelaFbo.begin();
         stelaShader.begin();
@@ -130,6 +144,7 @@ void VHPcam::update() {
         videoTexture.draw(0, 0, camWidth, camHeight);
         stelaShader.end();
         stelaFbo.end();
+        
         // Cam
         camFbo.begin();
         camShader.begin();
@@ -142,6 +157,7 @@ void VHPcam::update() {
         stelaFbo.draw(0, 0, camWidth, camHeight);
         camShader.end();
         camFbo.end();
+        
         // Grey
         greyFbo.begin();
         greyShader.begin();

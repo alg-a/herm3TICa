@@ -53,6 +53,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     
     // allocate the frame buffer object
     camFbo.allocate(camWidth, camHeight, GL_RGB, 0);
+    invertFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     scaleFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     stelaFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     of2Fbo.allocate(camWidth, camHeight, GL_RGB, 0);
@@ -89,6 +90,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     fileBeingRecorded = "";
     recording = false;
     playing = false;
+    invert = false;
     
     ntarot = 0;
 }
@@ -109,6 +111,13 @@ void VHPcam::update() {
         vidGrabber.update();
         if (vidGrabber.isFrameNew()){
             vidTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
+            if (invert) {
+                invertFbo.begin();
+                vidTexture.draw(camWidth, 0, -camWidth, camHeight);
+                invertFbo.end();
+                invertFbo.readToPixels(invertPix);
+                vidTexture.loadData(invertPix.getPixels(), camWidth, camHeight, GL_RGB);
+            }
             // Stela
             stelaFbo.begin();
             stelaShader.begin();

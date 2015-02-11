@@ -3,10 +3,10 @@
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 6500 1;
+-1 -1 12876 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 10200 1;
+-1 -1 14593 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -28,10 +28,10 @@
 #N canvas 241 465 430 156 g 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 6500 1;
+-1 -1 12876 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 10200 1;
+-1 -1 14593 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -53,10 +53,10 @@
 #N canvas 36 580 430 156 b 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 6500 1;
+-1 -1 12876 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 10200 1;
+-1 -1 14593 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -77,9 +77,9 @@
 #X restore -322 229 pd b;
 #N canvas 317 363 457 135 rgb 0;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 6500 0;
+-1 -1 0 0;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 10200 0;
+-1 -1 0 0;
 #X obj 0 54 s c_of3_e1;
 #X obj 0 74 s c_of3_e2;
 #X obj 0 95 s c_of3_e3;
@@ -141,7 +141,7 @@
 #N canvas 320 350 450 300 stela 0;
 #X obj 0 80 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 1 1000 1 0 empty empty empty -2 -8 0 10 -262144
--1 -1 16700 1;
+-1 -1 19900 1;
 #X obj 0 35 pack f;
 #X msg 0 57 /stela \$1;
 #X obj 0 -20 r c_of3_stela;
@@ -214,7 +214,7 @@
 #X obj 18 -115 packOSC;
 #X obj 0 -21 udpsend;
 #X msg 11 -160 disconnect;
-#X obj 0 0 tgl 15 0 empty empty connected 20 7 0 8 -24198 -1 -1 0 1
+#X obj 0 0 tgl 15 0 empty empty connected 20 7 0 8 -24198 -1 -1 1 1
 ;
 #X obj -19 -271 loadbang;
 #X obj -19 -249 t b b b;
@@ -249,7 +249,7 @@
 #N canvas 1146 418 450 300 mezcla 0;
 #X obj 0 100 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 1 1000 1 0 empty empty empty -2 -8 0 10 -262144
--1 -1 19900 1;
+-1 -1 0 1;
 #X floatatom 0 31 5 0 0 0 - - -;
 #X obj 0 55 pack f;
 #X obj 0 -30 r c_of3_mixture;
@@ -265,7 +265,7 @@
 #N canvas 1127 641 450 300 player 0;
 #X obj 0 83 s of3_msgOSC;
 #X obj 0 38 pack f f;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
 #X obj 32 0 hradio 24 1 0 10 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
 #X obj 32 -21 loadbang;
@@ -292,7 +292,7 @@
 #X coords 0 -1 1 1 24 24 2 0 0;
 #X restore -72 429 pd showplayer;
 #N canvas 561 591 450 300 webcam 0;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
 #X obj 0 76 s of3_msgOSC;
 #X obj 0 31 pack f;
 #X msg 0 53 /cam \$1;
@@ -335,7 +335,7 @@
 -1 -1;
 #N canvas 320 350 450 300 zoom 0;
 #X obj 3 0 hsl 200 24 1 4 1 0 empty empty empty -2 -8 0 10 -262144
--1 -1 12100 1;
+-1 -1 0 1;
 #X floatatom 0 81 5 0 0 0 - - -;
 #X obj 0 105 pack f;
 #X obj 0 -20 r c_of3_zoom;
@@ -352,7 +352,7 @@
 #N canvas 1127 641 450 300 tarot 0;
 #X obj 0 77 s of3_msgOSC;
 #X obj 0 0 hradio 24 1 0 6 empty empty empty 0 -8 0 10 -262144 -1 -1
-1;
+0;
 #X obj 0 -21 loadbang;
 #X obj 0 32 pack f;
 #X msg 0 54 /tarot \$1;
@@ -379,6 +379,19 @@
 #X obj -17 464 r of2_vector_y;
 #X obj -310 485 average 10;
 #X obj -17 485 average 10;
+#X text 99 297 espejo;
+#N canvas 1194 520 450 300 invert 0;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
+#X obj 0 31 pack f;
+#X msg 0 53 /invert \$1;
+#X obj 0 76 s of3_msgOSC;
+#X obj 0 -21 r of3_invert;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 0 0;
+#X coords 0 -1 1 1 24 24 2 0 0;
+#X restore 67 292 pd invert;
 #X connect 13 0 14 0;
 #X connect 26 0 15 0;
 #X connect 31 0 33 0;

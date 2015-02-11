@@ -30,6 +30,7 @@ class VHPcam {
         // Recording
         ofxVideoRecorder        vidRecorder;
         bool                    recording;
+        bool                    invert;
         int                     recordingNum;
         string                  newRecording;
         string                  fileBeingRecorded;
@@ -38,6 +39,8 @@ class VHPcam {
         ofTexture               vidTexture;
         ofFbo                   camFbo;
         ofPixels                camPix;
+        ofFbo                   invertFbo;
+        ofPixels                invertPix;
         ofFbo                   scaleFbo;
         ofPixels                scalePix;
         ofFbo                   stelaFbo;

@@ -61,6 +61,8 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.player.setSpeed(m.getArgAsFloat(0));
         } else if (m.getAddress() == "/velocityBkg") {
             _cam.bkgPlayer.setSpeed(m.getArgAsFloat(0));
+        } else if (m.getAddress() == "/invert") {
+            (m.getArgAsInt32(0)==0) ? _cam.invert = false : _cam.invert = true;
         }
 
     }

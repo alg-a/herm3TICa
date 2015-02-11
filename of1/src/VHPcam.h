@@ -43,6 +43,8 @@ class VHPcam {
         ofPixels                camPix;
         ofFbo                   playerFbo;
         ofPixels                playerPix;
+        ofFbo                   invertFbo;
+        ofPixels                invertPix;
         ofFbo                   stelaFbo;
         ofPixels                stelaPix;
         ofFbo                   greyFbo;
@@ -50,10 +52,11 @@ class VHPcam {
     
         bool                    show;
         bool                    showPlayer;
+        bool                    invert;
         int                     camWidth;
         int                     camHeight;
         int                     totalPixels;
-        int                    bkgAdjustment;
+        int                     bkgAdjustment;
     
         // contraste
         VHPcontrast             contrast;

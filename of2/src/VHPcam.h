@@ -41,22 +41,28 @@ class VHPcam {
         bool                    recording;
         bool                    playing;
         bool                    playingBkg;
+        bool                    invert;
     
         // video
         ofTexture               videoTexture;
         ofTexture               playerTexture;
         ofTexture               recorderTexture;
+        ofTexture               contrastTexture;
         ofTexture               greyTexture;
         ofTexture               stelaTexture;
         ofTexture               background; // sustraccion de fondo
         ofTexture               adjTexture;
     
+        ofFbo                   invertFbo;
+        ofPixels                invertPix;
         ofFbo                   recorderFbo;
         ofPixels                recorderPix;
         ofFbo                   stelaFbo;
         ofPixels                stelaPix;
         ofFbo                   adjFbo;
         ofPixels                adjPix;
+        ofFbo                   extraFbo;
+        ofPixels                extraPix;
         ofFbo                   greyFbo;
         ofPixels                greyPix;
         ofFbo                   sustractFbo;
@@ -89,8 +95,8 @@ class VHPcam {
     
         // contraste
         VHPcontrast             contrast;
-        int                     e[4];
-        int                     f[4];
+        int                     e[6];
+        int                     f[6];
     
         // ofxCv
         ofxCvGrayscaleImage 	greyImage;
@@ -111,6 +117,8 @@ class VHPcam {
         ofShader                contrastShader;
         ofShader                sierpinskiShader;
         ofShader                alphaShader;
+        ofShader                holeShader;
+
     
         ofFbo fboBlurOnePass;
         ofFbo fboBlurTwoPass;

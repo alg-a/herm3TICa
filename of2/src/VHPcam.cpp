@@ -42,15 +42,17 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     }
     
     // init grabber
-    vidGrabber.initGrabber(camWidth,camHeight);
+    vidGrabber.initGrabber(camWidth*2,camHeight*2);
     
     // allocate the frame buffer object
     // Cam
+    invertFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     greyFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     sustractFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     fboBlurOnePass.allocate(camWidth, camHeight, GL_RGB, 0);
     fboBlurTwoPass.allocate(camWidth, camHeight, GL_RGB, 0);
     adjFbo.allocate(camWidth, camHeight, GL_RGB, 0);
+    extraFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     // Video
     maskFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     stelaFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
@@ -59,11 +61,12 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     
     // allocate textures
     // Cam
-    videoTexture.allocate(camWidth, camHeight, GL_RGB);
+    videoTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     greyTexture.allocate(camWidth, camHeight, GL_RGB);
     background.allocate(camWidth, camHeight, GL_RGB);
     adjTexture.allocate(camWidth, camHeight, GL_RGB);
     // Video
+    contrastTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     playerTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     recorderTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     stelaTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
@@ -124,6 +127,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
 	contrastShader.load("shaders_gles/contrast");
 	sierpinskiShader.load("shaders_gles/sierpinski");
     alphaShader.load("shaders_gles/alpha");
+    holeShader.load("shaders_gles/hole");
     cout << "shadersES2" << endl;
     #else
 	if(ofGetGLProgrammableRenderer()){
@@ -137,6 +141,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
 		contrastShader.load("shaders_gl3/contrast");
         sierpinskiShader.load("shaders_gl3/sierpinski");
         alphaShader.load("shaders_gl3/alpha");
+        holeShader.load("shaders_gl3/hole");
         cout << "shadersGL3" << endl;
 	}else{
 		greyShader.load("shaders/greyscale");
@@ -149,6 +154,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
 		contrastShader.load("shaders/contrast");
         sierpinskiShader.load("shaders/sierpinski");
         alphaShader.load("shaders/alpha");
+        holeShader.load("shaders/hole");
         cout << "shadersGL2" << endl;
 	}
     #endif
@@ -166,6 +172,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     BkgNum = _nb;
     playingBkgNum = 0;
     playingBkg = false;
+    invert = false;
     
     x = 0;
     blur = 0.0;
@@ -177,6 +184,11 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     mode = 0;
     vidBackground = 0;
     maskColor.set(0, 0, 0);
+    
+    e[4] = 162;
+    f[4] = 179;
+    e[5] = 136;
+    f[5] = 255;
 }
 
 void VHPcam::settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw){
@@ -203,9 +215,18 @@ void VHPcam::update(ofxOscSender & _sender) {
     
     if (vidGrabber.isFrameNew()){
         
-        videoTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
+        videoTexture.loadData(vidGrabber.getPixels(), camWidth*2, camHeight*2, GL_RGB);
         
         /* Cam */
+        
+        // Invert
+        if (invert) {
+            invertFbo.begin();
+            videoTexture.draw(camWidth*2, 0, -camWidth*2, camHeight*2);
+            invertFbo.end();
+            invertFbo.readToPixels(invertPix);
+            videoTexture.loadData(invertPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+        }
         
         // Grey
         greyFbo.begin();
@@ -255,55 +276,113 @@ void VHPcam::update(ofxOscSender & _sender) {
         
         colorImage.setFromPixels(adjPix);
         greyImage.setFromColorImage(colorImage);
-        contourFinder.findContours(greyImage, 60, (camWidth*camHeight)/3, 4, true);
+        contourFinder.findContours(greyImage, 60, (camWidth*camHeight)/2, 12, true);
         
         /* Video */
-        
-        // Mask
-        maskFbo.begin();
-        switch (vidBackground) {
-            case 0:
-                ofClear(maskColor);
-                break;
-            case 1:
-                stelaTexture.draw(0, 0, camWidth*2, camHeight*2);
-                break;
-            case 2:
-                playerTexture.draw(0, 0, camWidth*2, camHeight*2);
-                break;
-            default:
-                break;
+        if (mode==4) {
+            extraFbo.begin();
+            ofClear(255, 255, 255, 255);
+            ofPushStyle();
+            for (int i = 0; i < contourFinder.nBlobs; i++){
+                if(contourFinder.blobs[i].hole) {
+                    for (int o = 0; o<20; o++) {
+                        ofSetColor(0, 0, 0, o*o/5 + 20);
+                        ofFill();
+                        ofSetLineWidth(1.5);
+                        ofBeginShape();
+                        int s = 20 - o;
+                        for (int u = 0; u < contourFinder.blobs[i].pts.size(); u++){
+                            
+                            ofVec3f v = contourFinder.blobs[i].centroid*2 - contourFinder.blobs[i].pts[u]*2;
+                            ofVec3f p = contourFinder.blobs[i].pts[u]*2 + v*s*s/300;
+                            ofVertex(p.x, p.y);
+                            // ofCurveVertex
+                        }
+                        ofVec3f v = contourFinder.blobs[i].centroid*2 - contourFinder.blobs[i].pts[0]*2;
+                        ofVec3f p = contourFinder.blobs[i].pts[0]*2 + v*s*s/300;
+                        ofVertex(p.x, p.y);
+                        ofEndShape();
+                    }
+                }
+            }
+            ofPopStyle();
+            extraFbo.end();
+            extraFbo.readToPixels(extraPix);
+            // Stela
+            stelaFbo.begin();
+            stelaShader.begin();
+            stelaShader.setUniformTexture("tex1", stelaTexture, 1);
+            stelaShader.setUniform1f("mixture", percent[0]/1000.0);
+            extraFbo.draw(0, 0, camWidth*2, camHeight*2);
+            stelaShader.end();
+            stelaFbo.end();
+            // copy the frame buffer pixels
+            stelaFbo.readToPixels(stelaPix);
+            stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+            // Contraste Final
+            contrastFbo.begin();
+            contrastShader.begin();
+            contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
+            contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
+            contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
+            contrastShader.setUniform1f("f1", f[1]);
+            contrastShader.setUniform1f("f2", f[2]);
+            contrastShader.setUniform1f("f3", f[3]);
+            stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
+            contrastShader.end();
+            contrastFbo.end();
+            // copy the frame buffer pixels
+            contrastFbo.readToPixels(contrastPix);
+            contrastTexture.loadData(contrastPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+        } else {
+            
+            // Mask
+            maskFbo.begin();
+            switch (vidBackground) {
+                case 0:
+                    ofClear(maskColor);
+                    break;
+                case 1:
+                    stelaTexture.draw(0, 0, camWidth*2, camHeight*2);
+                    break;
+                case 2:
+                    playerTexture.draw(0, 0, camWidth*2, camHeight*2);
+                    break;
+                default:
+                    break;
+            }
+            maskShader.begin();
+            maskShader.setUniformTexture("mask", adjTexture, 1);
+            videoTexture.draw(0, 0, camWidth*2, camHeight*2);
+            maskShader.end();
+            maskFbo.end();
+            maskFbo.readToPixels(maskPix);
+            // Stela
+            stelaFbo.begin();
+            stelaShader.begin();
+            stelaShader.setUniformTexture("tex1", stelaTexture, 1);
+            stelaShader.setUniform1f("mixture", percent[0]/1000.0);
+            maskFbo.draw(0, 0, camWidth*2, camHeight*2);
+            stelaShader.end();
+            stelaFbo.end();
+            // copy the frame buffer pixels
+            stelaFbo.readToPixels(stelaPix);
+            stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+            
+            // Contraste Final
+            contrastFbo.begin();
+            contrastShader.begin();
+            contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
+            contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
+            contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
+            contrastShader.setUniform1f("f1", f[1]);
+            contrastShader.setUniform1f("f2", f[2]);
+            contrastShader.setUniform1f("f3", f[3]);
+            stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
+            contrastShader.end();
+            contrastFbo.end();
         }
-        maskShader.begin();
-        maskShader.setUniformTexture("mask", adjTexture, 1);
-        videoTexture.draw(0, 0, camWidth*2, camHeight*2);
-        maskShader.end();
-        maskFbo.end();
-        maskFbo.readToPixels(maskPix);
-        // Stela
-        stelaFbo.begin();
-        stelaShader.begin();
-        stelaShader.setUniformTexture("tex1", stelaTexture, 1);
-        stelaShader.setUniform1f("mixture", percent[0]/1000.0);
-        maskFbo.draw(0, 0, camWidth*2, camHeight*2);
-        stelaShader.end();
-        stelaFbo.end();
-        // copy the frame buffer pixels
-        stelaFbo.readToPixels(stelaPix);
-        stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
-        // Contraste Final
-        contrastFbo.begin();
-        contrastShader.begin();
-        contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
-        contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
-        contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
-        contrastShader.setUniform1f("f1", f[1]);
-        contrastShader.setUniform1f("f2", f[2]);
-        contrastShader.setUniform1f("f3", f[3]);
-        stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
-        contrastShader.end();
-        contrastFbo.end();
-        
+                
         // Sierpinski
         for (int i=0; i<6; i++) {
             Fbo[i].begin();
@@ -430,6 +509,23 @@ void VHPcam::draw() {
                 grid.draw();
             }
             break;
+            
+        case 4: // holes
+            
+            holeShader.begin();
+            holeShader.setUniformTexture("texE1", contrast.texture[e[4]], 1);
+            holeShader.setUniformTexture("texE2", contrast.texture[e[5]], 2);
+            holeShader.setUniformTexture("mask", contrastTexture, 3);
+            holeShader.setUniform1f("f1", f[4]);
+            holeShader.setUniform1f("f2", f[5]);
+            videoTexture.draw(0, 0, camWidth*2, camHeight*2);
+            holeShader.end();
+            contrastTexture.draw(camWidth*3/2, camHeight*3/2, camWidth/2, camHeight/2);
+            ofPushStyle();
+            ofSetHexColor(0x000000);
+            ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
+            ofPopStyle();
+            break;
         default:
             videoTexture.draw(0,0);
             // do nithing
@@ -448,7 +544,7 @@ void VHPcam::draw() {
 //----------------------------------------------------------------
 
 void VHPcam::setContrast(int _n, float _e, float _f) {
-    _n = ofClamp(_n, 0, 3);
+    _n = ofClamp(_n, 0, 5);
     e[_n] = (int) ofClamp(_e, 0, 255);
     f[_n] = (int) ofClamp(_f, 0, 255);
     cout << "e["<< _n << "]: "<< e[_n] << ", f[" << _n << "]: "<< f[_n] << endl;
