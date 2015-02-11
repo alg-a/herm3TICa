@@ -42,6 +42,7 @@ class VHPcam {
         bool                    playing;
         bool                    playingBkg;
         bool                    invert;
+        bool                    streaming;
     
         // video
         ofTexture               videoTexture;
@@ -128,7 +129,6 @@ class VHPcam {
         float min;
         float max;
         VHPgrid grid;
-        bool sendGrid;
         VHPsierpinski sierpinski;
     
         // display
@@ -139,9 +139,28 @@ class VHPcam {
         // methods
         void setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _nb);
         void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw);
+    
         void update(ofxOscSender & _sender);
+        void invertVideo();
+        void adjustVideo();
+        void findBlobs();
+        void mask();
+    
+        void sierpinskiData(ofxOscSender & _sender);
+        void gridStyle(ofxOscSender & _sender);
+        void sierpinskiStyle();
+        void holes();
+    
         void draw();
+        void drawInterface();
+        void drawSierpinskiData();
+        void drawGrid();
+        void drawSierpinskiStyle();
+        void drawHoles();
+    
         void setContrast(int _n, float _e, float _f);
+        void setMode(int _m);
+    
         bool load(int _n);
         bool loadBkg(int _n);
         void play(int _p, int _n);
@@ -151,6 +170,9 @@ class VHPcam {
         string getNewRecording();
         void emptyNewRecording();
         void updateBkg();
+    
+        
+    
     
     private:
 	

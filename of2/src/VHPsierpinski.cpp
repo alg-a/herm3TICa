@@ -22,6 +22,9 @@ void VHPsierpinski::init() {
     vector<int> pos_l1;
     threshold = 150;
     
+    // Json
+    streamer.init("http://test.escoitar.org/exec/update_data2.php", 0, "santiago", "vhplab_0000");
+    
     for (int i=0; i<total; i++) {
         
         int x = i % width; // 0 - 53
@@ -48,7 +51,8 @@ void VHPsierpinski::init() {
                 }
             }
             if (!already) {
-                L_0.push_back(VHPdata(pos, x_0, y_0, 243, 243,"/sierpinski_0/"+ofToString(L_0.size())));
+                int l = streamer.addData("L0-"+ ofToString(L_0.size()), "string");
+                L_0.push_back(VHPdata(pos, x_0, y_0, 243, 243,"/sierpinski_0/"+ofToString(L_0.size()),l));
                 pos_l0.push_back(pos);
             }
         } else {
@@ -74,7 +78,8 @@ void VHPsierpinski::init() {
                     }
                 }
                 if (!already) {
-                    L_1.push_back(VHPdata(pos, x_1, y_1, 81, 81,"/sierpinski_1/"+ofToString(L_1.size())));
+                    int l = streamer.addData("L1-"+ ofToString(L_1.size()), "string");
+                    L_1.push_back(VHPdata(pos, x_1, y_1, 81, 81,"/sierpinski_1/"+ofToString(L_1.size()),l));
                     pos_l1.push_back(pos);
                 }
             } else {
@@ -84,7 +89,7 @@ void VHPsierpinski::init() {
                 
                 if ((x_2s==1)&&(y_2s==1)) {
                     pos = y * 56 * 3 + x * 3; // L_2 56 x 27 RGB
-                    L_2.push_back(VHPdata(pos, x, y, 27, 27,"/sierpinski_2/"+ofToString(L_2.size())));
+                    L_2.push_back(VHPdata(pos, x, y, 27, 27,"/sierpinski_2/"+ofToString(L_2.size()),L_2.size()));
                 }
                 
             }
@@ -148,6 +153,7 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
     _d.setAverage((int) grey);
     if (_d.isActive()) {
         if(_d.isNew()) {
+            streamer.setData(_d.l, ofToString((int)value)+"-"+ofToString(grey)+"-"+ofToString((int)_d.on));
             ofxOscMessage msg;
             msg.setAddress(_d.address);
             cout << "Address: " << _d.address << endl;
@@ -156,6 +162,7 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
             msg.addIntArg((int)_d.on);
             _sender.sendMessage(msg);
             _d.updateLast();
+            
         }
         // type: 0 grid, 1 toggle, 2 trigger, 3 average
         switch (_d.type) {
@@ -172,6 +179,12 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
                 break;
         }
     }
+}
+
+void VHPsierpinski::sendJson(){
+    streamer.setData(0, ofToString(ofRandom(2)));
+    streamer.setData(2, ofToString(ofRandom(2)));
+    streamer.setData(1, ofToString(ofRandom(2)));
 }
 
 //----------------------------------------------------------------

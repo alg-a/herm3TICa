@@ -9,7 +9,7 @@ class VHPdata {
     
         //constructor
         VHPdata();
-        VHPdata(int _n, int _x, int _y, int _w, int _h, string _a);
+        VHPdata(int _n, int _x, int _y, int _w, int _h, string _a, int _l);
         VHPdata(int _x, int _y, int _w, int _h);
     
         // variables
@@ -25,6 +25,7 @@ class VHPdata {
         int             lastAverage;
         int             type;
         string          address;
+        int             l;
         ofColor         color;
         ofColor         grey;
     

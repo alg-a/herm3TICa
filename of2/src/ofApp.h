@@ -4,8 +4,9 @@
 #include "ofxXmlSettings.h"
 #include "VHPcam.h"
 #include "VHPosc.h"
+#include "VHPthreadedJson.h"
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp {
 
 	public:
 		void setup();
@@ -23,13 +24,13 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         // settings
-        ofxXmlSettings settings;
+        ofxXmlSettings      settings;
 
         // Cam
-        VHPcam          cam;
+        VHPcam              cam;
     
         // OSC
-        VHPosc          osc;
+        VHPosc              osc;
     
         // info
         ofTrueTypeFont		font;

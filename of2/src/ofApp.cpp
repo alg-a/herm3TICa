@@ -52,6 +52,7 @@ void ofApp::setup(){
     
     // info
     font.loadFont("verdana.ttf", 8, false, true);
+    
 }
 
 //--------------------------------------------------------------
@@ -71,7 +72,9 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     if (key == 'f'){
 		ofToggleFullscreen();
-	}
+	} else if (key == 's') {
+        cam.sierpinski.sendJson();
+    }
 }
 
 //--------------------------------------------------------------

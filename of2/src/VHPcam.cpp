@@ -113,7 +113,6 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     
     // Grid
     gridFbo.allocate(w[4], h[4], GL_RGB, 0);
-    sendGrid = false;
     
     //shaders
     #ifdef TARGET_OPENGLES
@@ -173,6 +172,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     playingBkgNum = 0;
     playingBkg = false;
     invert = false;
+    streaming = false;
     
     x = 0;
     blur = 0.0;
@@ -209,7 +209,7 @@ void VHPcam::update(ofxOscSender & _sender) {
     vidGrabber.update();
     player.update();
     bkgPlayer.update();
-    
+
     if (player.isPlaying()) playerTexture.loadData(player.getPixels(), camWidth*2, camHeight*2, GL_RGB);
     if (bkgPlayer.isPlaying()) background.loadData(bkgPlayer.getPixels(), camWidth, camHeight, GL_RGB);
     
@@ -217,201 +217,268 @@ void VHPcam::update(ofxOscSender & _sender) {
         
         videoTexture.loadData(vidGrabber.getPixels(), camWidth*2, camHeight*2, GL_RGB);
         
-        /* Cam */
-        
         // Invert
-        if (invert) {
-            invertFbo.begin();
-            videoTexture.draw(camWidth*2, 0, -camWidth*2, camHeight*2);
-            invertFbo.end();
-            invertFbo.readToPixels(invertPix);
-            videoTexture.loadData(invertPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+        invertVideo();
+        
+        // 0 interface, 1 sierpinski mago, 2 mascara + grid, 3 sierpinski styled, 4 Black holes white wall
+        switch (mode) {
+            case 0:
+                // Adjust
+                adjustVideo();
+                // contourFinder
+                findBlobs();
+                // Mask
+                mask();
+                break;
+            case 1:
+                // SierpinskiData
+                sierpinskiData(_sender);
+                break;
+            case 2:
+                // Adjust
+                adjustVideo();
+                // Mask
+                mask();
+                // Grid
+                gridStyle(_sender);
+                break;
+            case 3:
+                // Adjust
+                adjustVideo();
+                // Mask
+                mask();
+                // Sierpinski styled
+                sierpinskiStyle();
+                // Grid
+                gridStyle(_sender);
+                break;
+            case 4:
+                // Adjust
+                adjustVideo();
+                // contourFinder
+                findBlobs();
+                // Black holes white wall
+                holes();
+                break;
+            default:
+                break;
         }
-        
-        // Grey
-        greyFbo.begin();
-        greyShader.begin();
-        videoTexture.draw(0, 0, camWidth, camHeight);
-        greyShader.end();
-        greyFbo.end();
-        greyFbo.readToPixels(greyPix);
-        
-        // Sustract
-        sustractFbo.begin();
-        sustractShader.begin();
-        sustractShader.setUniformTexture("texBKG", background, 1);
-        greyFbo.draw(0, 0, camWidth, camHeight);
-        sustractShader.end();
-        sustractFbo.end();
-        sustractFbo.readToPixels(sustractPix);
-        
-        // Blur X
-        fboBlurOnePass.begin();
-        shaderBlurX.begin();
-        shaderBlurX.setUniform1f("blurAmnt", blur);
-        sustractFbo.draw(0, 0, camWidth, camHeight);
-        shaderBlurX.end();
-        fboBlurOnePass.end();
-        
-        // Blur Y
-        fboBlurTwoPass.begin();
-        shaderBlurY.begin();
-        shaderBlurY.setUniform1f("blurAmnt", blur);
-        fboBlurOnePass.draw(0, 0, camWidth, camHeight);
-        shaderBlurY.end();
-        fboBlurTwoPass.end();
-        
-        // Adjust
-        adjFbo.begin();
-        adjShader.begin();
-        adjShader.setUniformTexture("texE", contrast.texture[e[0]], 1);
-        adjShader.setUniform1f("f", f[0]);
-        adjShader.setUniform1f("minColor", min);
-        adjShader.setUniform1f("maxColor", max);
-        fboBlurTwoPass.draw(0, 0, camWidth, camHeight);
-        adjShader.end();
-        adjFbo.end();
-        adjFbo.readToPixels(adjPix);
-        adjTexture.loadData(adjPix.getPixels(), camWidth, camHeight, GL_RGB);
-        
-        colorImage.setFromPixels(adjPix);
-        greyImage.setFromColorImage(colorImage);
-        contourFinder.findContours(greyImage, 60, (camWidth*camHeight)/2, 12, true);
-        
-        /* Video */
-        if (mode==4) {
-            extraFbo.begin();
-            ofClear(255, 255, 255, 255);
-            ofPushStyle();
-            for (int i = 0; i < contourFinder.nBlobs; i++){
-                if(contourFinder.blobs[i].hole) {
-                    for (int o = 0; o<20; o++) {
-                        ofSetColor(0, 0, 0, o*o/5 + 20);
-                        ofFill();
-                        ofSetLineWidth(1.5);
-                        ofBeginShape();
-                        int s = 20 - o;
-                        for (int u = 0; u < contourFinder.blobs[i].pts.size(); u++){
-                            
-                            ofVec3f v = contourFinder.blobs[i].centroid*2 - contourFinder.blobs[i].pts[u]*2;
-                            ofVec3f p = contourFinder.blobs[i].pts[u]*2 + v*s*s/300;
-                            ofVertex(p.x, p.y);
-                            // ofCurveVertex
-                        }
-                        ofVec3f v = contourFinder.blobs[i].centroid*2 - contourFinder.blobs[i].pts[0]*2;
-                        ofVec3f p = contourFinder.blobs[i].pts[0]*2 + v*s*s/300;
-                        ofVertex(p.x, p.y);
-                        ofEndShape();
-                    }
-                }
-            }
-            ofPopStyle();
-            extraFbo.end();
-            extraFbo.readToPixels(extraPix);
-            // Stela
-            stelaFbo.begin();
-            stelaShader.begin();
-            stelaShader.setUniformTexture("tex1", stelaTexture, 1);
-            stelaShader.setUniform1f("mixture", percent[0]/1000.0);
-            extraFbo.draw(0, 0, camWidth*2, camHeight*2);
-            stelaShader.end();
-            stelaFbo.end();
-            // copy the frame buffer pixels
-            stelaFbo.readToPixels(stelaPix);
-            stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
-            // Contraste Final
-            contrastFbo.begin();
-            contrastShader.begin();
-            contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
-            contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
-            contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
-            contrastShader.setUniform1f("f1", f[1]);
-            contrastShader.setUniform1f("f2", f[2]);
-            contrastShader.setUniform1f("f3", f[3]);
-            stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
-            contrastShader.end();
-            contrastFbo.end();
-            // copy the frame buffer pixels
-            contrastFbo.readToPixels(contrastPix);
-            contrastTexture.loadData(contrastPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
-        } else {
-            
-            // Mask
-            maskFbo.begin();
-            switch (vidBackground) {
-                case 0:
-                    ofClear(maskColor);
-                    break;
-                case 1:
-                    stelaTexture.draw(0, 0, camWidth*2, camHeight*2);
-                    break;
-                case 2:
-                    playerTexture.draw(0, 0, camWidth*2, camHeight*2);
-                    break;
-                default:
-                    break;
-            }
-            maskShader.begin();
-            maskShader.setUniformTexture("mask", adjTexture, 1);
-            videoTexture.draw(0, 0, camWidth*2, camHeight*2);
-            maskShader.end();
-            maskFbo.end();
-            maskFbo.readToPixels(maskPix);
-            // Stela
-            stelaFbo.begin();
-            stelaShader.begin();
-            stelaShader.setUniformTexture("tex1", stelaTexture, 1);
-            stelaShader.setUniform1f("mixture", percent[0]/1000.0);
-            maskFbo.draw(0, 0, camWidth*2, camHeight*2);
-            stelaShader.end();
-            stelaFbo.end();
-            // copy the frame buffer pixels
-            stelaFbo.readToPixels(stelaPix);
-            stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
-            
-            // Contraste Final
-            contrastFbo.begin();
-            contrastShader.begin();
-            contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
-            contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
-            contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
-            contrastShader.setUniform1f("f1", f[1]);
-            contrastShader.setUniform1f("f2", f[2]);
-            contrastShader.setUniform1f("f3", f[3]);
-            stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
-            contrastShader.end();
-            contrastFbo.end();
-        }
-                
-        // Sierpinski
-        for (int i=0; i<6; i++) {
-            Fbo[i].begin();
-            ofClear(0, 0, 0, 255);
-            contrastFbo.draw(0, 0, w[i]-2, th[i]);
-            Fbo[i].end();
-            Fbo[i].readToPixels(Pix[i]);
-            Texture[i].loadData(Pix[i].getPixels(), w[i], h[i], GL_RGB);
-        }
-        
-        // Grid
-        gridFbo.begin();
-        adjTexture.draw(0, 0, w[4]-2, h[4]);
-        gridFbo.end();
-        gridFbo.readToPixels(gridPix);
-        grid.update(gridPix.getPixels(), 2);
-        
-        // SierpinskiData
-        for (int i=0; i<6; i++) {
-            sierpinskiFbo[i].begin();
-            ofClear(0, 0, 0, 255);
-            //contrastFbo.draw(0, 0, dw[i]-2, dh[i]);
-            videoTexture.draw(0, 0, w[i]-2, th[i]);
-            sierpinskiFbo[i].end();
-            sierpinskiFbo[i].readToPixels(sierpinskiPix[i]);
-            sierpinskiTexture[i].loadData(sierpinskiPix[i].getPixels(), w[i], h[i], GL_RGB);
-        }
-        sierpinski.update(sierpinskiPix[5].getPixels(), sierpinskiPix[4].getPixels(), sierpinskiPix[3].getPixels(), _sender);
+     }
+}
+
+void VHPcam::invertVideo() {
+    if (invert) {
+        invertFbo.begin();
+        videoTexture.draw(camWidth*2, 0, -camWidth*2, camHeight*2);
+        invertFbo.end();
+        invertFbo.readToPixels(invertPix);
+        videoTexture.loadData(invertPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
     }
+}
+
+void VHPcam::adjustVideo() {
+    // Grey
+    greyFbo.begin();
+    greyShader.begin();
+    videoTexture.draw(0, 0, camWidth, camHeight);
+    greyShader.end();
+    greyFbo.end();
+    greyFbo.readToPixels(greyPix);
+    
+    // Sustract
+    sustractFbo.begin();
+    sustractShader.begin();
+    sustractShader.setUniformTexture("texBKG", background, 1);
+    greyFbo.draw(0, 0, camWidth, camHeight);
+    sustractShader.end();
+    sustractFbo.end();
+    sustractFbo.readToPixels(sustractPix);
+    
+    // Blur X
+    fboBlurOnePass.begin();
+    shaderBlurX.begin();
+    shaderBlurX.setUniform1f("blurAmnt", blur);
+    sustractFbo.draw(0, 0, camWidth, camHeight);
+    shaderBlurX.end();
+    fboBlurOnePass.end();
+    
+    // Blur Y
+    fboBlurTwoPass.begin();
+    shaderBlurY.begin();
+    shaderBlurY.setUniform1f("blurAmnt", blur);
+    fboBlurOnePass.draw(0, 0, camWidth, camHeight);
+    shaderBlurY.end();
+    fboBlurTwoPass.end();
+    
+    // Adjust
+    adjFbo.begin();
+    adjShader.begin();
+    adjShader.setUniformTexture("texE", contrast.texture[e[0]], 1);
+    adjShader.setUniform1f("f", f[0]);
+    adjShader.setUniform1f("minColor", min);
+    adjShader.setUniform1f("maxColor", max);
+    fboBlurTwoPass.draw(0, 0, camWidth, camHeight);
+    adjShader.end();
+    adjFbo.end();
+    adjFbo.readToPixels(adjPix);
+    adjTexture.loadData(adjPix.getPixels(), camWidth, camHeight, GL_RGB);
+}
+
+void VHPcam::findBlobs() {
+    colorImage.setFromPixels(adjPix);
+    greyImage.setFromColorImage(colorImage);
+    contourFinder.findContours(greyImage, 60, (camWidth*camHeight)/2, 12, true);
+}
+
+void VHPcam::mask() {
+    
+    // Mask
+    maskFbo.begin();
+    switch (vidBackground) {
+        case 0:
+            ofClear(maskColor);
+            break;
+        case 1:
+            stelaTexture.draw(0, 0, camWidth*2, camHeight*2);
+            break;
+        case 2:
+            playerTexture.draw(0, 0, camWidth*2, camHeight*2);
+            break;
+        default:
+            break;
+    }
+    maskShader.begin();
+    maskShader.setUniformTexture("mask", adjTexture, 1);
+    videoTexture.draw(0, 0, camWidth*2, camHeight*2);
+    maskShader.end();
+    maskFbo.end();
+    maskFbo.readToPixels(maskPix);
+    
+    // Stela
+    stelaFbo.begin();
+    stelaShader.begin();
+    stelaShader.setUniformTexture("tex1", stelaTexture, 1);
+    stelaShader.setUniform1f("mixture", percent[0]/1000.0);
+    maskFbo.draw(0, 0, camWidth*2, camHeight*2);
+    stelaShader.end();
+    stelaFbo.end();
+    // copy the frame buffer pixels
+    stelaFbo.readToPixels(stelaPix);
+    stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+    
+    // Contraste Final
+    contrastFbo.begin();
+    contrastShader.begin();
+    contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
+    contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
+    contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
+    contrastShader.setUniform1f("f1", f[1]);
+    contrastShader.setUniform1f("f2", f[2]);
+    contrastShader.setUniform1f("f3", f[3]);
+    stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
+    contrastShader.end();
+    contrastFbo.end();
+}
+
+
+//----------------------------------------------------------------
+
+void VHPcam::sierpinskiData(ofxOscSender & _sender) {
+    for (int i=0; i<6; i++) {
+        sierpinskiFbo[i].begin();
+        ofClear(0, 0, 0, 255);
+        //contrastFbo.draw(0, 0, dw[i]-2, dh[i]);
+        videoTexture.draw(0, 0, w[i]-2, th[i]);
+        sierpinskiFbo[i].end();
+        sierpinskiFbo[i].readToPixels(sierpinskiPix[i]);
+        sierpinskiTexture[i].loadData(sierpinskiPix[i].getPixels(), w[i], h[i], GL_RGB);
+    }
+    sierpinski.update(sierpinskiPix[5].getPixels(), sierpinskiPix[4].getPixels(), sierpinskiPix[3].getPixels(), _sender);
+}
+
+//----------------------------------------------------------------
+
+void VHPcam::gridStyle(ofxOscSender & _sender) {
+    // Grid
+    gridFbo.begin();
+    adjTexture.draw(0, 0, w[4]-2, h[4]);
+    gridFbo.end();
+    gridFbo.readToPixels(gridPix);
+    grid.update(gridPix.getPixels(), 2, _sender);
+
+}
+
+//----------------------------------------------------------------
+
+void VHPcam::sierpinskiStyle() {
+    // Sierpinski
+    for (int i=0; i<6; i++) {
+        Fbo[i].begin();
+        ofClear(0, 0, 0, 255);
+        contrastFbo.draw(0, 0, w[i]-2, th[i]);
+        Fbo[i].end();
+        Fbo[i].readToPixels(Pix[i]);
+        Texture[i].loadData(Pix[i].getPixels(), w[i], h[i], GL_RGB);
+    }
+}
+
+//----------------------------------------------------------------
+
+void VHPcam::holes() {
+    extraFbo.begin();
+    ofClear(255, 255, 255, 255);
+    ofPushStyle();
+    for (int i = 0; i < contourFinder.nBlobs; i++){
+        if(contourFinder.blobs[i].hole) {
+            for (int o = 0; o<20; o++) {
+                ofSetColor(0, 0, 0, o*o/5 + 20);
+                ofFill();
+                ofSetLineWidth(1.5);
+                ofBeginShape();
+                int s = 20 - o;
+                for (int u = 0; u < contourFinder.blobs[i].pts.size(); u++){
+                    
+                    ofVec3f v = contourFinder.blobs[i].centroid*2 - contourFinder.blobs[i].pts[u]*2;
+                    ofVec3f p = contourFinder.blobs[i].pts[u]*2 + v*s*s/300;
+                    ofVertex(p.x, p.y);
+                    // ofCurveVertex
+                }
+                ofVec3f v = contourFinder.blobs[i].centroid*2 - contourFinder.blobs[i].pts[0]*2;
+                ofVec3f p = contourFinder.blobs[i].pts[0]*2 + v*s*s/300;
+                ofVertex(p.x, p.y);
+                ofEndShape();
+            }
+        }
+    }
+    ofPopStyle();
+    extraFbo.end();
+    extraFbo.readToPixels(extraPix);
+    // Stela
+    stelaFbo.begin();
+    stelaShader.begin();
+    stelaShader.setUniformTexture("tex1", stelaTexture, 1);
+    stelaShader.setUniform1f("mixture", percent[0]/1000.0);
+    extraFbo.draw(0, 0, camWidth*2, camHeight*2);
+    stelaShader.end();
+    stelaFbo.end();
+    // copy the frame buffer pixels
+    stelaFbo.readToPixels(stelaPix);
+    stelaTexture.loadData(stelaPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+    // Contraste Final
+    contrastFbo.begin();
+    contrastShader.begin();
+    contrastShader.setUniformTexture("texE1", contrast.texture[e[1]], 1);
+    contrastShader.setUniformTexture("texE2", contrast.texture[e[2]], 2);
+    contrastShader.setUniformTexture("texE3", contrast.texture[e[3]], 3);
+    contrastShader.setUniform1f("f1", f[1]);
+    contrastShader.setUniform1f("f2", f[2]);
+    contrastShader.setUniform1f("f3", f[3]);
+    stelaFbo.draw(0, 0, camWidth*2, camHeight*2);
+    contrastShader.end();
+    contrastFbo.end();
+    // copy the frame buffer pixels
+    contrastFbo.readToPixels(contrastPix);
+    contrastTexture.loadData(contrastPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
 }
 
 //----------------------------------------------------------------
@@ -420,111 +487,19 @@ void VHPcam::draw() {
     int n;
     switch (mode) {
         case 0: // Working Interface
-            greyFbo.draw(0, 0, camWidth, camHeight);
-            background.draw(camWidth*3/4, camHeight*3/4, camWidth/4, camHeight/4);
-            sustractFbo.draw(camWidth, 0, camWidth, camHeight);
-            //fboBlurTwoPass.draw(0, camHeight, camWidth, camHeight);
-            adjFbo.draw(0, camHeight, camWidth, camHeight);
-            maskFbo.draw(camWidth, camHeight, camWidth, camHeight);
-            for (int i = 0; i < contourFinder.nBlobs; i++){
-                contourFinder.blobs[i].draw(camWidth, camHeight);
-                ofSetColor(255);
-                if(contourFinder.blobs[i].hole){
-                    ofDrawBitmapString("hole",
-                                       contourFinder.blobs[i].boundingRect.getCenter().x + camWidth,
-                                       contourFinder.blobs[i].boundingRect.getCenter().y + camHeight);
-                }
-            }
-            ofPushStyle();
-            ofSetHexColor(0xffffff);
-            ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
-            ofDrawBitmapString("Num blobs found: " + ofToString(contourFinder.nBlobs), camWidth*2 - 160, camHeight*2 - 24);
-            ofPopStyle();
+            drawInterface();
             break;
         case 1: // SierpinskiData mago + grid
-            /* n = 243;
-            for (int i=0; i<6; i++) {
-                alphaShader.begin();
-                alphaShader.setUniform1f("alpha", sierpinskiMixture);
-                alphaShader.setUniform1i("doAlpha", doAlpha);
-                sierpinskiTexture[5-i].draw(0, 0, w[5-i]*n, h[5-i]*n);
-                alphaShader.end();
-                n /= 3;
-            }*/
-            n = 1;
-            for (int i=0; i<6; i++) {
-                alphaShader.begin();
-                alphaShader.setUniform1f("alpha", sierpinskiMixture);
-                alphaShader.setUniform1i("doAlpha", doAlpha);
-                sierpinskiTexture[i].draw(0, 0, w[i]*n, h[i]*n);
-                alphaShader.end();
-                n *= 3;
-            }
-            sierpinski.draw();
-            ofPushStyle();
-            ofSetHexColor(0xffffff);
-            ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
-            ofPopStyle();
-            if (sendGrid) {
-                ofVec2f v = grid.getVector();
-                ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 260, camHeight*2 - 38);
-                grid.draw();
-            }
+            drawSierpinskiData();
             break;
         case 2: // mascara + grid
-            contrastFbo.draw(0, 0, camWidth*2, camHeight*2);
-            ofPushStyle();
-            ofSetHexColor(0xffffff);
-            ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
-            ofDrawBitmapString("stela: " + ofToString(percent[0]/1000.0), camWidth*2 - 260, camHeight*2 - 24);
-            ofPopStyle();
-            if (sendGrid) {
-                ofVec2f v = grid.getVector();
-                ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 260, camHeight*2 - 38);
-                grid.draw();
-            }
+            drawGrid();
             break;
         case 3: // Advanced sierpinski
-            /* n = 1;
-            for (int i=0; i<6; i++) {
-                sierpinskiShader.begin();
-                Texture[i].draw(camWidth*2, 0, w[i]*n, h[i]*n);
-                sierpinskiShader.end();
-                n *= 3;
-            }*/
-            ofPushStyle();
-            ofSetColor(maskColor);
-            ofFill();
-            ofRect(0, 0, w[0], h[0]);
-            ofPopStyle();
-            n = 243;
-            for (int i=0; i<6; i++) {
-                sierpinskiShader.begin();
-                Texture[5-i].draw(0, 0, w[5-i]*n, h[5-i]*n);
-                sierpinskiShader.end();
-                n /= 3;
-            }
-            if (sendGrid) {
-                ofVec2f v = grid.getVector();
-                grid.draw();
-            }
+            drawSierpinskiStyle();
             break;
-            
         case 4: // holes
-            
-            holeShader.begin();
-            holeShader.setUniformTexture("texE1", contrast.texture[e[4]], 1);
-            holeShader.setUniformTexture("texE2", contrast.texture[e[5]], 2);
-            holeShader.setUniformTexture("mask", contrastTexture, 3);
-            holeShader.setUniform1f("f1", f[4]);
-            holeShader.setUniform1f("f2", f[5]);
-            videoTexture.draw(0, 0, camWidth*2, camHeight*2);
-            holeShader.end();
-            contrastTexture.draw(camWidth*3/2, camHeight*3/2, camWidth/2, camHeight/2);
-            ofPushStyle();
-            ofSetHexColor(0x000000);
-            ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
-            ofPopStyle();
+            drawHoles();
             break;
         default:
             videoTexture.draw(0,0);
@@ -541,6 +516,107 @@ void VHPcam::draw() {
     }
 }
 
+void VHPcam::drawInterface() {
+    greyFbo.draw(0, 0, camWidth, camHeight);
+    background.draw(camWidth*3/4, camHeight*3/4, camWidth/4, camHeight/4);
+    sustractFbo.draw(camWidth, 0, camWidth, camHeight);
+    //fboBlurTwoPass.draw(0, camHeight, camWidth, camHeight);
+    adjFbo.draw(0, camHeight, camWidth, camHeight);
+    maskFbo.draw(camWidth, camHeight, camWidth, camHeight);
+    for (int i = 0; i < contourFinder.nBlobs; i++){
+        contourFinder.blobs[i].draw(camWidth, camHeight);
+        ofSetColor(255);
+        if(contourFinder.blobs[i].hole){
+            ofDrawBitmapString("hole",
+                               contourFinder.blobs[i].boundingRect.getCenter().x + camWidth,
+                               contourFinder.blobs[i].boundingRect.getCenter().y + camHeight);
+        }
+    }
+    ofPushStyle();
+    ofSetHexColor(0xffffff);
+    ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
+    ofDrawBitmapString("Num blobs found: " + ofToString(contourFinder.nBlobs), camWidth*2 - 160, camHeight*2 - 24);
+    ofPopStyle();
+}
+
+void VHPcam::drawSierpinskiData() {
+    int n;
+    /* n = 243;
+     for (int i=0; i<6; i++) {
+     alphaShader.begin();
+     alphaShader.setUniform1f("alpha", sierpinskiMixture);
+     alphaShader.setUniform1i("doAlpha", doAlpha);
+     sierpinskiTexture[5-i].draw(0, 0, w[5-i]*n, h[5-i]*n);
+     alphaShader.end();
+     n /= 3;
+     }*/
+    n = 1;
+    for (int i=0; i<6; i++) {
+        alphaShader.begin();
+        alphaShader.setUniform1f("alpha", sierpinskiMixture);
+        alphaShader.setUniform1i("doAlpha", doAlpha);
+        sierpinskiTexture[i].draw(0, 0, w[i]*n, h[i]*n);
+        alphaShader.end();
+        n *= 3;
+    }
+    sierpinski.draw();
+    ofPushStyle();
+    ofSetHexColor(0xffffff);
+    ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
+    ofPopStyle();
+}
+
+void VHPcam::drawGrid() {
+    contrastFbo.draw(0, 0, camWidth*2, camHeight*2);
+    ofPushStyle();
+    ofSetHexColor(0xffffff);
+    ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
+    ofDrawBitmapString("stela: " + ofToString(percent[0]/1000.0), camWidth*2 - 260, camHeight*2 - 24);
+    ofPopStyle();
+    ofVec2f v = grid.getVector();
+    ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 260, camHeight*2 - 38);
+    grid.draw();
+}
+
+void VHPcam::drawSierpinskiStyle() {
+    int n;
+    /* n = 1;
+     for (int i=0; i<6; i++) {
+     sierpinskiShader.begin();
+     Texture[i].draw(camWidth*2, 0, w[i]*n, h[i]*n);
+     sierpinskiShader.end();
+     n *= 3;
+     }*/
+    ofPushStyle();
+    ofSetColor(maskColor);
+    ofFill();
+    ofRect(0, 0, w[0], h[0]);
+    ofPopStyle();
+    n = 243;
+    for (int i=0; i<6; i++) {
+        sierpinskiShader.begin();
+        Texture[5-i].draw(0, 0, w[5-i]*n, h[5-i]*n);
+        sierpinskiShader.end();
+        n /= 3;
+    }
+}
+
+void VHPcam::drawHoles() {
+    holeShader.begin();
+    holeShader.setUniformTexture("texE1", contrast.texture[e[4]], 1);
+    holeShader.setUniformTexture("texE2", contrast.texture[e[5]], 2);
+    holeShader.setUniformTexture("mask", contrastTexture, 3);
+    holeShader.setUniform1f("f1", f[4]);
+    holeShader.setUniform1f("f2", f[5]);
+    videoTexture.draw(0, 0, camWidth*2, camHeight*2);
+    holeShader.end();
+    contrastTexture.draw(camWidth*3/2, camHeight*3/2, camWidth/2, camHeight/2);
+    ofPushStyle();
+    ofSetHexColor(0x000000);
+    ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
+    ofPopStyle();
+}
+
 //----------------------------------------------------------------
 
 void VHPcam::setContrast(int _n, float _e, float _f) {
@@ -548,6 +624,20 @@ void VHPcam::setContrast(int _n, float _e, float _f) {
     e[_n] = (int) ofClamp(_e, 0, 255);
     f[_n] = (int) ofClamp(_f, 0, 255);
     cout << "e["<< _n << "]: "<< e[_n] << ", f[" << _n << "]: "<< f[_n] << endl;
+}
+
+void VHPcam::setMode(int _m) {
+    // 0 interface, 1 sierpinski mago, 2 mascara + grid, 3 sierpinski styled, 4 Black holes white wall
+    if ((mode==1)&&(_m!=1)) {
+        if (streaming) sierpinski.streamer.stop();
+    } else if ((mode!=1)&&(_m==1)) {
+        if (streaming) sierpinski.streamer.start();
+    } else if ((mode==2)&&(_m!=2)) {
+        if (streaming) grid.streamer.stop();
+    } else if ((mode!=2)&&(_m==2)) {
+        if (streaming) grid.streamer.start();
+    }
+    mode = _m;
 }
 
 //----------------------------------------------------------------

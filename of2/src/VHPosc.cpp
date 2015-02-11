@@ -43,15 +43,13 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.min = m.getArgAsFloat(0);
             _cam.max = m.getArgAsFloat(1);
         } else if (m.getAddress() == "/mode") {
-            _cam.mode = m.getArgAsInt32(0);
+            _cam.setMode(m.getArgAsInt32(0));
         } else if (m.getAddress() == "/threshold") {
             _cam.sierpinski.setThreshold(m.getArgAsInt32(0));
         } else if (m.getAddress() == "/color") {
             _cam.maskColor.set(m.getArgAsInt32(0), m.getArgAsInt32(1), m.getArgAsInt32(2));
         } else if (m.getAddress() == "/maskMode") {
             _cam.vidBackground = m.getArgAsInt32(0);
-        } else if (m.getAddress() == "/grid") {
-            (m.getArgAsInt32(0)==0) ? _cam.sendGrid = false : _cam.sendGrid = true;
         } else if (m.getAddress() == "/sierpinski") {
             _cam.sierpinski.setActive(m.getArgAsInt32(0), m.getArgAsInt32(1), m.getArgAsInt32(2), m.getArgAsInt32(3));
         } else if (m.getAddress() == "/sierpinskiAlpha") {
@@ -63,8 +61,9 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.bkgPlayer.setSpeed(m.getArgAsFloat(0));
         } else if (m.getAddress() == "/invert") {
             (m.getArgAsInt32(0)==0) ? _cam.invert = false : _cam.invert = true;
+        } else if (m.getAddress() == "/streaming") {
+            (m.getArgAsInt32(0)==0) ? _cam.streaming = false : _cam.streaming = true;
         }
-
     }
     string newRecording = _cam.getNewRecording();
     if (newRecording!="") {
@@ -76,17 +75,6 @@ void VHPosc::update(VHPcam & _cam) {
         //cout << " sending: " << msg.getArgAsString(0) << " to address: " << msg.getAddress() << endl;
         sender.sendMessage(msg);
         _cam.emptyNewRecording();
-    }
-    if (_cam.sendGrid) {
-        ofVec2f v = _cam.grid.getVector();
-        if ((v.x>0.0)|(v.y>0.0)) {
-            ofxOscMessage msg;
-            msg.setAddress("/grid/vector");
-            msg.addFloatArg(v.x);
-            msg.addFloatArg(v.y);
-            //cout << " sending: " << msg.getArgAsFloat(0) << " " << msg.getArgAsFloat(1) << " to address: " << msg.getAddress() << endl;
-            sender.sendMessage(msg);
-        }
     }
 }
 

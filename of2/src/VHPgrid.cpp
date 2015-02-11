@@ -25,6 +25,12 @@ void VHPgrid::init(int _w, int _h, int _aw, int _ah) {
         int y = (i - x) / _w;
         area.push_back(VHPdata(x, y, _aw, _ah));
     }
+    
+    // Json
+    streamer.init("http://test.escoitar.org/exec/update_data2.php", 0, "santiago", "vhplab_0000");
+    streamer.addData("grid-vector-x", "float");
+    streamer.addData("grid-vector-y", "float");
+    
 }
 
 //----------------------------------------------------------------
@@ -48,7 +54,7 @@ void VHPgrid::draw() {
 
 //----------------------------------------------------------------
 
-void VHPgrid::update(const unsigned char * _d, int _o) {
+void VHPgrid::update(const unsigned char * _d, int _o, ofxOscSender & _sender) {
     ofVec2f v;
     int n;
     float total_weight = 0.0001;
@@ -66,6 +72,16 @@ void VHPgrid::update(const unsigned char * _d, int _o) {
         */
     }
     vector.set(v.x*area[0].width/total_weight, v.y*area[0].height/total_weight);
+    if ((vector.x>0.0)|(vector.y>0.0)) {
+        streamer.setData(0, ofToString(vector.x/pixW));
+        streamer.setData(1, ofToString(vector.y/pixH));
+        ofxOscMessage msg;
+        msg.setAddress("/grid/vector");
+        msg.addFloatArg(vector.x/pixW);
+        msg.addFloatArg(vector.y/pixH);
+        //cout << " sending: " << msg.getArgAsFloat(0) << " " << msg.getArgAsFloat(1) << " to address: " << msg.getAddress() << endl;
+        _sender.sendMessage(msg);
+    }
 }
 
 //----------------------------------------------------------------

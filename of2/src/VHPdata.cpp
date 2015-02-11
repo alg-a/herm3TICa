@@ -9,7 +9,7 @@ VHPdata::VHPdata() : grey(128, 255), type(0), active(false), on(false), average(
 
 }
 
-VHPdata::VHPdata(int _n, int _x, int _y, int _w, int _h, string _a) : grey(128, 255), vector(_x, _y), width(_w), height(_h), type(2), active(false), on(false), average(0), lastAverage(0), value(false), lastValue(false), pixelNum(_n), address(_a) {
+VHPdata::VHPdata(int _n, int _x, int _y, int _w, int _h, string _a, int _l) : grey(128, 255), vector(_x, _y), width(_w), height(_h), type(2), active(false), on(false), average(0), lastAverage(0), value(false), lastValue(false), pixelNum(_n), address(_a), l(_l) {
     // trigger
 }
 

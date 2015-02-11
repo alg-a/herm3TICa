@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "VHPdata.h"
 #include "ofxOsc.h"
+#include "VHPthreadedJson.h"
 
 //--------------------------------------------------------
 class VHPsierpinski {
@@ -18,6 +19,9 @@ class VHPsierpinski {
         vector<VHPdata>             L_2;
         int                         threshold;
     
+        // Json
+        VHPthreadedJson             streamer;
+    
         // methods
         void init();
         void draw();
@@ -25,6 +29,7 @@ class VHPsierpinski {
         void updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSender & _sender);
         void setActive(int _l, int _n, int _a, int _t);
         void setThreshold(int _t);
+        void sendJson();
     
     private:
 	
