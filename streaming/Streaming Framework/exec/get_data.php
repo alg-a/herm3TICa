@@ -9,23 +9,25 @@
 	if ( (isset($_POST['user_name'])) && ($_POST['user_name']!="") ) {
 		$user_name = $_POST["user_name"];
 	}
-	if ( (isset($_GET['data_name'])) && ($_GET['data_name']!="") ) {
-		$data_name = $_GET["data_name"];
+	if ( (isset($_POST['data_name'])) && ($_POST['data_name']!="") ) {
+		$data_name = $_POST["data_name"];
 	}
-	if ( (isset($_GET['last'])) && ($_GET['last']=="true") ) {
+	if ( (isset($_POST['last'])) && ($_POST['last']=="true") ) {
 		$last = true;
 	}
-	if ( (isset($_GET['stored'])) && ($_GET['stored']=="true") ) {
+	/*
+	if ( (isset($_POST['stored'])) && ($_POST['stored']=="true") ) {
 		$stored = true;
 	}
-	if ( (isset($_GET['all'])) && ($_GET['all']=="true") ) {
+	if ( (isset($_POST['all'])) && ($_POST['all']=="true") ) {
 		$all = true;
 	} else {
 		$all = false;
 	}
-	((isset($_GET['timeoffset']))&&($_GET['timeoffset']!=""))  ? $timeoffset = intval($_GET["timeoffset"]) : $timeoffset = 20;
-	if ( (isset($_GET['lang'])) && ($_GET['lang']!="") ) {
-		include ("../inc/lang_".$_GET['lang'].".php");
+	*/
+	((isset($_POST['timeoffset']))&&($_POST['timeoffset']!=""))  ? $timeoffset = intval($_POST["timeoffset"]) : $timeoffset = 20;
+	if ( (isset($_POST['lang'])) && ($_POST['lang']!="") ) {
+		include ("../inc/lang_".$_POST['lang'].".php");
 	} else {
 		include ("../inc/lang_es.php");
 	}
@@ -40,22 +42,42 @@
 		if (!$user['error']) {
 			// el usuario existe
 			$user_id = $user['data']['id'];
-			$read = db_select_all($db_tables['data'], 'insert_datetime', '>'.$date, '*insert_datetime');
-			if (!$read['error']) {
-				$elements = Array();
-				$return_elements = Array();
-				foreach ($read['data']['herm3tica_data'] as $element) {
-					if (!in_array($element['id'], $elements)) {
-    					array_push($elements, $element['id']);
-    					array_push($return_elements, $element);
-					}	
+			if (isset($data_name)) {
+				$read = db_select_all($db_tables['data'], Array('insert_datetime', 'data_name'), Array('>'.$date, $data_name), '*insert_datetime');
+				if (!$read['error']) {
+					$elements = Array();
+					$return_elements = Array();
+					foreach ($read['data']['herm3tica_data'] as $element) {
+						if (!in_array($element['id'], $elements)) {
+    						array_push($elements, $element['id']);
+    						array_push($return_elements, $element);
+						}	
+					}
+					$return = return_array('exec_get_data', $return_elements, $write['success_selecting_db_entries'], $read['dosql'], false, '', '', '');
+				} else {
+					// error: 3 - no_db_entries_found.
+					// $process_id, $data, $ui_msg, $dosql='', $error=FALSE, $type='', $tec_msg='', $error_process=''
+					$return = return_array('exec_get_data', '', $read['msg'], $read['dosql'], true, 3, "There is no recent data being streamed", 'db_select_all');
 				}
-				$return['data'] = $return_elements;
 			} else {
-				// error: 3 - no_db_entries_found.
-				// $process_id, $data, $ui_msg, $dosql='', $error=FALSE, $type='', $tec_msg='', $error_process=''
-				$return = return_array('exec_get_data', '', $read['msg'], $read['dosql'], true, 3, "There is no recent data being streamed", 'db_select_all');
+				$read = db_select_all($db_tables['data'], 'insert_datetime', '>'.$date, '*insert_datetime');
+				if (!$read['error']) {
+					$elements = Array();
+					$return_elements = Array();
+					foreach ($read['data']['herm3tica_data'] as $element) {
+						if (!in_array($element['id'], $elements)) {
+    						array_push($elements, $element['id']);
+    						array_push($return_elements, $element);
+						}	
+					}
+					$return = return_array('exec_get_data', $return_elements, $write['success_selecting_db_entries'], $read['dosql'], false, '', '', '');
+				} else {
+					// error: 3 - no_db_entries_found.
+					// $process_id, $data, $ui_msg, $dosql='', $error=FALSE, $type='', $tec_msg='', $error_process=''
+					$return = return_array('exec_get_data', '', $read['msg'], $read['dosql'], true, 3, "There is no recent data being streamed", 'db_select_all');
+				}
 			}
+			
 		} else {
 			/// no error handling jet!!!
 			$return = $user;

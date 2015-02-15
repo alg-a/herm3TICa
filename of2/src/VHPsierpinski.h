@@ -4,7 +4,7 @@
 #include "ofMain.h"
 #include "VHPdata.h"
 #include "ofxOsc.h"
-#include "VHPthreadedJson.h"
+#include "VHPhttpJson.h"
 
 //--------------------------------------------------------
 class VHPsierpinski {
@@ -20,7 +20,8 @@ class VHPsierpinski {
         int                         threshold;
     
         // Json
-        VHPthreadedJson             streamer;
+        VHPhttpJson                 streamer;
+        string                      data;
     
         // methods
         void init();

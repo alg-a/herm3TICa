@@ -63,6 +63,12 @@ void VHPosc::update(VHPcam & _cam) {
             (m.getArgAsInt32(0)==0) ? _cam.invert = false : _cam.invert = true;
         } else if (m.getAddress() == "/streaming") {
             (m.getArgAsInt32(0)==0) ? _cam.streaming = false : _cam.streaming = true;
+        } else if (m.getAddress() == "/syphon") {
+            (m.getArgAsInt32(0)==0) ? _cam.syphon = false : _cam.syphon = true;
+        } else if (m.getAddress() == "/sustract") {
+            (m.getArgAsInt32(0)==0) ? _cam.sustract = false : _cam.sustract = true;
+        } else if (m.getAddress() == "/negative") {
+            (m.getArgAsInt32(0)==0) ? _cam.negative = false : _cam.negative = true;
         }
     }
     string newRecording = _cam.getNewRecording();

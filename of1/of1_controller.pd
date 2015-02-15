@@ -320,7 +320,7 @@
 #X coords 0 -1 1 1 205 24 2 0 0;
 #X restore -180 440 pd velocity;
 #X text 100 296 espejo;
-#N canvas 1194 520 450 300 invert 1;
+#N canvas 1194 520 450 300 invert 0;
 #X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
 #X obj 0 76 s of1_msgOSC;
 #X obj 0 31 pack f;

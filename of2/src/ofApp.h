@@ -4,7 +4,6 @@
 #include "ofxXmlSettings.h"
 #include "VHPcam.h"
 #include "VHPosc.h"
-#include "VHPthreadedJson.h"
 
 class ofApp : public ofBaseApp {
 

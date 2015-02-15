@@ -8,6 +8,7 @@
 #include "ofxOpenCv.h"
 #include "VHPgrid.h"
 #include "VHPsierpinski.h"
+#include "ofxSyphon.h"
 
 
 //--------------------------------------------------------
@@ -21,6 +22,7 @@ class VHPcam {
     
         // Cam
         ofVideoGrabber          vidGrabber;
+        ofxSyphonClient         vidClient;
     
         // Player
         ofVideoPlayer           player;
@@ -40,6 +42,9 @@ class VHPcam {
         string                  fileBeingRecorded;
         bool                    recording;
         bool                    playing;
+        bool                    syphon;
+        bool                    sustract;
+        bool                    negative;
         bool                    playingBkg;
         bool                    invert;
         bool                    streaming;
@@ -110,6 +115,7 @@ class VHPcam {
         // shaders
         ofShader                greyShader;
         ofShader                sustractShader;
+        ofShader                invertShader;
         ofShader                maskShader;
         ofShader                adjShader;
         ofShader                shaderBlurX;
@@ -141,7 +147,10 @@ class VHPcam {
         void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw);
     
         void update(ofxOscSender & _sender);
+        void getSyphonVideo();
         void invertVideo();
+        void sustractBackground();
+        void negativeVideo();
         void adjustVideo();
         void findBlobs();
         void mask();

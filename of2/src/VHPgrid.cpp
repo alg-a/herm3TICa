@@ -27,7 +27,7 @@ void VHPgrid::init(int _w, int _h, int _aw, int _ah) {
     }
     
     // Json
-    streamer.init("http://test.escoitar.org/exec/update_data2.php", 0, "santiago", "vhplab_0000");
+    streamer.init("http://test.escoitar.org/exec/update_data.php", "http://test.escoitar.org/exec/update_data2.php", 0, "santiago", "vhplab_0000");
     streamer.addData("grid-vector-x", "float");
     streamer.addData("grid-vector-y", "float");
     
@@ -82,6 +82,7 @@ void VHPgrid::update(const unsigned char * _d, int _o, ofxOscSender & _sender) {
         //cout << " sending: " << msg.getArgAsFloat(0) << " " << msg.getArgAsFloat(1) << " to address: " << msg.getAddress() << endl;
         _sender.sendMessage(msg);
     }
+    streamer.update();
 }
 
 //----------------------------------------------------------------

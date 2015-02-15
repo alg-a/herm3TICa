@@ -4,7 +4,7 @@
 #include "ofMain.h"
 #include "VHPdata.h"
 #include "ofxOsc.h"
-#include "VHPthreadedJson.h"
+#include "VHPhttpJson.h"
 
 //--------------------------------------------------------
 class VHPgrid {
@@ -23,7 +23,7 @@ class VHPgrid {
         ofVec2f                     vector;
     
         // Json
-        VHPthreadedJson             streamer;
+        VHPhttpJson                 streamer;
     
         // methods
         void init(int _w, int _h, int _aw, int _ah);

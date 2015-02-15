@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `herm3tica_data` (
   `data_int` int(11) DEFAULT NULL,
   `data_float` float DEFAULT NULL,
   `data_string` varchar(255) DEFAULT NULL,
+  `data_text` text DEFAULT NULL,
   `insert_datetime` datetime DEFAULT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=61 ;
 

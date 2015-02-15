@@ -23,7 +23,7 @@ void VHPsierpinski::init() {
     threshold = 150;
     
     // Json
-    streamer.init("http://test.escoitar.org/exec/update_data2.php", 0, "santiago", "vhplab_0000");
+    streamer.init("http://test.escoitar.org/exec/update_data.php", "http://test.escoitar.org/exec/get_data.php", 0, "santiago", "vhplab_0000");
     
     for (int i=0; i<total; i++) {
         
@@ -39,7 +39,7 @@ void VHPsierpinski::init() {
         int y_0r = y % n; // resto para poder obtener una división entera 0 - 8
         int y_0 = (y - y_0r) / n; // 26/9, 0 - 2
         // no hace falta hacer el %3
-       
+        
         if ((x_0s==1)&&(y_0==1)) {
             pos = y_0 * 8 * 3 + x_0 * 3; // L_0 8 x 3 RGB
             // we dont want to add de same area several times
@@ -51,7 +51,8 @@ void VHPsierpinski::init() {
                 }
             }
             if (!already) {
-                int l = streamer.addData("L0-"+ ofToString(L_0.size()), "string");
+                //int l = streamer.addData("L0-"+ ofToString(L_0.size()), "string");
+                int l = L_0.size();
                 L_0.push_back(VHPdata(pos, x_0, y_0, 243, 243,"/sierpinski_0/"+ofToString(L_0.size()),l));
                 pos_l0.push_back(pos);
             }
@@ -78,7 +79,8 @@ void VHPsierpinski::init() {
                     }
                 }
                 if (!already) {
-                    int l = streamer.addData("L1-"+ ofToString(L_1.size()), "string");
+                    //int l = streamer.addData("L1-"+ ofToString(L_1.size()), "string");
+                    int l = L_1.size();
                     L_1.push_back(VHPdata(pos, x_1, y_1, 81, 81,"/sierpinski_1/"+ofToString(L_1.size()),l));
                     pos_l1.push_back(pos);
                 }
@@ -118,6 +120,7 @@ void VHPsierpinski::draw() {
 //----------------------------------------------------------------
 
 void VHPsierpinski::update(const unsigned char * _l0, const unsigned char * _l1, const unsigned char * _l2, ofxOscSender & _sender) {
+    data = "";
     for (int u=0; u<L_0.size(); u++) {
         updateData(L_0[u], _l0[L_0[u].pixelNum], _l0[L_0[u].pixelNum+1], _l0[L_0[u].pixelNum+2], _sender);
     }
@@ -126,6 +129,9 @@ void VHPsierpinski::update(const unsigned char * _l0, const unsigned char * _l1,
     }
     for (int u=0; u<L_2.size(); u++) {
         updateData(L_2[u], _l2[L_2[u].pixelNum], _l2[L_2[u].pixelNum+1], _l2[L_2[u].pixelNum+2], _sender);
+    }
+    if (data!="") {
+       streamer.sendData("sierpinski", "text", data); 
     }
 }
 
@@ -153,7 +159,11 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
     _d.setAverage((int) grey);
     if (_d.isActive()) {
         if(_d.isNew()) {
-            streamer.setData(_d.l, ofToString((int)value)+"-"+ofToString(grey)+"-"+ofToString((int)_d.on));
+            if (streamer.streaming) {
+                if (data!="") data += "_";
+                data += ofToString(_d.l) + "-" + ofToString((int)_d.on) + "-" + ofToString((int)value) + "-" + ofToString((int)grey);
+            }
+            //streamer.setData(_d.l, ofToString((int)value)+"-"+ofToString(grey)+"-"+ofToString((int)_d.on));
             ofxOscMessage msg;
             msg.setAddress(_d.address);
             cout << "Address: " << _d.address << endl;
@@ -182,9 +192,11 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
 }
 
 void VHPsierpinski::sendJson(){
+    cout << "sierpinski.sendJson()" << endl;
     streamer.setData(0, ofToString(ofRandom(2)));
     streamer.setData(2, ofToString(ofRandom(2)));
     streamer.setData(1, ofToString(ofRandom(2)));
+    streamer.getData("santiago", "L1-0");
 }
 
 //----------------------------------------------------------------

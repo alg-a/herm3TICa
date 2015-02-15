@@ -44,6 +44,14 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     // init grabber
     vidGrabber.initGrabber(camWidth*2,camHeight*2);
     
+    
+    
+    //using Syphon app Simple Server, found at http://syphon.v002.info/
+    //mClient.set("","Simple Server");
+    vidClient.setup();
+    vidClient.set("ipCam","");
+    
+    
     // allocate the frame buffer object
     // Cam
     invertFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
@@ -118,6 +126,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     #ifdef TARGET_OPENGLES
 	greyShader.load("shaders_gles/greyscale");
     sustractShader.load("shaders_gles/sustraction");
+    invertShader.load("shaders_gles/invert");
     maskShader.load("shaders_gles/mask");
 	stelaShader.load("shaders_gles/stela");
     shaderBlurX.load("shaders_gles/shaderBlurX");
@@ -132,6 +141,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
 	if(ofGetGLProgrammableRenderer()){
 		greyShader.load("shaders_gl3/greyscale");
         sustractShader.load("shaders_gl3/sustraction");
+        invertShader.load("shaders_gl3/invert");
         maskShader.load("shaders_gl3/mask");
 		stelaShader.load("shaders_gl3/stela");
         shaderBlurX.load("shaders_gl3/shaderBlurX");
@@ -145,6 +155,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
 	}else{
 		greyShader.load("shaders/greyscale");
         sustractShader.load("shaders/sustraction");
+        invertShader.load("shaders/invert");
         maskShader.load("shaders/mask.vert");
 		stelaShader.load("shaders/stela");
 		shaderBlurX.load("shaders/shaderBlurX");
@@ -168,6 +179,9 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     fileBeingRecorded = "";
     recording = false;
     playing = false;
+    syphon = false;
+    sustract = true;
+    negative = false;
     BkgNum = _nb;
     playingBkgNum = 0;
     playingBkg = false;
@@ -216,6 +230,9 @@ void VHPcam::update(ofxOscSender & _sender) {
     if (vidGrabber.isFrameNew()){
         
         videoTexture.loadData(vidGrabber.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+        
+        // Syphon
+        getSyphonVideo();
         
         // Invert
         invertVideo();
@@ -266,6 +283,16 @@ void VHPcam::update(ofxOscSender & _sender) {
      }
 }
 
+void VHPcam::getSyphonVideo() {
+    if (syphon) {
+        invertFbo.begin();
+        vidClient.draw(0, 0, camWidth*2, camHeight*2);
+        invertFbo.end();
+        invertFbo.readToPixels(invertPix);
+        videoTexture.loadData(invertPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+    }
+}
+
 void VHPcam::invertVideo() {
     if (invert) {
         invertFbo.begin();
@@ -273,6 +300,35 @@ void VHPcam::invertVideo() {
         invertFbo.end();
         invertFbo.readToPixels(invertPix);
         videoTexture.loadData(invertPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+    }
+}
+
+void VHPcam::sustractBackground() {
+    if (sustract) {
+        // Sustract
+        sustractFbo.begin();
+        sustractShader.begin();
+        sustractShader.setUniformTexture("texBKG", background, 1);
+        greyFbo.draw(0, 0, camWidth, camHeight);
+        sustractShader.end();
+        sustractFbo.end();
+        sustractFbo.readToPixels(sustractPix);
+    }
+}
+
+void VHPcam::negativeVideo() {
+    if (negative) {
+        // Invert to negative
+        sustractFbo.begin();
+        invertShader.begin();
+        if (sustract) {
+            sustractFbo.draw(0, 0, camWidth, camHeight);
+        } else {
+            greyFbo.draw(0, 0, camWidth, camHeight);
+        }
+        invertShader.end();
+        sustractFbo.end();
+        sustractFbo.readToPixels(sustractPix);
     }
 }
 
@@ -285,20 +341,18 @@ void VHPcam::adjustVideo() {
     greyFbo.end();
     greyFbo.readToPixels(greyPix);
     
-    // Sustract
-    sustractFbo.begin();
-    sustractShader.begin();
-    sustractShader.setUniformTexture("texBKG", background, 1);
-    greyFbo.draw(0, 0, camWidth, camHeight);
-    sustractShader.end();
-    sustractFbo.end();
-    sustractFbo.readToPixels(sustractPix);
+    sustractBackground();
+    negativeVideo();
     
     // Blur X
     fboBlurOnePass.begin();
     shaderBlurX.begin();
     shaderBlurX.setUniform1f("blurAmnt", blur);
-    sustractFbo.draw(0, 0, camWidth, camHeight);
+    if ((negative)||(sustract)) {
+        sustractFbo.draw(0, 0, camWidth, camHeight);
+    } else {
+        greyFbo.draw(0, 0, camWidth, camHeight);
+    }
     shaderBlurX.end();
     fboBlurOnePass.end();
     
