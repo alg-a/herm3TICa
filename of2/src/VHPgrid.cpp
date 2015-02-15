@@ -27,7 +27,7 @@ void VHPgrid::init(int _w, int _h, int _aw, int _ah) {
     }
     
     // Json
-    streamer.init("http://test.escoitar.org/exec/update_data.php", "http://test.escoitar.org/exec/update_data2.php", 0, "santiago", "vhplab_0000");
+    streamer.init("http://test.escoitar.org/exec/update_data.php", "http://test.escoitar.org/exec/update_data2.php", 0, "hermetica", "vhplab_0000");
     streamer.addData("grid-vector-x", "float");
     streamer.addData("grid-vector-y", "float");
     

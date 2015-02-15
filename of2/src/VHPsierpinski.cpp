@@ -23,7 +23,7 @@ void VHPsierpinski::init() {
     threshold = 150;
     
     // Json
-    streamer.init("http://test.escoitar.org/exec/update_data.php", "http://test.escoitar.org/exec/get_data.php", 0, "santiago", "vhplab_0000");
+    streamer.init("http://test.escoitar.org/exec/update_data.php", "http://test.escoitar.org/exec/get_data.php", 0, "hermetica", "vhplab_0000");
     
     for (int i=0; i<total; i++) {
         

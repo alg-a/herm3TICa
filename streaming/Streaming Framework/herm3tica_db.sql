@@ -42,10 +42,13 @@ CREATE TABLE IF NOT EXISTS `herm3tica_data` (
 -- Volcado de datos para la tabla `herm3tica_data`
 --
 
-INSERT INTO `herm3tica_data` (`id`, `user_id`, `data_name`, `data_type`, `data_bool`, `data_int`, `data_float`, `data_string`, `insert_datetime`) VALUES
-(1, 1, 'test', 'bool', 0, 0, NULL, NULL, '2015-01-02 12:20:24'),
-(52, 1, 'test', 'bool', 0, 0, NULL, NULL, '2015-01-20 16:55:24'),
-(60, 2, 'testVLC', 'int', NULL, 12, NULL, NULL, '2015-01-21 12:10:30');
+INSERT INTO `herm3tica_data` (`id`, `user_id`, `data_name`, `data_type`, `data_bool`, `data_int`, `data_float`, `data_string`, `data_text`, `insert_datetime`) VALUES
+(1, 1, 'test', 'bool', 0, 0, NULL, NULL, NULL, '2015-01-02 12:20:24'),
+(52, 1, 'test', 'bool', 0, 0, NULL, NULL, NULL, '2015-01-20 16:55:24'),
+(60, 2, 'testVLC', 'int', NULL, 12, NULL, NULL, NULL, '2015-01-21 12:10:30');
+(4, 3, 'sierpinski', 'text', NULL, NULL, NULL, NULL, '6-1-0-12_12-1-0-4', '2015-02-15 12:10:41'),
+(47, 3, 'sierpinski', 'text', NULL, NULL, NULL, NULL, '2-1-0-15_12-0-0-14', '2015-02-15 12:11:10'),
+(63, 3, 'sierpinski', 'text', NULL, NULL, NULL, NULL, '7-0-0-17_12-0-0-17', '2015-02-15 12:11:32');
 
 -- --------------------------------------------------------
 
@@ -76,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `herm3tica_user` (
 
 INSERT INTO `herm3tica_user` (`id`, `user_name`) VALUES
 (1, 'horacio'),
-(2, 'n3m3da');
+(2, 'n3m3da'),
+(3, 'hermetica');
 
 --
 -- Índices para tablas volcadas
