@@ -19,6 +19,7 @@ void ofApp::setup(){
     for(int i = 0; i < n; i++){
         cam.loadImage(settings.getValue("IMAGE", "", i));
     }
+    cam.hierofante.setup(settings);
     
     // OSC
     osc.setup(settings.getValue("HOST", "localhost"), settings.getValue("S_PORT", 8000), settings.getValue("R_PORT", 9000));

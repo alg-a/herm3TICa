@@ -93,6 +93,8 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     invert = false;
     
     ntarot = 0;
+    
+    mode = 0;
 }
 
 void VHPcam::settings(int _stela, int _mixture, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3){
@@ -107,57 +109,53 @@ void VHPcam::settings(int _stela, int _mixture, int _show, int _e0, int _f0, int
 
 //----------------------------------------------------------------
 void VHPcam::update() {
-    if (camRecording) {
-        vidGrabber.update();
-        if (vidGrabber.isFrameNew()){
-            vidTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
-            if (invert) {
-                invertFbo.begin();
-                vidTexture.draw(camWidth, 0, -camWidth, camHeight);
-                invertFbo.end();
-                invertFbo.readToPixels(invertPix);
-                vidTexture.loadData(invertPix.getPixels(), camWidth, camHeight, GL_RGB);
+    
+    switch (mode) {
+        case 0: // narrative
+            if (camRecording) {
+                vidGrabber.update();
+                if (vidGrabber.isFrameNew()){
+                    vidTexture.loadData(vidGrabber.getPixels(), camWidth, camHeight, GL_RGB);
+                    if (invert) {
+                        invertFbo.begin();
+                        vidTexture.draw(camWidth, 0, -camWidth, camHeight);
+                        invertFbo.end();
+                        invertFbo.readToPixels(invertPix);
+                        vidTexture.loadData(invertPix.getPixels(), camWidth, camHeight, GL_RGB);
+                    }
+                    stela();
+                }
+            } else if (playing) {
+                player.update();
+                if (player.isPlaying()) {
+                    vidTexture.loadData(player.getPixels(), camWidth, camHeight, GL_RGB);
+                    stela();
+                }
+            } else {
+                int width = tarot[ntarot].getWidth() * automata.z;
+                int height = tarot[ntarot].getHeight() * automata.z;
+                automata += ofVec3f(ofRandom(-4,4),ofRandom(-4,4),0);
+                checkAutomata();
+                //escalado
+                scaleFbo.begin();
+                tarot[ntarot].draw(automata.x, automata.y, width, height);
+                scaleFbo.end();
+                scaleFbo.readToPixels(scalePix);
+                vidTexture.loadData(scalePix.getPixels(), camWidth, camHeight, GL_RGB);
+                stela();
             }
-            // Stela
-            stelaFbo.begin();
-            stelaShader.begin();
-            stelaShader.setUniformTexture("tex1", stelaTexture, 1);
-            stelaShader.setUniform1f("mixture", percent[0]/1000.0);
-            vidTexture.draw(0,0,camWidth, camHeight);
-            stelaShader.end();
-            stelaFbo.end();
-        }
-    } else if (playing) {
-        player.update();
-        if (player.isPlaying()) {
-            vidTexture.loadData(player.getPixels(), camWidth, camHeight, GL_RGB);
-            stelaFbo.begin();
-            stelaShader.begin();
-            stelaShader.setUniformTexture("tex1", stelaTexture, 1);
-            stelaShader.setUniform1f("mixture", percent[0]/1000.0);
-            vidTexture.draw(0, 0, camWidth, camHeight);
-            stelaShader.end();
-            stelaFbo.end();
-        }
-    } else {
-        int width = tarot[ntarot].getWidth() * automata.z;
-        int height = tarot[ntarot].getHeight() * automata.z;
-        automata += ofVec3f(ofRandom(-4,4),ofRandom(-4,4),0);
-        checkAutomata();
-        
-        //escalado
-        scaleFbo.begin();
-        tarot[ntarot].draw(automata.x, automata.y, width, height);
-        scaleFbo.end();
-        
-        // Stela
-        stelaFbo.begin();
-        stelaShader.begin();
-        stelaShader.setUniformTexture("tex1", stelaTexture, 1);
-        stelaShader.setUniform1f("mixture", percent[0]/1000.0);
-        scaleFbo.draw(0,0);
-        stelaShader.end();
-        stelaFbo.end();
+            break;
+        case 1: // oscFace
+            hierofante.update();
+            invertFbo.begin();
+            hierofante.draw();
+            invertFbo.end();
+            invertFbo.readToPixels(invertPix);
+            vidTexture.loadData(invertPix.getPixels(), camWidth, camHeight, GL_RGB);
+            stela();
+            break;
+        default:
+            break;
     }
     
     // Video
@@ -184,6 +182,18 @@ void VHPcam::update() {
     }
     
 }
+    
+//----------------------------------------------------------------
+void VHPcam::stela() {
+    // Stela
+    stelaFbo.begin();
+    stelaShader.begin();
+    stelaShader.setUniformTexture("tex1", stelaTexture, 1);
+    stelaShader.setUniform1f("mixture", percent[0]/1000.0);
+    vidTexture.draw(0, 0, camWidth, camHeight);
+    stelaShader.end();
+    stelaFbo.end();
+}
 
 //----------------------------------------------------------------
 
@@ -201,6 +211,11 @@ void VHPcam::setContrast(int _n, float _e, float _f) {
     e[_n] = (int) ofClamp(_e, 0, 255);
     f[_n] = (int) ofClamp(_f, 0, 255);
     cout << "e["<< _n << "]: "<< e[_n] << ", f[" << _n << "]: "<< f[_n] << endl;
+}
+
+void VHPcam::setMode(int _m) {
+    // 0 interface, 1 sierpinski mago, 2 mascara + grid, 3 sierpinski styled, 4 Black holes white wall
+    mode = _m;
 }
 
 //----------------------------------------------------------------

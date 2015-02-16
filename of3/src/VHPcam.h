@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "VHPcontrast.h"
 #include "ofxVideoRecorder.h"
+#include "VHPhierofante.h"
 
 //--------------------------------------------------------
 class VHPcam {
@@ -74,12 +75,20 @@ class VHPcam {
         vector<ofImage>         tarot;
         int                     ntarot;
     
+        // hierofante
+        VHPhierofante           hierofante;
+    
+        // display
+        int mode; // 0 narrative, 1 oscFace
+    
         // methods
         void setup(int _w, int _h, int _d, int _f, string _ffmpeg);
         void settings(int _stela, int _mixture, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
         void update();
+        void stela();
         void draw();
         void setContrast(int _n, float _e, float _f);
+        void setMode(int _m);
         bool load(int _n);
         void play(int _p, int _n);
     

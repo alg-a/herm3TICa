@@ -31,6 +31,8 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.percent[0] = m.getArgAsFloat(0);
         }  else if (m.getAddress() == "/mixture") {
             _cam.percent[1] = m.getArgAsFloat(0);
+        } else if (m.getAddress() == "/mode") {
+            _cam.setMode(m.getArgAsInt32(0));
         } else if (m.getAddress() == "/show") {
             (m.getArgAsInt32(0)==0) ? _cam.show = false : _cam.show = true;
         } else if (m.getAddress() == "/play") {
