@@ -17,6 +17,8 @@ void VHPhttpJson::init(string _send_url, string _get_url, int _user_id, string _
     user_name = _user_name;
     auth_key = _auth_key;
     streaming = false;
+    get = true;
+    timer = 0;
     ofAddListener(httpUtils.newResponseEvent, this, &VHPhttpJson::newResponse);
 }
 
@@ -48,6 +50,17 @@ void VHPhttpJson::update() {
             sendData(i);
             send[i] = false;
         }
+    }
+}
+
+//----------------------------------------------------------------
+
+void VHPhttpJson::update(string _user_name, string _data_name) {
+    timer++;
+    if ((get)||(timer>=20)) {
+        getData(_user_name, _data_name);
+        timer = 0;
+        get = false;
     }
 }
 
@@ -101,8 +114,13 @@ void VHPhttpJson::newResponse(ofxHttpResponse & response){
     result.parse(response.responseBody);
     bool error = result["error"].asBool();
     if (error) {
-        string msg = result["error_msg"].asString();
-        cout << msg << endl;
+        if (result["error_type"].asString()=="3") {
+            string msg = result["msg"].asString();
+            cout << msg << endl;
+        } else {
+            string msg = result["error_msg"].asString();
+            cout << msg << endl;
+        }
     } else {
         if (result["process_id"]=="exec_update_data") {
             string d_name = result["data"]["data_name"].asString();
@@ -111,11 +129,12 @@ void VHPhttpJson::newResponse(ofxHttpResponse & response){
             string d_time = result["data"]["insert_datetime"].asString();
             cout << "success to parse JSON after sending data: " << d_name << " " << d_type << " " << d_value << " " << d_time << endl;
         } else if (result["process_id"]=="exec_get_data") {
-            string d_name = result["data"][0]["data_name"].asString();
-            string d_type = result["data"][0]["data_type"].asString();
-            string d_value = result["data"][0]["data_"+d_type].asString();
-            string d_time = result["data"][0]["insert_datetime"].asString();
-            cout << "success to parse JSON after gathering data: " << d_name << " " << d_type << " " << d_value << " " << d_time << endl;
+            last_data[0] = result["data"][0]["data_name"].asString();
+            last_data[1] = result["data"][0]["data_type"].asString();
+            last_data[2] = result["data"][0]["data_"+last_data[1]].asString();
+            last_data[3] = result["data"][0]["insert_datetime"].asString();
+            cout << "success to parse JSON after gathering data: " << last_data[0] << " " << last_data[1] << " " << last_data[2] << " " << last_data[3] << endl;
+            get = true;
         } else {
             cout << response.responseBody << endl;
         }

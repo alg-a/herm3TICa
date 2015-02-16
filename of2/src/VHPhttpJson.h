@@ -24,12 +24,16 @@ public:
     string              auth_key;
     ofxHttpUtils        httpUtils;
     bool                streaming;
+    int                 timer;
+    bool                get;
+    string              last_data[4];
     
     // methods
     void init(string _send_url, string _get_url, int _user_id, string _user_name, string _auth_key);
     int addData(string _name, string _type);
     void setData(int _i, string _data);
     void update();
+    void update(string _user_name, string _data_name);
     void sendData(int _i);
     void sendData(string _data_name, string _data_type, string _data);
     void getData(string _user_name, string _data_name);

@@ -169,7 +169,8 @@ bool VHPdata::isNew(){
         case 1: // 1 toggle
             if (lastValue != value) {
                 if (!value) {
-                    on ? on= false : on= true;
+                    on ? on = false : on= true;
+                    by = "hermetica";
                     cout << "!value + !on " +ofToString(on)<< endl;
                     r = true;
                 } else {

@@ -81,6 +81,7 @@ INSERT INTO `herm3tica_user` (`id`, `user_name`) VALUES
 (1, 'horacio'),
 (2, 'n3m3da'),
 (3, 'hermetica');
+(4, 'pluton');
 
 --
 -- Índices para tablas volcadas

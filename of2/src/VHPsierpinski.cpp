@@ -130,8 +130,20 @@ void VHPsierpinski::update(const unsigned char * _l0, const unsigned char * _l1,
     for (int u=0; u<L_2.size(); u++) {
         updateData(L_2[u], _l2[L_2[u].pixelNum], _l2[L_2[u].pixelNum+1], _l2[L_2[u].pixelNum+2], _sender);
     }
-    if (data!="") {
-       streamer.sendData("sierpinski", "text", data); 
+    if (data!="") streamer.sendData("sierpinski", "text", data);
+    streamer.update("pluton", "sierpinski");
+    if ((streamer.last_data[3]!="")&&(last!=streamer.last_data[3])) {
+        last = streamer.last_data[3];
+        vector <string> areas = ofSplitString(streamer.last_data[2], "_");
+        for (int u=0; u<areas.size(); u++) {
+            vector <string> d = ofSplitString(areas[u], "-");
+            int index = ofToInt(d[0]);
+            int on = ofToInt(d[1]);
+            int value = ofToInt(d[2]);
+            int grey = ofToInt(d[3]);
+            cout << "index: " << index << " on: " << on << " value: " << value << " grey: " << grey << endl;
+            updateStreamerData(L_1[index], on, _sender);
+        }
     }
 }
 
@@ -177,7 +189,11 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
         // type: 0 grid, 1 toggle, 2 trigger, 3 average
         switch (_d.type) {
             case 1:
-                if (_d.on) _d.color.set(255, 255, 0, 255);
+                if ((_d.on)&&(_d.by=="hermetica")) {
+                    _d.color.set(255, 255, 0, 255);
+                } else if ((_d.on)&&(_d.by=="pluton")) {
+                    _d.color.set(255, 0, 255, 255);
+                }
                 break;
             case 2:
                 if ((_d.on)||(_d.getLastValue())) _d.color.set(255, 255, 0, 255);
@@ -190,13 +206,28 @@ void VHPsierpinski::updateData(VHPdata & _d, int _r, int _g, int _b, ofxOscSende
         }
     }
 }
-
+void VHPsierpinski::updateStreamerData(VHPdata & _d, int _on, ofxOscSender & _sender){
+    if (_on != _d.on) {
+        _d.on = _on;
+        if (_d.on) _d.color.set(255, 0, 255, 255);
+        _d.by = "pluton";
+        ofxOscMessage msg;
+        msg.setAddress(_d.address);
+        cout << "Address: " << _d.address << endl;
+        msg.addIntArg(_d.value);
+        msg.addFloatArg(_d.average);
+        msg.addIntArg((int)_d.on);
+        _sender.sendMessage(msg);
+    }
+}
 void VHPsierpinski::sendJson(){
+    /*
     cout << "sierpinski.sendJson()" << endl;
     streamer.setData(0, ofToString(ofRandom(2)));
     streamer.setData(2, ofToString(ofRandom(2)));
     streamer.setData(1, ofToString(ofRandom(2)));
     streamer.getData("santiago", "L1-0");
+     */
 }
 
 //----------------------------------------------------------------

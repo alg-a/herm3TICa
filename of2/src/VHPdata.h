@@ -25,6 +25,7 @@ class VHPdata {
         int             lastAverage;
         int             type;
         string          address;
+        string          by;
         int             l;
         ofColor         color;
         ofColor         grey;
