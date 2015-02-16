@@ -1,4 +1,4 @@
-#N canvas 885 463 925 883 10;
+#N canvas 309 97 925 883 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of2_msgOSC;

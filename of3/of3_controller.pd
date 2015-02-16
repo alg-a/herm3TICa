@@ -1,12 +1,12 @@
-#N canvas 1018 135 637 799 10;
+#N canvas 894 52 637 799 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 0 1;
+-1 -1 8100 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 0 1;
+-1 -1 12800 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -28,10 +28,10 @@
 #N canvas 241 465 430 156 g 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 0 1;
+-1 -1 8100 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 0 1;
+-1 -1 12800 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -53,10 +53,10 @@
 #N canvas 36 580 430 156 b 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 0 1;
+-1 -1 8100 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 0 1;
+-1 -1 12800 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -77,9 +77,9 @@
 #X restore -322 229 pd b;
 #N canvas 317 363 457 135 rgb 0;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 0;
+-1 -1 8100 0;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 0;
+-1 -1 12800 0;
 #X obj 0 54 s c_of3_e1;
 #X obj 0 74 s c_of3_e2;
 #X obj 0 95 s c_of3_e3;
@@ -102,10 +102,10 @@
 #N canvas 201 416 430 156 rgb_mascara 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 10925 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 13423 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -169,44 +169,54 @@
 #X coords 0 -1 1 1 24 24 2 0 0;
 #X restore 68 321 pd salvar;
 #X text 98 324 Gravar;
-#N canvas 953 249 373 442 reciveOSC 0;
-#X obj -826 78 symbol;
+#N canvas 953 249 562 369 reciveOSC 1;
+#X obj -826 101 symbol;
 #X obj -826 32 unpackOSC;
-#X obj -826 54 routeOSC /saved /of3_settings;
-#X obj -724 125 s c_of3_show;
-#X obj -741 102 s c_of3_stela;
-#X obj -707 151 s c_of3_e0;
-#X obj -690 173 s c_of3_f0;
-#X obj -673 197 s c_of3_e1;
-#X obj -656 221 s c_of3_f1;
-#X obj -639 242 s c_of3_e2;
-#X obj -622 266 s c_of3_f2;
-#X obj -605 287 s c_of3_e3;
-#X obj -588 311 s c_of3_f3;
-#X obj -741 80 unpack f f f f f f f f f f;
-#X obj -567 122 delay 1;
-#X msg -567 146 1;
-#X obj -567 166 s loadbang_1;
-#X obj -826 100 outlet;
+#X obj -724 146 s c_of3_show;
+#X obj -741 123 s c_of3_stela;
+#X obj -707 172 s c_of3_e0;
+#X obj -690 194 s c_of3_f0;
+#X obj -673 218 s c_of3_e1;
+#X obj -656 242 s c_of3_f1;
+#X obj -639 263 s c_of3_e2;
+#X obj -622 287 s c_of3_f2;
+#X obj -605 308 s c_of3_e3;
+#X obj -588 332 s c_of3_f3;
+#X obj -741 101 unpack f f f f f f f f f f;
+#X obj -567 143 delay 1;
+#X msg -567 167 1;
+#X obj -567 187 s loadbang_1;
+#X obj -826 123 outlet;
 #X obj -826 8 udpreceive 8002;
-#X connect 0 0 17 0;
-#X connect 1 0 2 0;
-#X connect 2 0 0 0;
-#X connect 2 1 13 0;
-#X connect 13 0 4 0;
-#X connect 13 1 3 0;
-#X connect 13 2 5 0;
-#X connect 13 3 6 0;
-#X connect 13 4 7 0;
-#X connect 13 5 8 0;
-#X connect 13 6 9 0;
-#X connect 13 7 10 0;
-#X connect 13 8 11 0;
-#X connect 13 9 12 0;
-#X connect 13 9 14 0;
+#X obj -826 54 routeOSC /saved /of3_settings /triggerVideo;
+#X obj -473 101 unpack f;
+#X obj -473 172 s of3_play;
+#X obj -406 172 s of3_play_num;
+#X msg -473 149 1;
+#X obj -473 125 t b f;
+#X connect 0 0 16 0;
+#X connect 1 0 18 0;
+#X connect 12 0 3 0;
+#X connect 12 1 2 0;
+#X connect 12 2 4 0;
+#X connect 12 3 5 0;
+#X connect 12 4 6 0;
+#X connect 12 5 7 0;
+#X connect 12 6 8 0;
+#X connect 12 7 9 0;
+#X connect 12 8 10 0;
+#X connect 12 9 11 0;
+#X connect 12 9 13 0;
+#X connect 13 0 14 0;
 #X connect 14 0 15 0;
-#X connect 15 0 16 0;
-#X connect 18 0 1 0;
+#X connect 17 0 1 0;
+#X connect 18 0 0 0;
+#X connect 18 1 12 0;
+#X connect 18 2 19 0;
+#X connect 19 0 23 0;
+#X connect 22 0 20 0;
+#X connect 23 0 22 0;
+#X connect 23 1 21 0;
 #X restore -123 8 pd reciveOSC;
 #X symbolatom -123 29 40 0 0 0 - - -;
 #N canvas 657 427 211 308 enviaOSC 0;
@@ -220,7 +230,7 @@
 #X obj -19 -249 t b b b;
 #X obj 18 -53 spigot;
 #X obj 69 -114 print;
-#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 0 1
+#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 1 1
 ;
 #X obj 18 -74 spigot;
 #X obj 113 -206 inlet;
@@ -265,16 +275,20 @@
 #N canvas 1127 641 450 300 player 0;
 #X obj 0 83 s of3_msgOSC;
 #X obj 0 38 pack f f;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
 #X obj 32 0 hradio 24 1 0 10 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
 #X obj 32 -21 loadbang;
 #X msg 0 60 /play \$1 \$2;
+#X obj 67 -46 r of3_play_num;
+#X obj 0 -46 r of3_play;
 #X connect 1 0 5 0;
 #X connect 2 0 1 0;
 #X connect 3 0 1 1;
 #X connect 4 0 3 0;
 #X connect 5 0 0 0;
+#X connect 6 0 3 0;
+#X connect 7 0 2 0;
 #X coords 0 -1 1 1 272 24 2 0 0;
 #X restore -321 397 pd player;
 #X text -44 400 Reproducir material gravado;
@@ -364,7 +378,7 @@
 #X restore -309 761 pd tarot;
 #N canvas 1187 589 450 300 velocity 0;
 #X obj 3 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 19900 1;
 #X obj 0 55 pack f;
 #X msg 0 77 /velocity \$1;
 #X obj 0 100 s of3_msgOSC;

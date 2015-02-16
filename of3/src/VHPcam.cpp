@@ -248,6 +248,9 @@ void VHPcam::play(int _p, int _n) {
     } else if (_p == 1){
         if(!playing) {
             playing = load(_n);
+        } else {
+            player.stop();
+            playing = load(_n);
         }
     }
 }
