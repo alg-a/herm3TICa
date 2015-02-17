@@ -1,8 +1,8 @@
-#N canvas 293 189 1253 805 10;
+#N canvas 417 164 1253 805 10;
 #X obj 0 0 cnv 15 648 324 empty empty empty 20 12 0 14 -257985 -66577
 0;
 #X obj 431 107 tgl 108 0 empty empty empty 17 7 0 10 -262144 -1 -1
-1 1;
+0 1;
 #X obj 35 251 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 251 251 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -58,7 +58,7 @@
 #X obj 11 47 tgl 12 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
 #X obj 107 107 tgl 108 0 empty empty empty 17 7 0 10 -262144 -1 -1
-0 1;
+1 1;
 #X obj 83 47 tgl 12 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
 #X obj 227 47 tgl 12 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -73,11 +73,11 @@
 1;
 #X obj 623 47 tgl 12 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 467 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 467 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 467 251 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 143 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 143 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 143 251 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
@@ -89,15 +89,15 @@
 1;
 #X obj 515 47 tgl 12 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 35 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+#X obj 35 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
 ;
-#X obj 251 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 251 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X obj 359 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 359 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X obj 575 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 575 35 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X text 3 -69 1 toggle \, 2 trigger \, 3 average;
+#X text 113 -265 1 toggle \, 2 trigger \, 3 average;
 #X obj 732 -20 VHPdataToggle 2 0 1;
 #X obj 732 10 VHPdataMsg 2 0 1;
 #X obj 853 -20 VHPdataToggle 2 1 1;
@@ -585,7 +585,25 @@
 #X obj 449 449 VHPdataToggle 0 0 1;
 #X obj 449 479 VHPdataMsg 0 0 1;
 #X obj 578 449 VHPdataToggle 0 1 1;
-#X obj 578 479 VHPdataMsg 0 1 2;
+#X obj -51 -241 r of2_sierpinski_toggle_1_0;
+#X obj -32 -218 r of2_sierpinski_toggle_1_1;
+#X obj -11 -195 r of2_sierpinski_toggle_1_2;
+#X obj 11 -172 r of2_sierpinski_toggle_1_3;
+#X obj 30 -149 r of2_sierpinski_toggle_1_4;
+#X obj 51 -126 r of2_sierpinski_toggle_1_5;
+#X obj 22 -50 r of2_sierpinski_toggle_0_0;
+#X obj 578 479 VHPdataMsg 0 1 1;
+#X obj -245 -228 r of2_sierpinski_toggle_1_6;
+#X obj -217 -207 r of2_sierpinski_toggle_1_7;
+#X obj -192 -186 r of2_sierpinski_toggle_1_8;
+#X obj -171 -165 r of2_sierpinski_toggle_1_9;
+#X obj -454 -239 r of2_sierpinski_toggle_1_10;
+#X obj 59 -30 r of2_sierpinski_toggle_0_1;
+#X obj -437 -218 r of2_sierpinski_toggle_1_11;
+#X obj -414 -197 r of2_sierpinski_toggle_1_12;
+#X obj -392 -174 r of2_sierpinski_toggle_1_13;
+#X obj -373 -151 r of2_sierpinski_toggle_1_14;
+#X obj -352 -128 r of2_sierpinski_toggle_1_15;
 #X connect 1 0 438 0;
 #X connect 2 0 424 0;
 #X connect 3 0 428 0;
@@ -1022,6 +1040,24 @@
 #X connect 434 1 5 0;
 #X connect 436 0 437 0;
 #X connect 436 1 29 0;
-#X connect 438 0 439 0;
+#X connect 438 0 446 0;
 #X connect 438 1 1 0;
+#X connect 439 0 45 0;
+#X connect 440 0 39 0;
+#X connect 441 0 46 0;
+#X connect 442 0 47 0;
+#X connect 443 0 37 0;
+#X connect 444 0 48 0;
+#X connect 445 0 29 0;
+#X connect 447 0 8 0;
+#X connect 448 0 6 0;
+#X connect 449 0 7 0;
+#X connect 450 0 9 0;
+#X connect 451 0 2 0;
+#X connect 452 0 1 0;
+#X connect 453 0 40 0;
+#X connect 454 0 3 0;
+#X connect 455 0 4 0;
+#X connect 456 0 38 0;
+#X connect 457 0 5 0;
 #X coords 0 -1 1 1 648 324 2 0 0;

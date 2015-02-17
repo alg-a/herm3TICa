@@ -10,9 +10,11 @@ VHPosc::VHPosc() {
 // methods
 
 //----------------------------------------------------------------
-void VHPosc::setup(string _h, int _sp, int _rp) {
+void VHPosc::setup(string _h, string _rh, int _sp, int _rsp, int _rp) {
     sender.setup(_h, _sp);
+    remoteSender.setup(_rh, _rsp);
     cout << "sender host: " << _h << ", " << _sp << endl;
+    cout << "remote sender host: " << _h << ", " << _sp << endl;
     receiver.setup(_rp);
     cout << "receiver port: " << _rp << endl;
 }

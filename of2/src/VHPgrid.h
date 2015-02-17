@@ -21,6 +21,7 @@ class VHPgrid {
         int                         pixW;
         int                         pixH;
         ofVec2f                     vector;
+        float                       total_weight;
     
         // Json
         VHPhttpJson                 streamer;

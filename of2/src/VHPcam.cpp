@@ -121,6 +121,8 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     
     // Grid
     gridFbo.allocate(w[4], h[4], GL_RGB, 0);
+    gridTexture.allocate(w[4], h[4], GL_RGB);
+    gridTexture.setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
     
     //shaders
     #ifdef TARGET_OPENGLES
@@ -218,7 +220,7 @@ void VHPcam::settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _
 }
 
 //----------------------------------------------------------------
-void VHPcam::update(ofxOscSender & _sender) {
+void VHPcam::update(ofxOscSender & _local_sender, ofxOscSender & _remote_sender) {
     
     vidGrabber.update();
     player.update();
@@ -249,7 +251,7 @@ void VHPcam::update(ofxOscSender & _sender) {
                 break;
             case 1:
                 // SierpinskiData
-                sierpinskiData(_sender);
+                sierpinskiData(_local_sender);
                 break;
             case 2:
                 // Adjust
@@ -257,7 +259,7 @@ void VHPcam::update(ofxOscSender & _sender) {
                 // Mask
                 mask();
                 // Grid
-                gridStyle(_sender);
+                gridStyle(_local_sender);
                 break;
             case 3:
                 // Adjust
@@ -267,7 +269,7 @@ void VHPcam::update(ofxOscSender & _sender) {
                 // Sierpinski styled
                 sierpinskiStyle();
                 // Grid
-                gridStyle(_sender);
+                gridStyle(_remote_sender);
                 break;
             case 4:
                 // Adjust
@@ -455,11 +457,12 @@ void VHPcam::sierpinskiData(ofxOscSender & _sender) {
 void VHPcam::gridStyle(ofxOscSender & _sender) {
     // Grid
     gridFbo.begin();
-    adjTexture.draw(0, 0, w[4]-2, h[4]);
+    ofClear(0, 0, 0, 255);
+    adjTexture.draw(0, 0, w[4]-2, th[4]);
     gridFbo.end();
     gridFbo.readToPixels(gridPix);
     grid.update(gridPix.getPixels(), 2, _sender);
-
+    gridTexture.loadData(gridPix.getPixels(), w[4], h[4], GL_RGB);
 }
 
 //----------------------------------------------------------------
@@ -547,6 +550,7 @@ void VHPcam::draw() {
             drawSierpinskiData();
             break;
         case 2: // mascara + grid
+            gridTexture.draw(0, 0, w[4]*h[0]/h[4], h[0]);
             drawGrid();
             break;
         case 3: // Advanced sierpinski
@@ -621,11 +625,19 @@ void VHPcam::drawSierpinskiData() {
 }
 
 void VHPcam::drawGrid() {
-    contrastFbo.draw(0, 0, camWidth*2, camHeight*2);
+    
+    alphaShader.begin();
+    alphaShader.setUniform1f("alpha", sierpinskiMixture);
+    alphaShader.setUniform1i("doAlpha", doAlpha);
+    //contrastFbo.draw(0, 0, camWidth*2, camHeight*2);
+    contrastFbo.draw(0, 0, w[0], h[0]);
+    alphaShader.end();
+    
+    
     ofPushStyle();
     ofSetHexColor(0xffffff);
     ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
-    ofDrawBitmapString("stela: " + ofToString(percent[0]/1000.0), camWidth*2 - 260, camHeight*2 - 24);
+    ofDrawBitmapString("peso: " + ofToString(grid.total_weight), camWidth*2 - 260, camHeight*2 - 24);
     ofPopStyle();
     ofVec2f v = grid.getVector();
     ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 260, camHeight*2 - 38);

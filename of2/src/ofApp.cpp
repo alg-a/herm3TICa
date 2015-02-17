@@ -32,7 +32,7 @@ void ofApp::setup(){
                  settings.getValue("RECORTE_BLACK", 0.25),
                  settings.getValue("RECORTE_WHITE", 0.25));
     // OSC
-    osc.setup(settings.getValue("HOST", "localhost"), settings.getValue("S_PORT", 8000), settings.getValue("R_PORT", 9000));
+    osc.setup(settings.getValue("HOST", "localhost"), settings.getValue("REMOTE_HOST", "172.24.200.243"), settings.getValue("S_PORT", 8000), settings.getValue("REMOTE_S_PORT", 8002), settings.getValue("R_PORT", 9000));
     osc.sendSettings(
                      settings.getValue("STELA", 100),
                      settings.getValue("SHOW", 0),
@@ -59,7 +59,7 @@ void ofApp::setup(){
 void ofApp::update(){
     ofBackground(0,0,0);
     osc.update(cam); // receive msg and set cam
-    cam.update(osc.sender); // update cam and send msg via osc
+    cam.update(osc.sender, osc.remoteSender); // update cam and send msg via osc
 }
 
 //--------------------------------------------------------------

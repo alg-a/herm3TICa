@@ -58,6 +58,7 @@ class VHPcam {
         ofTexture               stelaTexture;
         ofTexture               background; // sustraccion de fondo
         ofTexture               adjTexture;
+        ofTexture               gridTexture;
     
         ofFbo                   invertFbo;
         ofPixels                invertPix;
@@ -146,7 +147,7 @@ class VHPcam {
         void setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _nb);
         void settings(int _stela, int _mixture, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3, float _b, float _rb, float _rw);
     
-        void update(ofxOscSender & _sender);
+        void update(ofxOscSender & _local_sender, ofxOscSender & _remote_sender);
         void getSyphonVideo();
         void invertVideo();
         void sustractBackground();
