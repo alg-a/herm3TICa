@@ -13,7 +13,7 @@ class VHPdata {
         VHPdata(int _x, int _y, int _w, int _h);
     
         // variables
-        ofVec2f         vector;
+        ofVec2f         position;
         int             pixelNum;
         int             width;
         int             height;

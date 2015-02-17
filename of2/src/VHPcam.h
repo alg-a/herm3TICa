@@ -59,6 +59,8 @@ class VHPcam {
         ofTexture               background; // sustraccion de fondo
         ofTexture               adjTexture;
         ofTexture               gridTexture;
+        ofTexture               drawTexture;
+        ofTexture               drawTexture2;
     
         ofFbo                   invertFbo;
         ofPixels                invertPix;
@@ -80,6 +82,10 @@ class VHPcam {
         ofPixels                contrastPix;
         ofFbo                   gridFbo;
         ofPixels                gridPix;
+        ofFbo                   drawFbo;
+        ofPixels                drawPix;
+        ofFbo                   drawFbo2;
+        ofPixels                drawPix2;
     
         // sierpinskiFbo
         ofFbo                   Fbo[6];
@@ -161,7 +167,8 @@ class VHPcam {
         void sierpinskiStyle();
         void holes();
     
-        void draw();
+        void draw(int _x, int _y, int _width, int _height);
+        void drawInFbo();
         void drawInterface();
         void drawSierpinskiData();
         void drawGrid();

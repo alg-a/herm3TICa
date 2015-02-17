@@ -2,7 +2,7 @@
 #X obj 0 0 cnv 15 648 324 empty empty empty 20 12 0 14 -159808 -66577
 0;
 #X obj 431 107 tgl 108 0 empty empty empty 17 7 0 10 -262144 -1 -1
-1 1;
+0 1;
 #X obj 35 251 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 251 251 tgl 36 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -586,6 +586,8 @@
 #X obj 449 479 VHPdataMsg 0 0 3;
 #X obj 578 449 VHPdataToggle 0 1 3;
 #X obj 578 479 VHPdataMsg 0 1 3;
+#X obj 15 -46 r of2_sierpinski_average_0_0;
+#X obj 52 -26 r of2_sierpinski_average_0_1;
 #X connect 1 0 438 0;
 #X connect 2 0 424 0;
 #X connect 3 0 428 0;
@@ -1024,4 +1026,6 @@
 #X connect 436 1 29 0;
 #X connect 438 0 439 0;
 #X connect 438 1 1 0;
+#X connect 440 0 29 0;
+#X connect 441 0 1 0;
 #X coords 0 -1 1 1 648 324 2 0 0;

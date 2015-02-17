@@ -13,8 +13,14 @@ void main() {
 	vec4 texel0 = texture(tex0, texCoordVarying);
 	float a = alpha;
 	if (doAlpha==1) {
-		((floor(mod(texCoordVarying.x, 3)) == 1) && (floor(mod(texCoordVarying.y, 3)) == 1)) ? a = alpha : a = 0.0;
-		if ((texel0.r == 0) && (texel0.g == 0) && (texel0.b == 0)) a = 0.0;
+		if ((floor(mod(texCoordVarying.x, 3)) == 1) && (floor(mod(texCoordVarying.y, 3)) == 1)) {
+			a = alpha;
+		} else {
+			a = 0.0;
+		}
+		if ((texel0.r == 0) && (texel0.g == 0) && (texel0.b == 0)) {
+			a = 0.0;
+		}
 	}
 	outputColor = vec4(texel0.r, texel0.g, texel0.b, a);
 	

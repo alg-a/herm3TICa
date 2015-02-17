@@ -60,12 +60,12 @@ void ofApp::update(){
     ofBackground(0,0,0);
     osc.update(cam); // receive msg and set cam
     cam.update(osc.sender, osc.remoteSender); // update cam and send msg via osc
+    cam.drawInFbo();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    cam.draw();
-    
+    cam.draw(0,0,1280,720);
 }
 
 //--------------------------------------------------------------

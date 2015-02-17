@@ -15,12 +15,12 @@ class VHPgrid {
     
         // variables
         vector<VHPdata>             area;
-        int                         size;
+        int                         gridSize;
         int                         width;
         int                         height;
         int                         pixW;
         int                         pixH;
-        ofVec2f                     vector;
+        ofVec2f                     position;
         float                       total_weight;
     
         // Json

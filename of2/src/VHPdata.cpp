@@ -9,11 +9,11 @@ VHPdata::VHPdata() : grey(128, 255), type(0), active(false), on(false), average(
 
 }
 
-VHPdata::VHPdata(int _n, int _x, int _y, int _w, int _h, string _a, int _l) : grey(128, 255), vector(_x, _y), width(_w), height(_h), type(2), active(false), on(false), average(0), lastAverage(0), value(false), lastValue(false), pixelNum(_n), address(_a), l(_l) {
+VHPdata::VHPdata(int _n, int _x, int _y, int _w, int _h, string _a, int _l) : grey(128, 255), position(_x, _y), width(_w), height(_h), type(2), active(false), on(false), average(0), lastAverage(0), value(false), lastValue(false), pixelNum(_n), address(_a), l(_l) {
     // trigger
 }
 
-VHPdata::VHPdata(int _x, int _y, int _w, int _h) : grey(128, 255), vector(_x, _y), width(_w), height(_h), type(0), active(false), on(false), average(0), lastAverage(0), value(false), lastValue(false) {
+VHPdata::VHPdata(int _x, int _y, int _w, int _h) : grey(128, 255), position(_x, _y), width(_w), height(_h), type(0), active(false), on(false), average(0), lastAverage(0), value(false), lastValue(false) {
     // grid
 }
 
@@ -26,7 +26,7 @@ void VHPdata::draw() {
     ofNoFill();
     ofSetLineWidth(2);
     ofSetColor(color);
-    ofRect(vector.x*width+1, vector.y*height+1, width-2, height-2);
+    ofRect(position.x*width+1, position.y*height+1, width-2, height-2);
     ofPopStyle();
 }
 
@@ -35,14 +35,15 @@ void VHPdata::drawColor(int _n) {
     ofPushStyle();
     ofSetColor(color.r, color.g, color.b, color.a*0.6);
     ofFill();
-    ofRect(vector.x*width+1, vector.y*height+1, width-2, height-2);
+    ofRect(position.x*width+1, position.y*height+1, width-2, height-2);
+    // cout << "rectangle: " << position.x*width+1 << " " << position.y* height+1 << " " << width-2 << " " << height-2 << endl;
     ofPopStyle();
     
     ofPushStyle();
     ofSetColor(color.r, color.g, color.b, 255);
     ofNoFill();
     ofSetLineWidth(2);
-    ofRect(vector.x*width+1, vector.y*height+1, width-2, height-2);
+    ofRect(position.x*width+1, position.y*height+1, width-2, height-2);
     ofPopStyle();
     
     if (active){
@@ -50,22 +51,22 @@ void VHPdata::drawColor(int _n) {
         ofSetHexColor(0xffffff);
         //ofToString(pixelNum)
         //ofToString(_n)
-        ofDrawBitmapString("value: "+ ofToString(value), vector.x*width + 4, vector.y*height + 14);
-        ofDrawBitmapString("on: "+ ofToString(on), vector.x*width + 4, vector.y*height + 14 + 14);
+        ofDrawBitmapString("value: "+ ofToString(value), position.x*width + 4, position.y*height + 14);
+        ofDrawBitmapString("on: "+ ofToString(on), position.x*width + 4, position.y*height + 14 + 14);
         switch (type) {
             case 1:
-                ofDrawBitmapString("type: toggle", vector.x*width + 4, vector.y*height + 14 + 14*2);
+                ofDrawBitmapString("type: toggle", position.x*width + 4, position.y*height + 14 + 14*2);
                 break;
             case 2:
-                ofDrawBitmapString("type: trigger", vector.x*width + 4, vector.y*height + 14 + 14*2);
+                ofDrawBitmapString("type: trigger", position.x*width + 4, position.y*height + 14 + 14*2);
                 break;
             case 3:
-                ofDrawBitmapString("type: average", vector.x*width + 4, vector.y*height + 14 + 14*2);
+                ofDrawBitmapString("type: average", position.x*width + 4, position.y*height + 14 + 14*2);
                 break;
             default:
                 break;
         }
-        ofDrawBitmapString("average: "+ ofToString(average), vector.x*width + 4, vector.y*height + 14 + 14*3);
+        ofDrawBitmapString("average: "+ ofToString(average), position.x*width + 4, position.y*height + 14 + 14*3);
         ofPopStyle();
     }
     

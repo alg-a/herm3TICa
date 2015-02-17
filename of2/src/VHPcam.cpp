@@ -66,6 +66,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     stelaFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     contrastFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     recorderFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
+    drawFbo.allocate(camWidth*2, camHeight*2, GL_RGB);
     
     // allocate textures
     // Cam
@@ -78,6 +79,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     playerTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     recorderTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     stelaTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
+    drawTexture.allocate(camWidth*2, camHeight*2, GL_RGB);
     
     // allocate ofxCv Images
     greyImage.allocate(camWidth,camHeight);
@@ -123,6 +125,8 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     gridFbo.allocate(w[4], h[4], GL_RGB, 0);
     gridTexture.allocate(w[4], h[4], GL_RGB);
     gridTexture.setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+    drawFbo2.allocate(w[0], h[0], GL_RGB, 0);
+    drawTexture2.allocate(w[0], h[0], GL_RGB);
     
     //shaders
     #ifdef TARGET_OPENGLES
@@ -259,7 +263,7 @@ void VHPcam::update(ofxOscSender & _local_sender, ofxOscSender & _remote_sender)
                 // Mask
                 mask();
                 // Grid
-                gridStyle(_local_sender);
+                gridStyle(_remote_sender);
                 break;
             case 3:
                 // Adjust
@@ -540,7 +544,13 @@ void VHPcam::holes() {
 
 //----------------------------------------------------------------
 
-void VHPcam::draw() {
+void VHPcam::draw(int _x, int _y, int _width, int _height) {
+    drawTexture.draw( _x, _y, _width, _height);
+}
+
+//----------------------------------------------------------------
+
+void VHPcam::drawInFbo() {
     int n;
     switch (mode) {
         case 0: // Working Interface
@@ -550,7 +560,6 @@ void VHPcam::draw() {
             drawSierpinskiData();
             break;
         case 2: // mascara + grid
-            gridTexture.draw(0, 0, w[4]*h[0]/h[4], h[0]);
             drawGrid();
             break;
         case 3: // Advanced sierpinski
@@ -574,7 +583,10 @@ void VHPcam::draw() {
     }
 }
 
+
 void VHPcam::drawInterface() {
+    drawFbo.begin();
+    
     greyFbo.draw(0, 0, camWidth, camHeight);
     background.draw(camWidth*3/4, camHeight*3/4, camWidth/4, camHeight/4);
     sustractFbo.draw(camWidth, 0, camWidth, camHeight);
@@ -595,9 +607,15 @@ void VHPcam::drawInterface() {
     ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
     ofDrawBitmapString("Num blobs found: " + ofToString(contourFinder.nBlobs), camWidth*2 - 160, camHeight*2 - 24);
     ofPopStyle();
+    
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
 }
 
 void VHPcam::drawSierpinskiData() {
+    drawFbo2.begin();
+    
     int n;
     /* n = 243;
      for (int i=0; i<6; i++) {
@@ -614,6 +632,7 @@ void VHPcam::drawSierpinskiData() {
         alphaShader.setUniform1f("alpha", sierpinskiMixture);
         alphaShader.setUniform1i("doAlpha", doAlpha);
         sierpinskiTexture[i].draw(0, 0, w[i]*n, h[i]*n);
+        //cout << "alphaShader w[i]*n " << w[i]*n << " h[i]*n " << h[i]*n << endl;
         alphaShader.end();
         n *= 3;
     }
@@ -622,9 +641,25 @@ void VHPcam::drawSierpinskiData() {
     ofSetHexColor(0xffffff);
     ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 160, camHeight*2 - 10);
     ofPopStyle();
+    
+    drawFbo2.end();
+    drawFbo2.readToPixels(drawPix2);
+    drawTexture2.loadData(drawPix2.getPixels(), w[0], h[0], GL_RGB);
+    
+    int newHeight = h[0]*camWidth*2/w[0];
+    int marginH = (camHeight*2 - newHeight)/2;
+    drawFbo.begin();
+    ofClear(0, 0, 0,255);
+    drawTexture2.draw(0, marginH, camWidth*2, newHeight); //
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
 }
 
 void VHPcam::drawGrid() {
+    drawFbo2.begin();
+    
+    gridTexture.draw(0, 0, w[4]*h[0]/h[4], h[0]);
     
     alphaShader.begin();
     alphaShader.setUniform1f("alpha", sierpinskiMixture);
@@ -642,9 +677,24 @@ void VHPcam::drawGrid() {
     ofVec2f v = grid.getVector();
     ofDrawBitmapString("grid vector: " + ofToString(v.x) +" " + ofToString(v.y), camWidth*2 - 260, camHeight*2 - 38);
     grid.draw();
+    
+    drawFbo2.end();
+    drawFbo2.readToPixels(drawPix2);
+    drawTexture2.loadData(drawPix2.getPixels(), w[0], h[0], GL_RGB);
+    
+    int newHeight = h[0]*camWidth*2/w[0];
+    int marginH = (camHeight*2 - newHeight)/2;
+    drawFbo.begin();
+    ofClear(0, 0, 0,255);
+    drawTexture2.draw(0, marginH, camWidth*2, newHeight); //
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
 }
 
 void VHPcam::drawSierpinskiStyle() {
+    drawFbo2.begin();
+    
     int n;
     /* n = 1;
      for (int i=0; i<6; i++) {
@@ -665,9 +715,25 @@ void VHPcam::drawSierpinskiStyle() {
         sierpinskiShader.end();
         n /= 3;
     }
+    
+    drawFbo2.end();
+    drawFbo2.readToPixels(drawPix2);
+    drawTexture2.loadData(drawPix2.getPixels(), w[0], h[0], GL_RGB);
+    
+    int newHeight = h[0]*camWidth*2/w[0];
+    int marginH = (camHeight*2 - newHeight)/2;
+    drawFbo.begin();
+    ofClear(0, 0, 0,255);
+    drawTexture2.draw(0, marginH, camWidth*2, newHeight); //
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+
 }
 
 void VHPcam::drawHoles() {
+    drawFbo.begin();
+    
     holeShader.begin();
     holeShader.setUniformTexture("texE1", contrast.texture[e[4]], 1);
     holeShader.setUniformTexture("texE2", contrast.texture[e[5]], 2);
@@ -681,6 +747,11 @@ void VHPcam::drawHoles() {
     ofSetHexColor(0x000000);
     ofDrawBitmapString("framerate: " + ofToString(ofGetFrameRate()), camWidth*2 - 260, camHeight*2 - 10);
     ofPopStyle();
+    
+    
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
 }
 
 //----------------------------------------------------------------

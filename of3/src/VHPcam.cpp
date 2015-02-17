@@ -134,7 +134,7 @@ void VHPcam::update() {
             } else {
                 int width = tarot[ntarot].getWidth() * automata.z;
                 int height = tarot[ntarot].getHeight() * automata.z;
-                automata += ofVec3f(ofRandom(-4,4),ofRandom(-4,4),0);
+                //automata += ofVec3f(ofRandom(-4,4),ofRandom(-4,4),0);
                 checkAutomata();
                 //escalado
                 scaleFbo.begin();
