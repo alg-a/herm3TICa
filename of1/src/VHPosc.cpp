@@ -56,6 +56,10 @@ void VHPosc::update(VHPcam & _cam) {
         sender.sendMessage(msg);
         _cam.emptyNewRecording();
     }
+    ofxOscMessage msg2;
+    msg2.setAddress("/framerate");
+    msg2.addFloatArg(ofGetFrameRate());
+    sender.sendMessage(msg2);
 }
 
 //----------------------------------------------------------------
