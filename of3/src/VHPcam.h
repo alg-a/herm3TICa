@@ -50,6 +50,9 @@ class VHPcam {
         ofFbo                   of2Fbo;
         ofPixels                of2Pix;
         ofTexture               of2Texture;
+        ofFbo                   drawFbo;
+        ofPixels                drawPix;
+        ofTexture               drawTexture;
     
         ofVec3f                 automata;
     
@@ -86,7 +89,8 @@ class VHPcam {
         void settings(int _stela, int _mixture, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
         void update();
         void stela();
-        void draw();
+        void draw(int _x, int _y, int _width, int _height);
+        void drawInFbo();
         void setContrast(int _n, float _e, float _f);
         void setMode(int _m);
         bool load(int _n);

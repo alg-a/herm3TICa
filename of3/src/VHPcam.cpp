@@ -57,11 +57,13 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     scaleFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     stelaFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     of2Fbo.allocate(camWidth, camHeight, GL_RGB, 0);
+    drawFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     
     // allocate textures
     vidTexture.allocate(camWidth, camHeight, GL_RGB);
     of2Texture.allocate(camWidth, camHeight, GL_RGB);
     stelaTexture.allocate(camWidth, camHeight, GL_RGB);
+    drawTexture.allocate(camWidth, camHeight, GL_RGB);
     
     //shaders
     #ifdef TARGET_OPENGLES
@@ -181,6 +183,8 @@ void VHPcam::update() {
         vidRecorder.addFrame(of2Pix);
     }
     
+    drawInFbo();
+    
 }
     
 //----------------------------------------------------------------
@@ -197,11 +201,19 @@ void VHPcam::stela() {
 
 //----------------------------------------------------------------
 
-void VHPcam::draw() {
+void VHPcam::drawInFbo() {
+    drawFbo.begin();
     of2Fbo.draw(0,0);
     if ((player.isPlaying())&&(showPlayer)) {
         player.draw(camWidth*2/4, camHeight*3/4, camWidth/4, camHeight/4);
     }
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth, camHeight, GL_RGB);
+}
+
+void VHPcam::draw(int _x, int _y, int _width, int _height) {
+    drawTexture.draw( _x, _y, _width, _height);
 }
 
 //----------------------------------------------------------------
