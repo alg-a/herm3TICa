@@ -66,7 +66,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg, int _n, int _
     stelaFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     contrastFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     recorderFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
-    drawFbo.allocate(camWidth*2, camHeight*2, GL_RGB);
+    drawFbo.allocate(camWidth*2, camHeight*2, GL_RGB, 0);
     
     // allocate textures
     // Cam

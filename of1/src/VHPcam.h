@@ -38,6 +38,7 @@ class VHPcam {
         ofTexture               videoTexture;
         ofTexture               playerTexture;
         ofTexture               timeBufferTexture;
+        ofTexture               drawTexture;
     
         ofFbo                   camFbo;
         ofPixels                camPix;
@@ -49,6 +50,8 @@ class VHPcam {
         ofPixels                stelaPix;
         ofFbo                   greyFbo;
         ofPixels                greyPix;
+        ofFbo                   drawFbo;
+        ofPixels                drawPix;
     
         bool                    show;
         bool                    showPlayer;
@@ -75,7 +78,8 @@ class VHPcam {
         void setup(int _w, int _h, int _d, int _f, string _ffmpeg);
         void settings(int _stela, int _mixture, int _show, int _e0, int _f0, int _e1, int _f1, int _e2, int _f2, int _e3, int _f3);
         void update();
-        void draw();
+        void draw(int _x, int _y, int _width, int _height);
+        void drawInFbo();
         void setContrast(int _n, float _e, float _f);
         bool load(int _n);
         void play(int _p, int _n);

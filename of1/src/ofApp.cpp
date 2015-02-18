@@ -34,7 +34,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    cam.draw();
+    cam.draw(0,0,1920,1080);
     ofPushStyle();
     ofSetHexColor(0xffffff);
     font.drawString("framerate: "+ofToString(ofGetFrameRate()), 20, cam.camHeight+ 20);

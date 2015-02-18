@@ -56,11 +56,13 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     playerFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     stelaFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     greyFbo.allocate(camWidth/2, camHeight/2, GL_RGB, 0);
+    drawFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     
     // allocate textures
     videoTexture.allocate(camWidth, camHeight, GL_RGB);
     playerTexture.allocate(camWidth, camHeight, GL_RGB);
     timeBufferTexture.allocate(camWidth, camHeight, GL_RGB);
+    drawTexture.allocate(camWidth, camHeight, GL_RGB);
     
     //shaders
     #ifdef TARGET_OPENGLES
@@ -181,11 +183,12 @@ void VHPcam::update() {
         }
         
     }
+    drawInFbo();
 }
 
 //----------------------------------------------------------------
-
-void VHPcam::draw() {
+void VHPcam::drawInFbo() {
+    drawFbo.begin();
     camFbo.draw(0,0);
     if (show) greyFbo.draw(camWidth*3/4, camHeight*3/4, camWidth/4, camHeight/4);
     if ((player.isPlaying())&&(showPlayer)) {
@@ -193,8 +196,15 @@ void VHPcam::draw() {
     }
     
     //if (vidRecorder->isRecording()){
-        // do something
+    // do something
     //}
+    drawFbo.end();
+    drawFbo.readToPixels(drawPix);
+    drawTexture.loadData(drawPix.getPixels(), camWidth, camHeight, GL_RGB);
+}
+
+void VHPcam::draw(int _x, int _y, int _width, int _height) {
+    drawTexture.draw( _x, _y, _width, _height);
 }
 
 //----------------------------------------------------------------
