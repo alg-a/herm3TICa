@@ -3,10 +3,10 @@
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 7900 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -258113
--1 -1 13400 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -28,10 +28,10 @@
 #N canvas 241 465 430 156 g 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 7900 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4034
--1 -1 13400 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -53,10 +53,10 @@
 #N canvas 36 580 430 156 b 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 7900 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -4160
--1 -1 13400 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -77,9 +77,9 @@
 #X restore -322 229 pd b;
 #N canvas 317 363 457 135 rgb 0;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 7900 0;
+-1 -1 0 0;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 13400 0;
+-1 -1 0 0;
 #X obj 0 31 t f f f;
 #X obj 209 32 t f f f;
 #X obj 0 54 s of3_e1;
@@ -102,10 +102,10 @@
 #N canvas 201 416 430 156 rgb_mascara 0;
 #X obj 0 96 s of3_msgOSC;
 #X obj 3 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 10925 1;
+-1 -1 0 1;
 #X floatatom 0 27 5 0 0 0 - - -;
 #X obj 212 0 hsl 200 24 0 255 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 13423 1;
+-1 -1 0 1;
 #X floatatom 209 27 5 0 0 0 - - -;
 #X obj 0 51 pack f f;
 #X msg 209 48 bang;
@@ -169,7 +169,7 @@
 #X coords 0 -1 1 1 24 24 2 0 0;
 #X restore 68 321 pd salvar;
 #X text 98 324 Gravar;
-#N canvas 856 239 743 374 reciveOSC 0;
+#N canvas 851 638 743 374 reciveOSC 0;
 #X obj -826 101 symbol;
 #X obj -826 32 unpackOSC;
 #X obj -741 101 unpack f f f f f f f f f f;
@@ -236,13 +236,13 @@
 #X obj 18 -115 packOSC;
 #X obj 0 -21 udpsend;
 #X msg 11 -160 disconnect;
-#X obj 0 0 tgl 15 0 empty empty connected 20 7 0 8 -24198 -1 -1 0 1
+#X obj 0 0 tgl 15 0 empty empty connected 20 7 0 8 -24198 -1 -1 1 1
 ;
 #X obj -19 -271 loadbang;
 #X obj -19 -249 t b b b;
 #X obj 18 -53 spigot;
 #X obj 69 -114 print;
-#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 1 1
+#X obj 79 0 tgl 15 0 empty empty sending 20 7 0 8 -24198 -1 -1 0 1
 ;
 #X obj 18 -74 spigot;
 #X obj 113 -206 inlet;
@@ -287,7 +287,7 @@
 #N canvas 1127 641 450 300 player 0;
 #X obj 0 83 s of3_msgOSC;
 #X obj 0 38 pack f f;
-#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1;
+#X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
 #X obj 32 0 hradio 24 1 0 10 empty empty empty 0 -8 0 10 -262144 -1
 -1 0;
 #X obj 32 -21 loadbang;
@@ -330,7 +330,7 @@
 #X coords 0 -1 1 1 24 24 2 0 0;
 #X restore 58 489 pd webcam;
 #X text 91 496 webcam;
-#N canvas 378 580 636 319 position 0;
+#N canvas 933 666 636 319 position 0;
 #X obj 240 245 s of3_msgOSC;
 #X msg 240 222 /position \$1 \$2;
 #X obj 240 200 pack f f;
@@ -349,7 +349,7 @@
 #X obj 439 2 r of2_vector_y;
 #X obj 439 23 average 10;
 #X obj 531 2 r of3_vector_y;
-#X obj 439 44 * 2;
+#X obj 439 44 * 1;
 #X connect 1 0 0 0;
 #X connect 2 0 1 0;
 #X connect 3 0 2 0;
@@ -402,19 +402,6 @@
 #X connect 4 0 0 0;
 #X coords 0 -1 1 1 272 24 2 0 0;
 #X restore -320 731 pd tarot;
-#N canvas 1187 589 450 300 velocity 0;
-#X obj 3 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 3400 0;
-#X obj 0 55 pack f;
-#X msg 0 77 /velocity \$1;
-#X obj 0 100 s of3_msgOSC;
-#X obj 0 -30 r of3_velocity;
-#X connect 0 0 1 0;
-#X connect 1 0 2 0;
-#X connect 2 0 3 0;
-#X connect 4 0 0 0;
-#X coords 0 -1 1 1 205 24 2 0 0;
-#X restore -321 429 pd velocity;
 #X text 99 297 espejo;
 #N canvas 1194 520 450 300 invert 0;
 #X obj 0 0 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1;
@@ -442,43 +429,70 @@
 #X coords 0 -1 1 1 120 24 2 0 0;
 #X restore -322 640 pd mode;
 #X text -194 642 Mode (narrative \, oscFace);
-#N canvas 980 689 250 316 emperador 0;
-#X obj 74 -23 r of2_weight;
+#N canvas 940 506 241 340 emperador 0;
+#X obj 143 -53 r of2_weight;
 #X floatatom 52 4 5 0 0 0 - - -;
 #X floatatom 64 58 5 0 0 0 - - -;
 #X floatatom 103 58 5 0 0 0 - - -;
 #X obj 64 36 min-max;
-#X obj 52 -44 r of3_weight;
-#X obj 52 99 /;
+#X obj 121 -74 r of3_weight;
+#X obj 40 103 /;
 #X text 145 191 1 - 1000;
 #X text 109 235 0 - 1;
-#X obj 13 214 expr 1 - ($f1 * 0.8);
-#X obj 64 169 expr 1000 - ($f1 * 950);
 #X obj 64 191 s of3_stela;
 #X obj 13 236 s of3_velocity;
 #X obj 100 100 tgl 24 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 64 147 spigot;
 #X obj 13 193 spigot;
-#X floatatom -3 137 5 0 0 0 - - -;
-#X connect 0 0 1 0;
+#X obj 122 5 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 52 -27 average 20;
+#X obj 13 214 expr ($f1 * 0.6) + 0.4;
+#X obj 64 169 expr ($f1 * 1000);
+#X connect 0 0 15 0;
 #X connect 1 0 4 0;
 #X connect 1 0 6 0;
 #X connect 3 0 6 1;
 #X connect 4 0 2 0;
 #X connect 4 1 3 0;
-#X connect 5 0 1 0;
-#X connect 6 0 14 0;
-#X connect 6 0 15 0;
-#X connect 6 0 16 0;
-#X connect 9 0 12 0;
-#X connect 10 0 11 0;
-#X connect 13 0 14 1;
-#X connect 13 0 15 1;
-#X connect 14 0 10 0;
-#X connect 15 0 9 0;
+#X connect 5 0 15 0;
+#X connect 6 0 12 0;
+#X connect 6 0 13 0;
+#X connect 11 0 12 1;
+#X connect 11 0 13 1;
+#X connect 12 0 17 0;
+#X connect 13 0 16 0;
+#X connect 14 0 4 1;
+#X connect 15 0 1 0;
+#X connect 16 0 10 0;
+#X connect 17 0 9 0;
 #X coords 0 -1 1 1 24 24 2 100 100;
 #X restore 187 662 pd emperador;
 #X text 12 698 Emperador (weight to stela & velocity);
+#N canvas 808 399 450 300 velocity 0;
+#X obj 3 0 hsl 200 24 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 0;
+#X obj 0 35 pack f;
+#X msg 0 57 /velocity \$1;
+#X obj 0 80 s of3_msgOSC;
+#X obj 0 -100 r of3_velocity;
+#X obj 0 -27 f;
+#X obj 38 -63 bang;
+#X obj 103 -61 metro 500;
+#X obj 157 -93 inlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 5 1;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
+#X connect 8 0 7 0;
+#X coords 0 -1 1 1 205 24 2 0 0;
+#X restore -300 429 pd velocity;
+#X obj -321 437 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1
+0 1;
 #X connect 13 0 14 0;
 #X connect 26 0 15 0;
+#X connect 37 0 36 0;
