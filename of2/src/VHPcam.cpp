@@ -574,9 +574,9 @@ void VHPcam::drawInFbo() {
             break;
     }
     if(recording){
-        recorderTexture.loadScreenData(0, 0, camWidth*2, camHeight*2);
+        //recorderTexture.loadScreenData(0, 0, camWidth*2, camHeight*2);
         recorderFbo.begin();
-        recorderTexture.draw(0, 0, camWidth*2, camHeight*2);
+        drawTexture.draw(0, 0, camWidth*2, camHeight*2);
         recorderFbo.end();
         recorderFbo.readToPixels(recorderPix);
         recorder.addFrame(recorderPix);
@@ -611,6 +611,7 @@ void VHPcam::drawInterface() {
     drawFbo.end();
     drawFbo.readToPixels(drawPix);
     drawTexture.loadData(drawPix.getPixels(), camWidth*2, camHeight*2, GL_RGB);
+    
 }
 
 void VHPcam::drawSierpinskiData() {

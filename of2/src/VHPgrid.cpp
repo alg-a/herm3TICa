@@ -57,7 +57,7 @@ void VHPgrid::draw() {
 void VHPgrid::update(const unsigned char * _d, int _o, ofxOscSender & _sender) {
     ofVec2f v;
     int n;
-    total_weight = 0.0001;
+    total_weight = 0.00001;
     for (int i=0; i<gridSize; i++) {
         int n = area[i].position.y * (width+_o) * 3 + area[i].position.x * 3;
         float grey = 0.2126 * _d[n] + 0.7152 * _d[n+1] + 0.0722 * _d[n+2];
@@ -82,12 +82,12 @@ void VHPgrid::update(const unsigned char * _d, int _o, ofxOscSender & _sender) {
         //cout << " sending: " << msg.getArgAsFloat(0) << " " << msg.getArgAsFloat(1) << " to address: " << msg.getAddress() << endl;
         _sender.sendMessage(msg);
     }
-    if (total_weight > 0.0001) {
+    //if (total_weight > 0.00001) {
         ofxOscMessage msg;
         msg.setAddress("/grid/weight");
         msg.addFloatArg(total_weight);
         _sender.sendMessage(msg);
-    }
+    //}
     streamer.update();
 }
 

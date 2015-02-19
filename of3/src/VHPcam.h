@@ -53,6 +53,8 @@ class VHPcam {
         ofFbo                   drawFbo;
         ofPixels                drawPix;
         ofTexture               drawTexture;
+        ofFbo                   recorderFbo;
+        ofPixels                recorderPix;
     
         ofVec3f                 automata;
     

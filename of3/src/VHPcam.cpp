@@ -58,6 +58,7 @@ void VHPcam::setup(int _w, int _h, int _d, int _f, string _ffmpeg) {
     stelaFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     of2Fbo.allocate(camWidth, camHeight, GL_RGB, 0);
     drawFbo.allocate(camWidth, camHeight, GL_RGB, 0);
+    recorderFbo.allocate(camWidth, camHeight, GL_RGB, 0);
     
     // allocate textures
     vidTexture.allocate(camWidth, camHeight, GL_RGB);
@@ -179,11 +180,15 @@ void VHPcam::update() {
     stelaFbo.readToPixels(stelaPix);
     stelaTexture.loadData(stelaPix.getPixels(), camWidth, camHeight, GL_RGB);
     
-    if(recording){
-        vidRecorder.addFrame(of2Pix);
-    }
-    
     drawInFbo();
+    if(recording){
+        //recorderTexture.loadScreenData(0, 0, camWidth*2, camHeight*2);
+        recorderFbo.begin();
+        drawTexture.draw(0, 0, camWidth, camHeight);
+        recorderFbo.end();
+        recorderFbo.readToPixels(recorderPix);
+        vidRecorder.addFrame(recorderPix);
+    }
     
 }
     
