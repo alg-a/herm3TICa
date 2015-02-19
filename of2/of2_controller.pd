@@ -1,4 +1,5 @@
-#N canvas 397 88 925 883 10;
+#N canvas 398 88 925 883 10;
+#X declare -lib mrpeach;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of2_msgOSC;
@@ -663,5 +664,6 @@
 #X coords 0 -1 1 1 15 15 2 0 0;
 #X restore 76 523 pd reset;
 #X text 96 521 reset num recording;
+#X obj 205 454 of2_contect_trigger_fortuna;
 #X connect 11 0 12 0;
 #X connect 29 0 13 0;
