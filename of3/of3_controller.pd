@@ -1,4 +1,4 @@
-#N canvas 1071 31 584 776 10;
+#N canvas 443 159 584 776 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of3_msgOSC;
@@ -493,6 +493,22 @@
 #X restore -300 429 pd velocity;
 #X obj -321 437 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1
 0 1;
+#N canvas 1041 615 295 276 reset 0;
+#X obj 0 0 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1 -1
+;
+#X obj 0 40 pack f;
+#X msg 0 62 /resetSave \$1;
+#X msg 0 19 0;
+#X obj 0 -22 r of3_reset_save;
+#X obj 0 85 s of3_msgOSC;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X coords 0 -1 1 1 15 15 2 0 0;
+#X restore 77 349 pd reset;
+#X text 99 347 reset num recording;
 #X connect 13 0 14 0;
 #X connect 26 0 15 0;
 #X connect 37 0 36 0;

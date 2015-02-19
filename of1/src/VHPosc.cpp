@@ -27,6 +27,8 @@ void VHPosc::update(VHPcam & _cam) {
             _cam.setContrast(m.getArgAsInt32(0), m.getArgAsFloat(1), m.getArgAsFloat(2));
         } else if (m.getAddress() == "/save") {
             _cam.save(m.getArgAsInt32(0));
+        } else if (m.getAddress() == "/resetSave") {
+            _cam.recordingNum = m.getArgAsInt32(0);
         } else if (m.getAddress() == "/stela") {
             _cam.percent[0] = m.getArgAsFloat(0);
         }  else if (m.getAddress() == "/mixture") {

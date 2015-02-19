@@ -1,4 +1,4 @@
-#N canvas 1023 371 596 513 10;
+#N canvas 888 332 596 513 10;
 #X declare -lib mrpeach;
 #N canvas 571 438 430 156 r 0;
 #X obj 0 96 s of1_msgOSC;
@@ -171,7 +171,7 @@
 #X coords 0 -1 1 1 24 24 2 0 0;
 #X restore 68 321 pd salvar;
 #X text 98 324 Gravar;
-#N canvas 824 245 843 435 reciveOSC 1;
+#N canvas 824 245 843 435 reciveOSC 0;
 #X obj -826 118 symbol;
 #X obj -826 32 unpackOSC;
 #X obj -826 9 udpreceive 8000;
@@ -371,6 +371,22 @@
 #X restore 68 291 pd invert;
 #X obj 147 16 r of1_framerate;
 #X floatatom 147 42 5 0 0 0 - - -;
+#N canvas 1041 615 295 276 reset 0;
+#X obj 0 0 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1 -1
+;
+#X obj 0 40 pack f;
+#X msg 0 62 /resetSave \$1;
+#X msg 0 19 0;
+#X obj 0 -22 r of1_reset_save;
+#X obj 0 85 s of1_msgOSC;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X coords 0 -1 1 1 15 15 2 0 0;
+#X restore 77 349 pd reset;
+#X text 97 347 reset num recording;
 #X connect 13 0 14 0;
 #X connect 22 0 15 0;
 #X connect 28 0 29 0;
