@@ -7,10 +7,10 @@ include ("../inc/base.php");
 
 header("Content-type: text/javascript; charset=utf-8");
  
-define('CONSUMER_KEY', 'S5CRkdg9ZrflXYH7vsw6Q');
-define('CONSUMER_SECRET', 'np1KIdHQANRd5SwcTNgGjEP1IicXujfy4Uai0EecwnI');
-define('ACCESS_TOKEN', '83389543-HYJ46ilEY84XyW7yIPRdr3VBMbrfEqMv5n2QjZ92q');
-define('ACCESS_TOKEN_SECRET', 'kAACnBWVkv5SBeytsLWwpHbN8WN6mEYhGiUKYwZVt1AfF');
+define('CONSUMER_KEY', 'xxxxxxxxxxxxxxxxxx');
+define('CONSUMER_SECRET', 'xxxxxxxxxxxxxxxxxx');
+define('ACCESS_TOKEN', 'xxxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxx');
+define('ACCESS_TOKEN_SECRET', 'xxxxxxxxxxxxxxxxxx');
  
 function search(array $query){
   $toa = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
